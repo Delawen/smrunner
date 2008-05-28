@@ -1,12 +1,46 @@
-27/05/2008: 20:00
- * SMIndexStructure: 
-finalizado
 
- * SMTreeNode: 
-finalizado excepto:
-·¿Clone debe clonar también las referencias? Eso añadiría complejidad ya que es fácil entrar en un bucle infinito.
-·¿Debe equals comparar también las referencias?
-·¿Debe equals utilizar el hashcode y ya está? (está generado con un asistente que tiene en cuenta todos los atributos del nodo)
+DUDAS
+=====
+[S 28-05-07] Si hago nodo1.next(nodo2) entonces nodo1 tiene por siguiene a nodo2,
+ pero nodo2 aún no tiene por previo a nodo1. Hay que ver de quien es responsabilidad hacer esto,
+ y si es de los mismos nodos cuidado con no acabar en una recursión infinita.
 
-* SMTree:
-comenzado
+[S 28-05-07] setRootObject ... ¿esta bien actualizado el mapa?
+[S 28-05-07] En removeSMTreeNode, usas equals y creo que es más bien == para comparar si apuntan al mismo objeto.
+
+
+CORREGIR
+========
+* SMTreeNode.Equals()
+
+
+28-05-2008
+==========
+
+[S 17:35] Modificado SMTree.setRootObject(T o) y SMTree.setRoot(val). OJO con actualizar el mapa...
+[S 17:30] Añadido constructor vacio SMTree()
+[S 17:00] Rehaciendo el changelog a un formato ameno e intuitivo :b
+
+27-05-2008
+==========
+[M 20:00] SMTree comenzado.
+[M 20:00] SMTreeNode finalizado pero con dudas.
+[M 20:00] SMIndexStructure: finalizado
+[S 14:00] Nuevo constructor: public SMTreeNode(T o, SMTreeNode parent, SMTreeNode nextSibling, SMTreeNode previousSibling, SMTreeNode firstChild)
+
+
+DUDAS SOLUCIONADAS
+==================
+
+[M 28-05-08] ¿Clone debe clonar también las referencias? Eso añadiría complejidad ya que es fácil entrar en un bucle infinito.
+            ·[S] No, desde el punto de vista de un nodo no es responsabilidad suya clonar las referencias
+                Seria responsabilidad de SMTree que es quien ve a los nodos como una estructura arbórea.
+[M 28-05-08] ¿Debe equals comparar también las referencias?
+            ·[S] Yo diría que sí. Aún así lo mismo vendría bien un método aparte que te comparase si el objeto del nodo es igual(por referencia y/o por objeto en sí) a un objeto dado.
+
+[M 28-05-08] ¿Debe equals utilizar el hashcode y ya está? (está generado con un asistente que tiene en cuenta todos los atributos del nodo)
+            ·[S] "Equal objects must produce the same hash code as long as they are equal, however unequal objects need not produce distinct hash codes."
+                    Viendo esa frase de internet, que es cierta, tengo dudas. ¿buscamos una comparación exacta o algo mas rápido?
+
+CORRECCIONES HECHAS
+===================
