@@ -40,7 +40,7 @@ public class SMIndexStructure<T>
         if(!index.containsValue(n))
             index.put(n.getObject(), n);
         else if( index.get(n.getObject()) != n.getObject() )
-            throw new ("Insertando un Nodo que ya existe en SMIndexStructure pero que cuyo object asociado es distinto al que hay en el Indice");
+            throw new Exception("Insertando un Nodo que ya existe en SMIndexStructure pero que cuyo object asociado es distinto al que hay en el Indice");
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
