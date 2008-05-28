@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map; 
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-import org.omg.CORBA.portable.ApplicationException;
+
 // #[regen=yes,id=DCE.E4C9EC8F-3F9B-C977-74A3-467F7EC114A6]
 // </editor-fold> 
 public class SMIndexStructure<T> 
