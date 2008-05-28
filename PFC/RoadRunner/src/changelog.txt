@@ -1,0 +1,12 @@
+27/05/2008: 20:00
+ * SMIndexStructure: 
+finalizado
+
+ * SMTreeNode: 
+finalizado excepto:
+·¿Clone debe clonar también las referencias? Eso añadiría complejidad ya que es fácil entrar en un bucle infinito.
+·¿Debe equals comparar también las referencias?
+·¿Debe equals utilizar el hashcode y ya está? (está generado con un asistente que tiene en cuenta todos los atributos del nodo)
+
+* SMTree:
+comenzado
