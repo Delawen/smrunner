@@ -9,22 +9,22 @@ public class SMTree<T> implements Cloneable{
     // #[regen=yes,id=DCE.E261DF56-4B2B-0EA1-3702-1E88F41ED5A2]
     // </editor-fold> 
     private SMTreeNode<T> root;
-    private SMIndexStructure mapa;
+    private SMIndexStructure<T> mapa;
     
     public SMTree ()
     {
-        this.mapa = new SMIndexStructure();
+        this.mapa = new SMIndexStructure<T>();
     
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.83F2AB07-B68C-2345-5D68-D860DA28ACDD]
     // </editor-fold> 
-    public SMTree (SMTreeNode root) 
+    public SMTree (SMTreeNode<T> root) 
     {
         super();
         this.root = root;
-        this.mapa = new SMIndexStructure(root);
+        this.mapa = new SMIndexStructure<T>(root);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -52,7 +52,7 @@ public class SMTree<T> implements Cloneable{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,regenBody=yes,id=DCE.0F12C6C0-0E3C-D31C-8C24-A027D7896501]
     // </editor-fold> 
-    public void setRoot (SMTreeNode val) {
+    public void setRoot (SMTreeNode<T> val) {
         this.root = val;
         mapa.add(val);
     }
@@ -60,14 +60,14 @@ public class SMTree<T> implements Cloneable{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.5291916E-6233-D758-53C9-932DAB3F937D]
     // </editor-fold> 
-    public boolean addSubSMTree (SMTree subtree, SMTreeNode where, Kinship k) {
+    public boolean addSubSMTree (SMTree<T> subtree, SMTreeNode<T> where, Kinship k) {
         return true;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.EC682BB2-DE7A-1448-A23F-DC7E2A17D347]
     // </editor-fold> 
-    public boolean addSMTreeNode (SMTreeNode n, SMTreeNode where, Kinship k) {
+    public boolean addSMTreeNode (SMTreeNode<T> n, SMTreeNode<T> where, Kinship k) {
         return true;
     }
 
@@ -132,7 +132,7 @@ public class SMTree<T> implements Cloneable{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.D0E849E0-57CC-9D85-CDEF-525A262F1DC8]
     // </editor-fold> 
-    public boolean addObject (T o, SMTreeNode where, Kinship k) {
+    public boolean addObject (T o, SMTreeNode<T> where, Kinship k) {
         return true;
     }
 
@@ -152,9 +152,9 @@ public class SMTree<T> implements Cloneable{
     }
     
     @Override
-    public SMTree clone() throws CloneNotSupportedException
+    public SMTree<T> clone() throws CloneNotSupportedException
     {
-        SMTree clon = (SMTree)super.clone();
+        SMTree<T> clon = (SMTree<T>)super.clone();
         
         return clon;
     }
@@ -164,11 +164,11 @@ public class SMTree<T> implements Cloneable{
         return false;
     }
 
-    public SMIndexStructure getMapa() {
+    public SMIndexStructure<T> getMapa() {
         return mapa;
     }
 
-    public void setMapa(SMIndexStructure mapa) {
+    public void setMapa(SMIndexStructure<T> mapa) {
         this.mapa = mapa;
     }
 
