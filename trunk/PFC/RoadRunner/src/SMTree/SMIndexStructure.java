@@ -45,6 +45,7 @@ public class SMIndexStructure<T>
         if(this.index != null)
             this.index.remove(item);
     }
+    
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.820DE30C-34EB-078E-9DA7-41F217F0EFCD]

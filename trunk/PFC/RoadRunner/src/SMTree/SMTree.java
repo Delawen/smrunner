@@ -10,6 +10,12 @@ public class SMTree<T> implements Cloneable{
     // </editor-fold> 
     private SMTreeNode<T> root;
     private SMIndexStructure mapa;
+    
+    public SMTree ()
+    {
+        this.mapa = new SMIndexStructure();
+    
+    }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.83F2AB07-B68C-2345-5D68-D860DA28ACDD]
@@ -26,7 +32,14 @@ public class SMTree<T> implements Cloneable{
     // </editor-fold> 
     public void setRootObject(T o) 
     {
-        this.root.setObject(o);
+        if(root == null)
+            this.root = new SMTreeNode<T>(o);
+        else
+            this.root.setObject(o);
+                 
+        //actualizamos el mapa
+        mapa.add(root);
+    
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -41,6 +54,7 @@ public class SMTree<T> implements Cloneable{
     // </editor-fold> 
     public void setRoot (SMTreeNode val) {
         this.root = val;
+        mapa.add(val);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -66,7 +80,7 @@ public class SMTree<T> implements Cloneable{
         n.getPrevious().setNext(n.getNext());
         n.getNext().setPrevious(n.getPrevious());
         
-        //Si es el primer y/o último hijo de un padre, también hay que actualizar esas referencias
+        //Si el nodo es el primer y/o último hijo de un padre, también hay que actualizar esas referencias
         if(n.getParent().getFirstChild().equals(n))
             n.getParent().setFirstChild(n.getNext());
         if(n.getParent().getLastChild().equals(n))
@@ -77,6 +91,7 @@ public class SMTree<T> implements Cloneable{
         SMTreeNode<T> hijo = n.getFirstChild();
         while(hijo != null)
         {
+            // CUIDAO!!!
             removeSMTreeNode(hijo);
             hijo = hijo.getNext();
         }
