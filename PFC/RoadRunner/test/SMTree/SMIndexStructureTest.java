@@ -70,7 +70,10 @@ public class SMIndexStructureTest {
         {
             int k = r.nextInt(100);
             for(int i = 1; i < k; i++)
-                 instance.add(new SMTreeNode<T>(new T()));
+            {
+                SMTreeNode<T> node = new SMTreeNode<T>(new T());
+                 instance.add(node);
+            }
 
             instance.add(new SMTreeNode<T>(t));
 
