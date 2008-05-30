@@ -40,6 +40,10 @@ public class BackwardItemIterator<T> implements WrapperIterator<T> {
         return true;
     }
 
+    public void remove() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 
 }
 
