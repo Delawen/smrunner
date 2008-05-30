@@ -60,7 +60,8 @@ public class SMTree<T> implements Cloneable{
     // #[regen=yes,regenBody=yes,id=DCE.0F12C6C0-0E3C-D31C-8C24-A027D7896501]
     // </editor-fold> 
     public void setRoot (SMTreeNode val) {
-        mapa.remove(root.getObject());
+        if(root != null)
+            mapa.remove(root.getObject());
         this.root = val;
         mapa.add(val);
     }

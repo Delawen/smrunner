@@ -63,9 +63,8 @@ public class SMIndexStructure<T>
     public void remove (T item) 
     {
         if(this.index == null)
-            throw new NullPointerException("");
+            throw new NullPointerException("El indice del arbol es nulo");
         
-        this.index.remove(item);
     }
     
     public void remove(SMTreeNode<T> node)
