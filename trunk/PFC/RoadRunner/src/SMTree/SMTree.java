@@ -174,6 +174,9 @@ public class SMTree<T> implements Cloneable{
         }
         
         mapa.remove(n);
+        n.getPrevious().setNext(n.getNext());
+        n.getNext().setPrevious(n.getPrevious());
+         
         return true;
     }
     
