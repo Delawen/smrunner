@@ -113,25 +113,29 @@ public class RoadRunner {
         return null;
     }
     
-    public enum ExitLevel {NOTHING,CONTINUE, EXIT, SLEEPandCONTINUE, SLEEPandEXIT}; 
-    public static void debug(String error,  ExitLevel e)
+    public enum ExitLevel {WARNING,NOTHING,CONTINUE, EXIT, SLEEPandCONTINUE, SLEEPandEXIT}; 
+    public static void debug(String message,  ExitLevel e)
     {
         switch(e)
         {
             case EXIT:
+                System.err.println("Error & exit: "+message);
                 System.exit(-1);
                 break;
             case NOTHING:
                 break;
+            case WARNING:
+                System.err.println("Warning: "+message);
+                break;
             case CONTINUE:
-                System.err.println(error);
+                System.err.println("Error & continue: "+message);
                 break;
             case SLEEPandCONTINUE:
-                System.err.println(error);
+                System.err.println("Error & sleep and continue: "+ message);
                 try{ Thread.sleep(5);} catch (Exception ex) {}
                 break;
             case SLEEPandEXIT:
-                System.err.println(error);
+                System.err.println("Error & sleen and exit: "+ message);
                 try{ Thread.sleep(5);} catch (Exception ex) {}
                 System.exit(-1);
                 break;
