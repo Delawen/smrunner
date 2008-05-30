@@ -117,6 +117,8 @@ public class SMTree<T> implements Cloneable{
      */
     public boolean removeFastSMTreeNode(SMTreeNode<T> n)
     {
+        
+        /* 
         // Si el nodo a borrar no tiene hijos
         if(n.getLastChild() == null && n.getFirstChild() == null)
         {
@@ -126,12 +128,12 @@ public class SMTree<T> implements Cloneable{
          
             return true;
         }
+         * 
+         * */
             
-        SMTreeNode nodeAux;
+        SMTreeNode nodeAux = n.getLastChild();
         
-        nodeAux = n.getLastChild();
-        
-        while(n != nodeAux)
+        while(n != nodeAux && nodeAux != null)
         {
             //Si tiene hijos, buscamos a su último hijo
             if(nodeAux.getLastChild() != null) 
@@ -176,6 +178,11 @@ public class SMTree<T> implements Cloneable{
         mapa.remove(n);
         n.getPrevious().setNext(n.getNext());
         n.getNext().setPrevious(n.getPrevious());
+        
+        if(n.getParent().getFirstChild() == n)
+            n.getParent().setFirstChild(n.getNext());
+        if(n.getParent().getLastChild() == n)
+            n.getParent().setLastChild(n.getPrevious());
          
         return true;
     }
