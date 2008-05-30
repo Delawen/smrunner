@@ -1,6 +1,3 @@
-wawawawaaa dfiwqjfioq
-pipipipi
-
 DUDAS
 =====
 [S 28-05-07] Si hago nodo1.next(nodo2) entonces nodo1 tiene por siguiene a nodo2,
@@ -16,9 +13,15 @@ CORREGIR
 * SMTreeNode.Equals()
 
 
+
+30-05-2008
+==========
+[S 17:00] Modificado SMTreeNode.equals: tambien considera referencias
+[S 16:40] Añadido metodo RR.debug()
+
 28-05-2008
 ==========
-
+[S 19:00] Varios cambios en clases SMTree*
 [S 17:35] Modificado SMTree.setRootObject(T o) y SMTree.setRoot(val). OJO con actualizar el mapa...
 [S 17:30] Añadido constructor vacio SMTree()
 [S 17:00] Rehaciendo el changelog a un formato ameno e intuitivo :b
