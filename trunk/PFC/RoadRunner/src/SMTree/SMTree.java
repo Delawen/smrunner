@@ -1,6 +1,9 @@
 package SMTree;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
+
+import roadrunner.RoadRunner.ExitLevel;
+
 // #[regen=yes,id=DCE.BDD5EA36-857A-98F5-E253-BFF7C656B696]
 // </editor-fold> 
 public class SMTree<T> implements Cloneable{
@@ -66,6 +69,11 @@ public class SMTree<T> implements Cloneable{
     // #[regen=yes,id=DCE.5291916E-6233-D758-53C9-932DAB3F937D]
     // </editor-fold> 
     public boolean addSubSMTree (SMTree subtree, SMTreeNode where, Kinship k) {
+        
+        if(where == root && (k == Kinship.LEFTSIBLING || k == Kinship.RIGHTSIBLING ))
+            roadrunner.RoadRunner.debug("Intentando añadirle un hermano a la raiz", ExitLevel.SLEEPandEXIT);
+        
+        
         return true;
     }
 
@@ -73,6 +81,36 @@ public class SMTree<T> implements Cloneable{
     // #[regen=yes,id=DCE.EC682BB2-DE7A-1448-A23F-DC7E2A17D347]
     // </editor-fold> 
     public boolean addSMTreeNode (SMTreeNode n, SMTreeNode where, Kinship k) {
+        
+        if(mapa.containsNode(n))
+            roadrunner.RoadRunner.debug("",ExitLevel.SLEEPandEXIT);
+        
+        switch(k)
+        {
+            case CHILD:
+                //where sera el padre
+                
+                //si no tiene hijos entonces 'n' sera tanto el primer como el ultimo hijo
+                if(where.getFirstChild() == null)
+                {
+                    where.setFirstChild(n);
+                    where.setLastChild(n);
+                }
+                //si tiene hijos lo añadimos al final
+                else
+                {
+                    where.setLastChild(n);
+                }
+                
+                //le decimos a 'n' que 'where' es su padre :-O
+                n.setParent(where);
+                break;
+            case RIGHTSIBLING:
+                
+                
+            case LEFTSIBLING:
+        
+        }
         return true;
     }
 
@@ -96,7 +134,6 @@ public class SMTree<T> implements Cloneable{
         SMTreeNode<T> hijo = n.getFirstChild();
         while(hijo != null)
         {
-            // CUIDAO!!!
             removeSMTreeNode(hijo);
             hijo = hijo.getNext();
         }
@@ -141,11 +178,11 @@ public class SMTree<T> implements Cloneable{
             // Si es un nodo hoja
             else if(nodeAux.getLastChild() == null && nodeAux.getFirstChild() == null)
             {
-                //nodoAux perdio anteriormente a su nodo.next 
-                nodeAux.setNext(null);
                 
                 // borramos a nodoAux del mapa
                 mapa.remove(nodeAux);
+                //eliminamos tambien su contenido
+                nodeAux.setObject(null);
                 
                 //si nodoAux no tiene previo, es porque será el hijo más a la izda.
                 if(nodeAux.getPrevious() == null)
@@ -153,8 +190,10 @@ public class SMTree<T> implements Cloneable{
                     //nos vamos al padre
                     nodeAux = nodeAux.getParent();
                     
-                    //dejamos al hijo huerfano
+                    //dejamos al hijo huerfano...
                     nodeAux.getFirstChild().setParent(null);
+                    //... y su hermano siguiente, si es que lo tenia ¿QUITAR?
+                    nodeAux.getFirstChild().setNext(null);
                     
                     //el padre ha dejado de tener hijos
                     nodeAux.setFirstChild(null);
@@ -162,27 +201,60 @@ public class SMTree<T> implements Cloneable{
                 }
                 else
                 {
-                    //este hijo será huerfano
+                    //este hijo será huerfano, pero no aún sus hermanos anteriores
                     nodeAux.setParent(null); 
+                    //dejará de tener siguiente, aunque ya no deberia de tenerlo ¿QUITAR?
+                    nodeAux.setNext(null);
                     
-                    /*En este momento sólo su hermano anterior tendra una referencia a este nodo*/
-                    
-                    //nos vamos al hermano
+                    //nos vamos al nodo anterior
                     nodeAux = nodeAux.getPrevious();
+                    
+                    //el nodo anterior termina de rematar a su siguiente
+                    
+                    nodeAux.getNext().setPrevious(null);
+                    //y el siguiente pierde la referencia a su nodo anterior lo dará por muerto 
+                    nodeAux.setNext(null);
                 }
                 
                 
             }
         }
         
-        mapa.remove(n);
-        n.getPrevious().setNext(n.getNext());
-        n.getNext().setPrevious(n.getPrevious());
+        if(n.getPrevious() != null)
+            n.getPrevious().setNext(n.getNext());
+        if(n.getNext() != null)
+            n.getNext().setPrevious(n.getPrevious());
         
-        if(n.getParent().getFirstChild() == n)
-            n.getParent().setFirstChild(n.getNext());
-        if(n.getParent().getLastChild() == n)
-            n.getParent().setLastChild(n.getPrevious());
+        // Si 'n' era el primer hijo de su padre     
+        if( n.getParent().getFirstChild() == n)
+        {
+            if(n.getNext() != null)
+               n.getParent().setFirstChild(n.getNext());
+            else
+            {
+                n.getParent().setFirstChild(null);
+                n.getParent().setLastChild(null);
+            }      
+        }
+        
+        // Si 'n' era el ultimo hijo de su padre
+        if( n.getParent().getLastChild() == n)
+        {
+            if(n.getPrevious() != null)
+               n.getParent().setLastChild(n.getPrevious());
+            else
+            {
+                n.getParent().setFirstChild(null);
+                n.getParent().setLastChild(null);
+            }      
+        }
+        //finiquitamos 'n'
+        
+        mapa.remove(n);
+        n.setNext(null);
+        n.setPrevious(null);
+        n.setParent(null);
+        n.setObject(null);
          
         return true;
     }
@@ -190,20 +262,101 @@ public class SMTree<T> implements Cloneable{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.D6BCC3C4-38C4-91FA-BCA0-6B5FE88BA618]
     // </editor-fold> 
-    public boolean substitute (SMTreeNode<T> from, SMTreeNode<T> to, SMTree<T> n) 
+    public boolean substitute (SMTreeNode<T> from, Enclosure inclusionFrom, 
+            SMTreeNode<T> to, Enclosure inclusionTo, SMTree<T> tree) 
     {
+        /*
+         * La idea es borrar toda la region que va [desde,hasta]
+         * ambos extremos inclusive 
+         */
+        if(inclusionFrom == Enclosure.NOT_ENCLOSED)
+            from = from.getNext();
+         if(inclusionTo == Enclosure.NOT_ENCLOSED)
+             to = to.getPrevious();
+        
+        /**
+         * Regiones vacias:
+         * 1. (from,to) siendo from==to
+         * 2. [from,to) siendo from==to
+         * 3. (from,to] siendo from==to
+         * 4. from == null
+         * 5. to == null
+         */
+        if( (from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
+                || from==null || to==null)
+        {
+            roadrunner.RoadRunner.debug("Región vacia al sustituir",ExitLevel.WARNING);
+            return false;
+        }
+        
+        
+        // from y to deben pertenecer al mismo nivel del arbol
+        if(from.getParent() != to.getParent())
+        {
+            roadrunner.RoadRunner.debug("La región a sustituir no forma parte del mismo nivel.",ExitLevel.SLEEPandEXIT);
+            return false;
+        }
+        
+        
+        /* Borramos [desde,hasta), el hasta no incluido*/
+        SMTreeNode<T> nextFrom;
+        while(from != to)
+        {
+            nextFrom = from.getNext();
+            removeFastSMTreeNode(from);
+            from = nextFrom;
+        }
+        
+        
+        /**
+         * tres casos para 'to':
+         * 1. 'to' tiene más elementos a la derecha : * * * from...to * * *
+         * 2. 'to' no tiene más elementos a la derecha pero si a la izquierda : * * * from...to
+         * 3. 'to' no tiene más elementos ni a la izquierda ni a la derecha: from...to
+         */
+        
+        //Caso 1
+        SMTreeNode<T> where;
+        Kinship whereKinship;
+        
+        if(to.getNext() != null)
+        {
+            //Insertaremos a la izquierda del elemento siguiente a 'to'
+            where = to.getNext();
+            whereKinship = Kinship.LEFTSIBLING;
+        }     
+        //Caso 2
+        else if(to.getPrevious() != null)
+        {
+            //Insertaremos a la derecha del elemento anterior a 'to'
+            where = to.getPrevious();
+            whereKinship = Kinship.RIGHTSIBLING;
+        }
+        //Caso 3
+        else 
+        {
+            where = to.getParent();
+            whereKinship = Kinship.CHILD;
+        }
+        
+        //Borramos 'to'
+        removeFastSMTreeNode(to);
+        
+        addSubSMTree(tree, where, whereKinship);
+   
         return true;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.024EDDB9-9F2B-3FDF-9CF5-E955ADB3ACBE]
     // </editor-fold> 
-    public boolean substituteObject (T from, T to, T by) 
+    public boolean substituteObject (T from, Enclosure inclusionFrom,
+            T to, Enclosure inclusionTo, T by) 
     {
         SMTreeNode<T> f = this.mapa.get(from);
         SMTreeNode<T> t = this.mapa.get(to);
         SMTree<T> b = new SMTree<T>(new SMTreeNode<T>(by));
-        return substitute(f, t, b);
+        return substitute(f,inclusionFrom, t,inclusionTo,b);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -211,7 +364,7 @@ public class SMTree<T> implements Cloneable{
     // </editor-fold> 
     public boolean removeObject (T o) 
     {
-        return removeSMTreeNode(this.mapa.get(o));
+        return removeFastSMTreeNode(this.mapa.get(o));
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
