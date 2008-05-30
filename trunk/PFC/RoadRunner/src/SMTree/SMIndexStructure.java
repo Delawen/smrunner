@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map; 
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
+import roadrunner.RoadRunner;
 
 // #[regen=yes,id=DCE.E4C9EC8F-3F9B-C977-74A3-467F7EC114A6]
 // </editor-fold> 
@@ -32,15 +33,19 @@ public class SMIndexStructure<T>
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.39A569BB-6010-5CE9-E1AA-14191C8692ED]
     // </editor-fold> 
-    public void add (SMTreeNode<T> n) throws Exception
+    public void add (SMTreeNode<T> n)
     {
         if(index == null)
             throw new NullPointerException("");
           
+        // Si el nodo (valor) no esta contenido:
         if(!index.containsValue(n))
             index.put(n.getObject(), n);
+        // Si el nodo (valor) ya existe en el Map, pero con Nodo.Object distinto
         else if( index.get(n.getObject()) != n.getObject() )
-            throw new Exception("Insertando un Nodo que ya existe en SMIndexStructure pero que cuyo object asociado es distinto al que hay en el Indice");
+            RoadRunner.debug("SMIndexStructure.Add: El nodo que quiero insertar en el Map ya existe y" +
+                    " tiene un valor distinto del que quiero insertar",RoadRunner.ExitLevel.SLEEPandEXIT);
+        //else:  El nodo existe ya en el Mapa, con el mismo Nodo.Object, por tanto no hacemos nada
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
