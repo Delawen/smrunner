@@ -4,12 +4,7 @@
  */
 
 package SMTree;
-
 import java.util.Random;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -61,24 +56,39 @@ public class SMTreeTest {
      */
     @Test
     public void addSubSMTree_left() {
-        SMTree<T> subtree = new SMTree<T>(new SMTreeNode<T>(new T()));
+                
+        SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
+        SMTree<T> instance = new SMTree<T>(raiz);
+        
+        SMTreeNode<T> padre = new SMTreeNode<T>(new T());
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
+        instance.addSubSMTree(new SMTree<T>(where), padre, Kinship.CHILD);
+        
+        SMTree<T> subtree = new SMTree<T>(new SMTreeNode<T>(new T()));
+ 
         Kinship k = Kinship.LEFTSIBLING;
-        SMTree<T> instance = new SMTree<T>(where);
         if(!instance.addSubSMTree(subtree, where, k))
             fail("addSubSMTree devolvió false.");
         assertEquals(where.getPrevious(), subtree.getRoot());
     }
    @Test
     public void addSubSMTree_right() {
-        SMTree<T> subtree = new SMTree<T>(new SMTreeNode<T>(new T()));
+        
+        SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
+        SMTree<T> instance = new SMTree<T>(raiz);
+        
+        SMTreeNode<T> padre = new SMTreeNode<T>(new T());
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
+        instance.addSubSMTree(new SMTree<T>(where), padre, Kinship.CHILD);
+        
+        SMTree<T> subtree = new SMTree<T>(new SMTreeNode<T>(new T()));
+ 
         Kinship k = Kinship.RIGHTSIBLING;
-        SMTree<T> instance = new SMTree<T>(where);
         if(!instance.addSubSMTree(subtree, where, k))
             fail("addSubSMTree devolvió false.");
         assertEquals(where.getNext(), subtree.getRoot());
     }
+   
    @Test
     public void addSubSMTree_child() {
         SMTree<T> subtree = new SMTree<T>(new SMTreeNode<T>(new T()));
@@ -95,10 +105,14 @@ public class SMTreeTest {
      */
     @Test
     public void addSMTreeNode_left() {
-        SMTreeNode<T> n = new SMTreeNode<T>(new T());
+        SMTreeNode<T> padre = new SMTreeNode<T>(new T());
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
+        
+        SMTree<T> instance = new SMTree<T>(padre);
+        instance.addSMTreeNode(where, padre, Kinship.CHILD);
+        
         Kinship k = Kinship.LEFTSIBLING;
-        SMTree<T> instance = new SMTree<T>(where);
+        SMTreeNode<T> n = new SMTreeNode<T>(new T());
         if(!instance.addSMTreeNode(n, where, k))
             fail("addSMTreeNode devolvió false");
         assertEquals(where.getPrevious(), n);
@@ -107,9 +121,14 @@ public class SMTreeTest {
     @Test
     public void addSMTreeNode_right() {
         SMTreeNode<T> n = new SMTreeNode<T>(new T());
+        
+        SMTreeNode<T> padre = new SMTreeNode<T>(new T());
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
+        
+        SMTree<T> instance = new SMTree<T>(padre);
+        instance.addSMTreeNode(where, padre, Kinship.CHILD);
+        
         Kinship k = Kinship.RIGHTSIBLING;
-        SMTree<T> instance = new SMTree<T>(where);
         if(!instance.addSMTreeNode(n, where, k))
             fail("addSMTreeNode devolvió false");
         assertEquals(where.getNext(), n);
@@ -157,14 +176,50 @@ public class SMTreeTest {
     @Test
     public void substitute() 
     {
-        SMTreeNode<T> from = new SMTreeNode<T>(new T());
-        SMTreeNode<T> to = new SMTreeNode<T>(new T());
-        SMTree<T> n = new SMTree<T>(new SMTreeNode<T>(new T()));
-        SMTree instance = new SMTree(from);
-        instance.addSMTreeNode(from, to, Kinship.RIGHTSIBLING);
-        if(!instance.substitute(from, Enclosure.NOT_ENCLOSED, to, Enclosure.ENCLOSED.NOT_ENCLOSED, n))
-            fail("addSMTreeNode devolvió false.");
-        fail("¿Parentesis o Corchetes?");
+        Random random = new Random();
+        
+        int num_pruebas = random.nextInt(100) + 20;
+        
+        for(int i = 0; i < num_pruebas; i++)
+        {
+            SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
+            SMTreeNode<T> from;
+            SMTreeNode<T> to;
+            
+            SMTree<T> n = new SMTree<T>(new SMTreeNode<T>(new T()));
+            
+            SMTree instance = new SMTree(raiz);
+
+            SMTreeNode<T> aux = new SMTreeNode<T>(new T());
+            from = aux;
+            
+            int max = random.nextInt(50) + 10;
+            for(int j = 0; j < max; j++)
+            {
+                instance.addSMTreeNode(aux, raiz, Kinship.CHILD);
+                if(random.nextBoolean())
+                    from = aux;
+                aux = new SMTreeNode<T>(new T());
+            }
+            to = aux;
+            max = random.nextInt(50) + 10;
+            for(int j = 0; j < max; j++)
+            {
+                instance.addSMTreeNode(aux, raiz, Kinship.CHILD);
+                if(random.nextBoolean())
+                    to = aux;
+                aux = new SMTreeNode<T>(new T());
+            }
+
+            if(!instance.substitute(from, Enclosure.NOT_ENCLOSED, to, Enclosure.ENCLOSED.NOT_ENCLOSED, n))
+                fail("addSMTreeNode devolvió false.");
+            
+            assertEquals(from.getNext(), n);
+            assertEquals(to.getPrevious(), n);
+            assertEquals(n.getRoot().getParent(), raiz);
+            
+        }
+        
     }
 
     /**
@@ -172,16 +227,50 @@ public class SMTreeTest {
      */
     @Test
     public void substituteObject() {
-        System.out.println("substituteObject");
-        T from = new T();
-        T to = new T();
-        T by = new T();
-        SMTreeNode<T> frum = new SMTreeNode<T>(from);
-        SMTree<T> instance = new SMTree<T>(frum);
-        instance.addObject(to, frum, Kinship.RIGHTSIBLING);
-        if(!instance.substituteObject(from, Enclosure.NOT_ENCLOSED, to, Enclosure.NOT_ENCLOSED, by))
-            fail("el substituteObject devolvió false.");
-        fail("¿Parentesis o Corchetes?");
+        Random random = new Random();
+        
+        int num_pruebas = random.nextInt(100) + 20;
+        
+        for(int i = 0; i < num_pruebas; i++)
+        {
+            SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
+            T from;
+            T to;
+            T what = new T();
+            
+            SMTree<T> n = new SMTree<T>(new SMTreeNode<T>(what));
+            
+            SMTree instance = new SMTree(raiz);
+
+            SMTreeNode<T> aux = new SMTreeNode<T>(new T());
+            from = aux.getObject();
+            
+            int max = random.nextInt(50) + 10;
+            for(int j = 0; j < max; j++)
+            {
+                instance.addSMTreeNode(aux, raiz, Kinship.CHILD);
+                if(random.nextBoolean())
+                    from = aux.getObject();
+                aux = new SMTreeNode<T>(new T());
+            }
+            to = aux.getObject();
+            max = random.nextInt(50) + 10;
+            for(int j = 0; j < max; j++)
+            {
+                instance.addSMTreeNode(aux, raiz, Kinship.CHILD);
+                if(random.nextBoolean())
+                    to = aux.getObject();
+                aux = new SMTreeNode<T>(new T());
+            }
+
+            if(!instance.substituteObject(from, Enclosure.NOT_ENCLOSED, to, Enclosure.ENCLOSED.NOT_ENCLOSED, n))
+                fail("addSMTreeNode devolvió false.");
+            
+            assertEquals(instance.getMapa().get(from).getNext(), n);
+            assertEquals(instance.getMapa().get(to).getPrevious(), n);
+            assertEquals(n.getRoot().getParent(), raiz);
+            
+        }
     }
 
     /**
