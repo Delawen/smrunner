@@ -1,66 +1,39 @@
 package SMTree;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.4F937AF2-FA3C-57D0-0C39-485D889F11FB]
-// </editor-fold> 
-public class ForwardItemIterator<T> implements WrapperIterator<T> 
-{
-    private SMTreeNode<T> actual;
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.1B12F94B-718E-F8B2-5CBC-527B9F5AE299]
-    // </editor-fold> 
-    private ForwardItemIterator () 
-    {
-        super();
-    }
+import java.util.ArrayList;
+import java.util.List;
+
+// #[regen=yes,id=DCE.4F937AF2-FA3C-57D0-0C39-485D889F11FB]
+import java.util.Stack;
+// </editor-fold> 
+public class ForwardItemIterator<T> extends WrapperIterator<T> 
+{
+    private Stack<SMTreeNode<T>> array;
+
     
     public ForwardItemIterator(SMTreeNode<T> nodoInicial)
     {
-        this();
-        this.actual = nodoInicial;
+        super(nodoInicial);
     }
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.245215D2-1215-CC60-AB9E-6019D1E6A4AD]
-    // </editor-fold> 
-    public SMTreeNode next () 
+
+    void inicializarArray(SMTreeNode<T> nodoInicial) 
     {
-        
-            
-        return actual;
+        this.array = new Stack<SMTreeNode<T>>();
+        this.array.add(nodoInicial);
+        recorrerHermanos(nodoInicial.getFirstChild());
     }
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.19EB4119-4E9F-6A37-A53B-97B36533E2E8]
-    // </editor-fold> 
-    public boolean hasNext () 
+    private void recorrerHermanos(SMTreeNode<T> node) 
     {
-        return true;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.83C74261-AEF1-2AFD-05D3-C7582DC2B24A]
-    // </editor-fold> 
-    public boolean goTo (SMTreeNode<T> nodo) 
-    {
-        if(nodo == null)
-            return false;
-        this.actual = nodo;
-        return true;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.6C7D0D32-B042-86FF-2B3A-5AD6D127016A]
-    // </editor-fold> 
-    public boolean isNext (T o) 
-    {
-        return true;
-    }
-
-    public void remove() 
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
+        while(node != null)
+        {
+            this.array.add(node);
+            recorrerHermanos(node.getFirstChild());
+            node = node.getNext();
+        }
     }
 }
 
