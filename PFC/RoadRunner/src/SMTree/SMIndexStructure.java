@@ -29,6 +29,11 @@ public class SMIndexStructure<T>
         this();
         this.add(root);
     }
+    
+    public Map<T, SMTreeNode> getIndex()
+    {
+        return index;
+    }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.39A569BB-6010-5CE9-E1AA-14191C8692ED]
@@ -74,6 +79,16 @@ public class SMIndexStructure<T>
             throw new NullPointerException("");
         
         return (SMTreeNode<T>) this.index.get(item);
+    }
+    
+    public boolean containsNode(SMTreeNode<T> n)
+    {
+        return index.containsValue(n);
+    }
+    
+    public boolean containsObject(T o)
+    {
+        return index.containsKey(o);
     }
 }
 
