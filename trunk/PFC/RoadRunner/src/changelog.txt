@@ -1,18 +1,14 @@
 DUDAS
 =====
-[S 28-05-07] Si hago nodo1.next(nodo2) entonces nodo1 tiene por siguiene a nodo2,
- pero nodo2 aún no tiene por previo a nodo1. Hay que ver de quien es responsabilidad hacer esto,
- y si es de los mismos nodos cuidado con no acabar en una recursión infinita.
-
-[S 28-05-07] setRootObject ... ¿esta bien actualizado el mapa?
-[S 28-05-07] En removeSMTreeNode, usas equals y creo que es más bien == para comparar si apuntan al mismo objeto.
-
 
 CORREGIR
 ========
 * SMTreeNode.Equals()
 
+TODO
+====
 
+* Smtree.clone
 
 30-05-2008
 ==========
