@@ -102,7 +102,7 @@ public class RoadRunner {
         return null;
     }
 
-    /**
+    /*
      *  @return       Wrapper
      *                       @param        s
      */
@@ -111,6 +111,31 @@ public class RoadRunner {
     // </editor-fold> 
     private Wrapper process (Sample s) {
         return null;
+    }
+    
+    public enum ExitLevel {NOTHING,CONTINUE, EXIT, SLEEPandCONTINUE, SLEEPandEXIT}; 
+    public static void debug(String error,  ExitLevel e)
+    {
+        switch(e)
+        {
+            case EXIT:
+                System.exit(-1);
+                break;
+            case NOTHING:
+                break;
+            case CONTINUE:
+                System.err.println(error);
+                break;
+            case SLEEPandCONTINUE:
+                System.err.println(error);
+                try{ Thread.sleep(5);} catch (Exception ex) {}
+                break;
+            case SLEEPandEXIT:
+                System.err.println(error);
+                try{ Thread.sleep(5);} catch (Exception ex) {}
+                System.exit(-1);
+                break;
+        }
     }
 
 }
