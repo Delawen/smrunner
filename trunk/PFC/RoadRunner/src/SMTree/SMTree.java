@@ -218,19 +218,6 @@ public class SMTree<T> implements Cloneable{
         
         if(n == null)
             throw new NullPointerException("");
-        
-        /* 
-        // Si el nodo a borrar no tiene hijos
-        if(n.getLastChild() == null && n.getFirstChild() == null)
-        {
-            mapa.remove(n);
-            n.getPrevious().setNext(n.getNext());
-            n.getNext().setPrevious(n.getPrevious());
-         
-            return true;
-        }
-         * 
-         * */
             
         SMTreeNode nodeAux = n.getLastChild();
         
@@ -341,7 +328,7 @@ public class SMTree<T> implements Cloneable{
          */
         if(inclusionFrom == Enclosure.NOT_ENCLOSED)
             from = from.getNext();
-         if(inclusionTo == Enclosure.NOT_ENCLOSED)
+        if(inclusionTo == Enclosure.NOT_ENCLOSED)
              to = to.getPrevious();
         
         /**
@@ -459,6 +446,8 @@ public class SMTree<T> implements Cloneable{
         return null;
     }
     
+    
+    //TODO
     @Override
     public SMTree clone() throws CloneNotSupportedException
     {
@@ -467,6 +456,8 @@ public class SMTree<T> implements Cloneable{
         return clon;
     }
     
+    
+    //TODO
     public boolean equals(Object o)
     {
         return false;
