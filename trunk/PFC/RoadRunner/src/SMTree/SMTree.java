@@ -35,7 +35,8 @@ public class SMTree<T> implements Cloneable{
         if(root == null)
             root = new SMTreeNode<T>(o);
         else
-        {         
+        { 
+            //borramos del mapa la anterior raiz.
             mapa.remove(root.getObject());
             root.setObject(o);
         }
@@ -103,6 +104,68 @@ public class SMTree<T> implements Cloneable{
         //Eliminamos el nodo del indice
         this.mapa.remove(hijo.getObject());
         
+        return true;
+    }
+    
+    
+    /**
+     * @param n
+     * @return
+     * 
+     * Este metodo se irá al último nodo hoja (la hoja más a la derecha)
+     * e irá eliminando todos los nodos que colgaban de n
+     */
+    public boolean removeFastSMTreeNode(SMTreeNode<T> n)
+    {
+        // Si el nodo a borrar no tiene hijos
+        if(n.getLastChild() == null)
+        {
+            mapa.remove(n);
+            n.getPrevious().setNext(n.getNext());
+            n.getNext().setPrevious(n.getPrevious());
+         
+            return true;
+        }
+            
+        SMTreeNode nodeAux;
+        
+        nodeAux = n.getLastChild();
+        
+        while(n != nodeAux)
+        {
+            //Si tiene hijos, buscamos a su último hijo
+            if(nodeAux.getLastChild() != null) 
+                nodeAux = nodeAux.getLastChild();
+            // Si es un nodo hoja
+            else if(nodeAux.getLastChild() == null && nodeAux.getFirstChild() == null)
+            {
+                //El nodo.next perdió anteriormente a su hijo derecho
+                nodeAux.setNext(null);
+              
+                //si nodoAux no tiene previo, es porque será el hijo más a la izda.
+                if(nodeAux.getPrevious() == null)
+                {
+                    //nos vamos al padre
+                    nodeAux = nodeAux.getParent();
+                    
+                    //dejamos al hijo huerfano
+                    nodeAux.getFirstChild().setParent(null);
+                    
+                    //el padre ha dejado de tener hijos
+                    nodeAux.setFirstChild(null);
+                    nodeAux.setLastChild(null);
+                }
+                else
+                {
+                    //este hijo será huerfano
+                    nodeAux.setParent(null);
+                    //nos vamos al hermano
+                    nodeAux = nodeAux.getPrevious();
+                }
+                
+                
+            }
+        }
         return true;
     }
     
