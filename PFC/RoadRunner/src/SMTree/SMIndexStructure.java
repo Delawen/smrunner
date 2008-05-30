@@ -38,7 +38,7 @@ public class SMIndexStructure<T>
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.39A569BB-6010-5CE9-E1AA-14191C8692ED]
     // </editor-fold> 
-    public void add (SMTreeNode<T> n)
+    public boolean add (SMTreeNode<T> n)
     {
         if(index == null)
             throw new NullPointerException("");
@@ -50,7 +50,11 @@ public class SMIndexStructure<T>
         else if( index.get(n.getObject()) != n.getObject() )
             RoadRunner.debug("SMIndexStructure.Add: El nodo que quiero insertar en el Map ya existe y" +
                     " tiene un valor distinto del que quiero insertar",RoadRunner.ExitLevel.SLEEPandEXIT);
-        //else:  El nodo existe ya en el Mapa, con el mismo Nodo.Object, por tanto no hacemos nada
+        //El nodo existe ya en el Mapa, con el mismo Nodo.Object, por tanto no hacemos nada
+        else
+            return false;
+        
+        return true;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
