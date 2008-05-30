@@ -59,6 +59,11 @@ public class SMIndexStructure<T>
         this.index.remove(item);
     }
     
+    public void remove(SMTreeNode<T> node)
+    {
+        index.remove(node.getObject());  
+    }
+    
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.820DE30C-34EB-078E-9DA7-41F217F0EFCD]
