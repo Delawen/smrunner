@@ -22,22 +22,6 @@ public class SMTreeTest {
     public SMTreeTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of setRootObject method, of class SMTree.
      */
@@ -229,72 +213,95 @@ public class SMTreeTest {
      * Test of addObject method, of class SMTree.
      */
     @Test
-    public void addObject() {
-        System.out.println("addObject");
-        T o = null;
-        SMTreeNode<T> where = null;
-        Kinship k = null;
-        SMTree instance = new SMTree();
-        boolean expResult = false;
-        boolean result = instance.addObject(o, where, k);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+    public void addObject() 
+    {
+        Random random = new Random();
+        int r = random.nextInt(50) + 10;
+        SMTreeNode<T> where = new SMTreeNode<T>(new T());
+        SMTree<T> instance = new SMTree<T>(where);
 
-    /**
-     * Test of iterator method, of class SMTree.
-     */
-    @Test
-    public void iterator() {
-        System.out.println("iterator");
-        SMTree instance = new SMTree();
-        IteratorStrategy expResult = null;
-        IteratorStrategy result = instance.iterator();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+        for(int i = 1; i < r; i++)
+        {
+            T o = new T();
 
+            Kinship k;
+            if(random.nextBoolean())
+                k= Kinship.CHILD;
+            else if(random.nextBoolean())
+                k = Kinship.LEFTSIBLING;
+            else
+                k = Kinship.RIGHTSIBLING;
+                
+            
+            assertTrue(instance.addObject(o, where, k));
+            assertNotNull(instance.getMapa().get(o));
+            
+            where = instance.getMapa().get(o);
+        }
+    }
+    
     /**
      * Test of equals method, of class SMTree.
      */
     @Test
     public void equals() {
+        Random random = new Random();
+        
+        int rand = random.nextInt(100) + 50;
+        
         SMTreeNode<T> raiz1 = new SMTreeNode<T>(new T());
         SMTreeNode<T> raiz2 = new SMTreeNode<T>(new T());
-        
         SMTree<T> instance2 = new SMTree<T>(raiz1);
         SMTree<T> instance = new SMTree<T>(raiz2);
-        
-        Random random = new Random();
-        int k = random.nextInt(100);
-        
-        
-        SMTreeNode<T> aux;
-        for(int i = 0; i < k; i++)
+            
+        for(int j = 1; j < rand; j++)
         {
-            aux = new SMTreeNode<T>(new T());
-            instance.addSMTreeNode(aux, raiz1, Kinship.CHILD);
-            instance2.addSMTreeNode(aux, raiz2, Kinship.CHILD);
+            int max = random.nextInt(100) + 10;
+
+            SMTreeNode<T> aux1;
+            SMTreeNode<T> aux2;
+            T t;
+            for(int i = 0; i < max; i++)
+            {
+                Kinship k;
+                if(random.nextBoolean())
+                    k= Kinship.CHILD;
+                else if(random.nextBoolean())
+                    k = Kinship.LEFTSIBLING;
+                else
+                    k = Kinship.RIGHTSIBLING;
+                
+                t = new T();
+                aux1 = new SMTreeNode<T>(t);
+                aux2 = new SMTreeNode<T>(t);
+                instance.addSMTreeNode(aux1, raiz1, k);
+                instance2.addSMTreeNode(aux2, raiz2, k);
+                if(random.nextBoolean())
+                {
+                    raiz1 = aux1;
+                    raiz2 = aux2;
+                }
+            }
+            
+            assertEquals(instance, instance2);
         }
-        
-        assertEquals(instance, instance2);
-        
+
+
         instance2 = new SMTree<T>(raiz1);
         instance = new SMTree<T>(raiz2);
-        
-        k = random.nextInt(100);
-        
-        for(int i = 0; i < k; i++)
+
+        int max = random.nextInt(100);
+
+        SMTreeNode<T> aux;
+        for(int i = 0; i < max; i++)
         {
             aux = new SMTreeNode<T>(new T());
             instance.addSMTreeNode(aux, raiz1, Kinship.CHILD);
             instance2.addSMTreeNode(aux, raiz2, Kinship.RIGHTSIBLING);
         }
-        
+
         assertFalse(instance.equals(instance2));
-        
+
     }
 
     /**
