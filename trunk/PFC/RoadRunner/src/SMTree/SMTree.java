@@ -70,20 +70,42 @@ public class SMTree<T> implements Cloneable{
     // </editor-fold> 
     public boolean addSubSMTree (SMTree subtree, SMTreeNode where, Kinship k) {
         
-        if(where == root && (k == Kinship.LEFTSIBLING || k == Kinship.RIGHTSIBLING ))
-            roadrunner.RoadRunner.debug("Intentando añadirle un hermano a la raiz", ExitLevel.SLEEPandEXIT);
+        if(subtree == null || where == null || k == null)
+            throw new NullPointerException("");
         
+        addSMTreeNode(subtree.getRoot(), where, k);
         
         return true;
     }
 
+    
+    /**
+     * Añade el nodo 'n'y todos sus descendientes en la posición 'k' del nodo 'where'
+     * 
+     */
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.EC682BB2-DE7A-1448-A23F-DC7E2A17D347]
     // </editor-fold> 
     public boolean addSMTreeNode (SMTreeNode n, SMTreeNode where, Kinship k) {
         
-        if(mapa.containsNode(n))
-            roadrunner.RoadRunner.debug("",ExitLevel.SLEEPandEXIT);
+        if(n == null || where == null || k == null)
+            throw new NullPointerException("");
+        
+        if(where == root && (k == Kinship.LEFTSIBLING || k == Kinship.RIGHTSIBLING ))
+        {
+            roadrunner.RoadRunner.debug("Intentando añadirle un hermano a la raiz", ExitLevel.SLEEPandEXIT);
+            return false;
+        }
+        
+        if(n.getObject() == null)
+            roadrunner.RoadRunner.debug("Se esta añadiendo un nodo con contenido vacio al arbol",ExitLevel.SLEEPandCONTINUE);
+        
+        //intentamos añadir el nodo al mapa
+        if(!mapa.add(n))
+        {
+            roadrunner.RoadRunner.debug("El nodo que se intenta añadir ya existe en el arbol",ExitLevel.SLEEPandCONTINUE);
+            return false;
+        }
         
         switch(k)
         {
@@ -106,40 +128,79 @@ public class SMTree<T> implements Cloneable{
                 n.setParent(where);
                 break;
             case RIGHTSIBLING:
+                /**
+                 * Casos:
+                 * 1. No tiene hermano derecho: Cuidado con actualizar el lastchild del padre
+                 * 2. Si tiene hermano derecho
+                 * 
+                 */
                 
+                //Caso 1:
+                if(where.getNext() == null)
+                {
+                    //actualizamos relaciones padre-hijo
+                    n.setParent(where.getParent());
+                    where.getParent().setLastChild(n);
+                    
+                    //relaciones entre 'n' y 'where'
+                    where.setNext(n);
+                    n.setPrevious(where);
+                }
+                //Caso 2:
+                else
+                {
+                    //actualizamos el nuevo nodo
+                    n.setPrevious(where);
+                    n.setNext(where.getNext());
+                    
+                    //actualizamos nodos adyacentes al nuevo
+                    where.getNext().setPrevious(n);
+                    where.setNext(n);
+                    
+                    //le asignamos padre a 'n'         
+                    n.setParent(where.getParent());
+                }
                 
             case LEFTSIBLING:
-        
+                /**
+                 * Casos:
+                 * 1. No tiene hermano izquierdo: ojo con actualizar firstchild del padre
+                 * 2. Si tiene hermano izquierdo
+                 * 
+                 */
+                
+                //Caso 1:
+                if(where.getPrevious() == null)
+                {
+                    //actualizamos relaciones padre-hijo
+                    n.setParent(where.getParent());
+                    where.getParent().setFirstChild(n);
+                    
+                    //relaciones entre 'n' y 'where'
+                    where.setPrevious(n);
+                    n.setNext(where);
+                }
+                //Caso 2:
+                else
+                {
+                    //actualizamos el nuevo nodo
+                    n.setPrevious(where.getPrevious());
+                    n.setNext(where);
+                    
+                    //actualizamos nodos adyacentes al nuevo
+                    where.getPrevious().setNext(n);
+                    where.setPrevious(n);
+                    
+                    //le asignamos padre a 'n'         
+                    n.setParent(where.getParent());
+                }
         }
-        return true;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.F23AC1EB-AD5A-6B5E-F74D-5AE361DE4190]
-    // </editor-fold> 
-    public boolean removeSMTreeNode (SMTreeNode<T> n) 
-    {
-        //Actualizamos las referencias de siguiente y anterior
-        n.getPrevious().setNext(n.getNext());
-        n.getNext().setPrevious(n.getPrevious());
         
-        //Si el nodo es el primer y/o último hijo de un padre, también hay que actualizar esas referencias
-        if(n.getParent().getFirstChild().equals(n))
-            n.getParent().setFirstChild(n.getNext());
-        if(n.getParent().getLastChild().equals(n))
-            n.getParent().setLastChild(n.getPrevious());
+        // Y añadimos todos los nodos los descendientes de 'n'         
         
-        //Si tiene hijos, se eliminan todos sus hijos (¿basta con borrarlos del mapa?)
-        //Por si acaso, hago recursión:
-        SMTreeNode<T> hijo = n.getFirstChild();
-        while(hijo != null)
-        {
-            removeSMTreeNode(hijo);
-            hijo = hijo.getNext();
-        }
         
-        //Eliminamos el nodo del indice
-        this.mapa.remove(hijo.getObject());
+        //TODO: crear un iterador que recorrar el a partir de un nodo(lo considere raiz) todos sus descendientes
+        //TODO mapa.add(todos los hijos)
         
         return true;
     }
@@ -154,6 +215,9 @@ public class SMTree<T> implements Cloneable{
      */
     public boolean removeFastSMTreeNode(SMTreeNode<T> n)
     {
+        
+        if(n == null)
+            throw new NullPointerException("");
         
         /* 
         // Si el nodo a borrar no tiene hijos
@@ -265,6 +329,12 @@ public class SMTree<T> implements Cloneable{
     public boolean substitute (SMTreeNode<T> from, Enclosure inclusionFrom, 
             SMTreeNode<T> to, Enclosure inclusionTo, SMTree<T> tree) 
     {
+        //TODO: ¿permitimos arbol vacio? puede ser interesante...
+        if(from == null || inclusionFrom == null || inclusionTo == null
+                || to == null)
+            throw new NullPointerException("");
+            
+            
         /*
          * La idea es borrar toda la region que va [desde,hasta]
          * ambos extremos inclusive 
