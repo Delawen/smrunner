@@ -280,6 +280,21 @@ public class SMTreeTest {
         }
         
         assertEquals(instance, instance2);
+        
+        instance2 = new SMTree<T>(raiz1);
+        instance = new SMTree<T>(raiz2);
+        
+        k = random.nextInt(100);
+        
+        for(int i = 0; i < k; i++)
+        {
+            aux = new SMTreeNode<T>(new T());
+            instance.addSMTreeNode(aux, raiz1, Kinship.CHILD);
+            instance2.addSMTreeNode(aux, raiz2, Kinship.RIGHTSIBLING);
+        }
+        
+        assertFalse(instance.equals(instance2));
+        
     }
 
     /**
@@ -287,62 +302,34 @@ public class SMTreeTest {
      */
     @Test
     public void getMapa() {
-        System.out.println("getMapa");
-        SMTree instance = new SMTree();
-        SMIndexStructure<T> expResult = null;
-        SMIndexStructure<T> result = instance.getMapa();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //Caso base:
+        SMTreeNode<T> node = new SMTreeNode<T>(new T());
+        SMTree<T> instance = new SMTree<T>(node);
+        SMIndexStructure<T> mapa = new SMIndexStructure<T>(node);
+        assertEquals(mapa, instance.getMapa());
+        
+        //Caso con un hijo:
+        SMTreeNode<T> node2 = new SMTreeNode<T>(new T());
+        instance.addSMTreeNode(node2, node, Kinship.CHILD);
+        mapa.add(node2);
+        assertEquals(mapa, instance.getMapa());
+        
+        //Caso complejo:
+        node2 = new SMTreeNode<T>(new T());
+        instance.addSMTreeNode(node2, node, Kinship.LEFTSIBLING);
+        mapa.add(node2);        
+        node2 = new SMTreeNode<T>(new T());
+        instance.addSMTreeNode(node2, node, Kinship.RIGHTSIBLING);
+        mapa.add(node2);
+        SMTreeNode<T> node3 = new SMTreeNode<T>(new T());
+        instance.addSMTreeNode(node3, node2, Kinship.CHILD);
+        mapa.add(node3);
+        assertEquals(mapa, instance.getMapa());
+        
+        //Caso con removes:
+        instance.removeSMTreeNode(node2);
+        mapa.remove(node2);
+        mapa.remove(node3);
+        assertEquals(mapa, instance.getMapa());
     }
-
-    /**
-     * Test of setMapa method, of class SMTree.
-     */
-    @Test
-    public void setMapa() {
-        System.out.println("setMapa");
-        SMIndexStructure<T> mapa = null;
-        SMTree instance = new SMTree();
-        instance.setMapa(mapa);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
-    class T
-    {
-        private int id;
-        
-        public T()
-        {
-            super();
-            id = Contador.getId();
-        }
-        
-        public int getId()
-        {
-            return id;
-        }
-        
-        public boolean equals(T o)
-        {
-            return (o.getId() == this.id);
-        }
-    }
-    
-    static class Contador
-    {
-        private static int id;
-        
-        private Contador()
-        {
-            id = 0;
-        }
-        
-        static protected int getId()
-        {
-            return id++;
-        }
-    }
-
 }
