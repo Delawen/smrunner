@@ -16,6 +16,8 @@ CORREGIR
 
 30-05-2008
 ==========
+[M 23:59] Pruebas hechas
+[S 23:59] Casi finiquitado SMTree
 [S 17:00] Modificado SMTreeNode.equals: tambien considera referencias
 [S 16:40] Añadido metodo RR.debug()
 
