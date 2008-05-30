@@ -2,6 +2,7 @@ package SMTree;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 
+import java.util.Iterator;
 import roadrunner.RoadRunner.ExitLevel;
 
 // #[regen=yes,id=DCE.BDD5EA36-857A-98F5-E253-BFF7C656B696]
@@ -199,9 +200,15 @@ public class SMTree<T> implements Cloneable{
         
         // Y añadimos todos los nodos los descendientes de 'n'         
         
+       //TODO: recorrer solo el subarbol
+        IteratorStrategy it = new ForwardItemIterator();
         
-        //TODO: crear un iterador que recorrar el a partir de un nodo(lo considere raiz) todos sus descendientes
-        //TODO mapa.add(todos los hijos)
+        it.goTo(n);
+        
+        while(it.hasNext())
+        {
+            mapa.add(it.next());
+        }
         
         return true;
     }
@@ -400,9 +407,7 @@ public class SMTree<T> implements Cloneable{
         //Borramos 'to'
         removeFastSMTreeNode(to);
         
-        addSubSMTree(tree, where, whereKinship);
-   
-        return true;
+        return addSubSMTree(tree, where, whereKinship);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -429,13 +434,47 @@ public class SMTree<T> implements Cloneable{
     // #[regen=yes,id=DCE.D0E849E0-57CC-9D85-CDEF-525A262F1DC8]
     // </editor-fold> 
     public boolean addObject (T o, SMTreeNode where, Kinship k) {
-        return true;
+        
+        if(o == null || where == null || k == null)
+            throw new NullPointerException("");
+        
+        if(mapa.containsObject(o))
+        {
+            roadrunner.RoadRunner.debug("Intentando añadir un objeto al arbol que ya existe", ExitLevel.CONTINUE);
+            return false;
+        }
+        
+        return addSMTreeNode(new SMTreeNode(o), where, k);
     }
 
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.01E67DBC-7BE9-89D2-7807-C5806F837A45]
     // </editor-fold> 
+    
+    public abstract class IteratorStrategy implements Iterator 
+    {
+        // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
+        // #[regen=yes,id=DCE.9CBAB27E-DB77-5A22-806A-6641CA402434]
+        // </editor-fold>  
+        public abstract SMTreeNode next (); 
+ 
+        // <editor-fold defaultstate="collapsed" desc=" UML Marker ">  
+        // #[regen=yes,id=DCE.530847C3-D5FF-A47B-87EC-2ACF19D100C4] 
+        // </editor-fold>  
+        public abstract boolean hasNext (); 
+ 
+        // <editor-fold defaultstate="collapsed" desc=" UML Marker ">  
+        // #[regen=yes,id=DCE.2A4E1EC6-85DC-FB22-85E5-4B55B251D6F5] 
+        // </editor-fold>  
+        public abstract boolean goTo (SMTreeNode Unnamed); 
+
+        private SMTreeNode<T> getRoot() 
+        { 
+            return root;
+        } 
+}
+
     public IteratorStrategy iterator () {
         return null;
     }
@@ -444,9 +483,16 @@ public class SMTree<T> implements Cloneable{
     // #[regen=yes,id=DCE.BE3836CA-6B50-60BB-11D2-D9C2EFA03088]
     // </editor-fold> 
     public IteratorStrategy iterator (String type) {
+        
+        IteratorStrategy it;
+        
+        if(type.equals("FowardItemIterator"))
+                it = new ForwardItemIterator();
+        else
+            throw new NoSuchMethodException("No está implementado un iterador para "+type);
+ 
         return null;
     }
-    
     
     //TODO
     @Override
@@ -461,7 +507,20 @@ public class SMTree<T> implements Cloneable{
     //TODO
     public boolean equals(Object o)
     {
-        return false;
+        IteratorStrategy itThis = new ForwardItemIterator();
+        IteratorStrategy itObject = new ForwardItemIterator();
+        
+        boolean equals = true;
+        SMTreeNode nodeThis;
+        SMTreeNode nodeObject;
+        while(itThis.hasNext() && equals)
+        {
+            nodeThis = itThis.next();
+            nodeObject = itObject.next();
+            equals = nodeObject.equals(nodeObject);  
+        }
+        
+        return equals;
     }
 
     public SMIndexStructure getMapa() {
