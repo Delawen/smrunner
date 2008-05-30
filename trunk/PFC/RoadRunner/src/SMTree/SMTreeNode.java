@@ -179,7 +179,12 @@ public class SMTreeNode<T> implements Cloneable{
         if(!(o instanceof SMTreeNode))
             return false;
         SMTreeNode node = (SMTreeNode)o;
-        if(!node.getObject().equals(this.getObject()))
+        if(!node.getObject().equals(this.getObject())
+                || node.firstChild != this.firstChild
+                || node.lastChild != this.lastChild
+                || node.next != this.next
+                || node.previous != this.previous
+                || node.parent != this.parent)
             return false;
         return true;
     }
