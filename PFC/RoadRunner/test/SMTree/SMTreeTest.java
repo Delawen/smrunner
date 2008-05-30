@@ -143,7 +143,7 @@ public class SMTreeTest {
         for(int i = 0; i < 4; i++)
             instance.addSMTreeNode(new SMTreeNode<T>(new T()), raiz, Kinship.CHILD);
         
-        if(!instance.removeSMTreeNode(n))
+        if(!instance.removeFastSMTreeNode(n))
             fail("removeSMTreeNode devolvió false.");
         
         SMTreeNode<T> aux = raiz.getFirstChild();
@@ -162,7 +162,7 @@ public class SMTreeTest {
         SMTree<T> n = new SMTree<T>(new SMTreeNode<T>(new T()));
         SMTree instance = new SMTree(from);
         instance.addSMTreeNode(from, to, Kinship.RIGHTSIBLING);
-        if(!instance.substitute(from, to, n))
+        if(!instance.substitute(from, Enclosure.NOT_ENCLOSED, to, Enclosure.ENCLOSED.NOT_ENCLOSED, n))
             fail("addSMTreeNode devolvió false.");
         fail("¿Parentesis o Corchetes?");
     }
@@ -179,7 +179,7 @@ public class SMTreeTest {
         SMTreeNode<T> frum = new SMTreeNode<T>(from);
         SMTree<T> instance = new SMTree<T>(frum);
         instance.addObject(to, frum, Kinship.RIGHTSIBLING);
-        if(!instance.substituteObject(from, to, by))
+        if(!instance.substituteObject(from, Enclosure.NOT_ENCLOSED, to, Enclosure.NOT_ENCLOSED, by))
             fail("el substituteObject devolvió false.");
         fail("¿Parentesis o Corchetes?");
     }
@@ -334,7 +334,7 @@ public class SMTreeTest {
         assertEquals(mapa, instance.getMapa());
         
         //Caso con removes:
-        instance.removeSMTreeNode(node2);
+        instance.removeFastSMTreeNode(node2);
         mapa.remove(node2);
         mapa.remove(node3);
         assertEquals(mapa, instance.getMapa());

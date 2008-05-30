@@ -31,7 +31,6 @@ public class SMTreeNodeTest {
         SMTreeNode<T> expResult = new SMTreeNode<T>(new T());
         instance.setNext(expResult);
         assertEquals(instance.getNext(), expResult);
-        assertEquals(expResult.getPrevious(), instance);
     }
 
 
@@ -45,8 +44,6 @@ public class SMTreeNodeTest {
         SMTreeNode<T> expResult = new SMTreeNode<T>(new T());
         instance.setParent(expResult);
         assertEquals(expResult, instance.getParent());
-        assertEquals(expResult.getFirstChild(), instance);
-        assertEquals(expResult.getLastChild(), instance);
     }
 
     /**
@@ -58,7 +55,6 @@ public class SMTreeNodeTest {
         SMTreeNode<T> expResult = new SMTreeNode<T>(new T());
         instance.setPrevious(expResult);
         assertEquals(instance.getPrevious(), expResult);
-        assertEquals(expResult.getNext(), instance);
     }
 
     /**
