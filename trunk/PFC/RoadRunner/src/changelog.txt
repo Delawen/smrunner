@@ -3,12 +3,12 @@ DUDAS
 
 CORREGIR
 ========
-* SMTreeNode.Equals()
+* Iteradores utilizados sn SMTree
 
 TODO
 ====
-
 * Smtree.clone
+
 
 30-05-2008
 ==========
