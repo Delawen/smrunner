@@ -161,12 +161,8 @@ public class SMTreeNode<T> implements Cloneable{
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = 2;
         hash = 13 * hash + (this.parent != null ? this.parent.hashCode() : 0);
-        hash = 13 * hash + (this.next != null ? this.next.hashCode() : 0);
-        hash = 13 * hash + (this.previous != null ? this.previous.hashCode() : 0);
-        hash = 13 * hash + (this.firstChild != null ? this.firstChild.hashCode() : 0);
-        hash = 13 * hash + (this.lastChild != null ? this.lastChild.hashCode() : 0);
         hash = 13 * hash + (this.object != null ? this.object.hashCode() : 0);
         return hash;
     }
