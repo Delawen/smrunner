@@ -40,19 +40,17 @@ public class SMIndexStructure<T>
     // </editor-fold> 
     public boolean add (SMTreeNode<T> n)
     {
-        if(index == null)
+        if(index == null || n == null)
             throw new NullPointerException("");
-        else if (n == null)
-            throw new NullPointerException("Añadiendo un nodo nullo al Map");  
           
         // Si el nodo (valor) no esta contenido:
         if(!index.containsValue(n))
             index.put(n.getObject(), n);
         // Si el nodo (valor) ya existe en el Map, pero con Nodo.Object distinto
-        else if( index.get(n.getObject()) != n.getObject() )
+        else if( index.get(n.getObject()) != n)
         {
             RoadRunner.debug("SMIndexStructure.Add: El nodo que quiero insertar [n:"+n+",o:"+n.getObject()+"] en el Map ya existe y" +
-                    " [n:"+index.get(n)+",o:"+index.get(n.getObject())+"]tiene un valor distinto del que quiero insertar",RoadRunner.ExitLevel.CONTINUE);
+                    " [n:"+n+",o:"+index.get(n.getObject())+"]tiene un valor distinto del que quiero insertar",RoadRunner.ExitLevel.CONTINUE);
             return false;
         }
         //El nodo existe ya en el Mapa, con el mismo Nodo.Object, por tanto no hacemos nada
