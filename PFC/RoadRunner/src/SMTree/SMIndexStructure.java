@@ -50,7 +50,7 @@ public class SMIndexStructure<T>
         else if( index.get(n.getObject()) != n.getObject() )
         {
             RoadRunner.debug("SMIndexStructure.Add: El nodo que quiero insertar [n:"+n+",o:"+n.getObject()+"] en el Map ya existe y" +
-                    " [n:"+index.get(n)+",o:"+index.get(n).getObject()+"]tiene un valor distinto del que quiero insertar",RoadRunner.ExitLevel.CONTINUE);
+                    " [n:"+index.get(n)+",o:"+index.get(n.getObject())+"]tiene un valor distinto del que quiero insertar",RoadRunner.ExitLevel.CONTINUE);
             return false;
         }
         //El nodo existe ya en el Mapa, con el mismo Nodo.Object, por tanto no hacemos nada
