@@ -334,27 +334,34 @@ public class SMTreeTest {
         
         System.out.println("addObject()");
         Random random = new Random();
-        int r = random.nextInt(50) + 10;
-        SMTreeNode<T> where = new SMTreeNode<T>(new T());
-        SMTree<T> instance = new SMTree<T>(where);
-
-        for(int i = 1; i < r; i++)
+        int rand = random.nextInt(100) + 20;
+        for(int j = 0; j < rand; j++)
         {
-            T o = new T();
+            SMTreeNode<T> where = new SMTreeNode<T>(new T());
+            SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
+            SMTree<T> instance = new SMTree<T>(raiz);
+            instance.addSMTreeNode(where, raiz, Kinship.CHILD);
 
-            Kinship k;
-            if(random.nextBoolean())
-                k= Kinship.CHILD;
-            else if(random.nextBoolean())
-                k = Kinship.LEFTSIBLING;
-            else
-                k = Kinship.RIGHTSIBLING;
-                
-            
-            assertTrue(instance.addObject(o, where, k));
-            assertNotNull(instance.getMapa().get(o));
-            
-            where = instance.getMapa().get(o);
+            int r = random.nextInt(100)+20;
+            for(int i = 1; i < r; i++)
+            {
+                T o = new T();
+
+                Kinship k;
+                if(random.nextBoolean())
+                    k= Kinship.CHILD;
+                else if(random.nextBoolean())
+                    k = Kinship.LEFTSIBLING;
+                else
+                    k = Kinship.RIGHTSIBLING;
+
+
+                assertTrue(instance.addObject(o, where, k));
+                assertNotNull(instance.getMapa().get(o));
+
+                if(random.nextBoolean())
+                    where = instance.getMapa().get(o);
+            }
         }
     }
     
