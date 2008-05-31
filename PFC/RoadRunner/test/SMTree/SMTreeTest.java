@@ -22,6 +22,7 @@ public class SMTreeTest {
      */
     @Test
     public void setRootObject() {
+        System.out.println("setRootObject()");
         T o = new T();
         SMTree<T> instance = new SMTree<T>();
         instance.setRootObject(o);
@@ -34,6 +35,7 @@ public class SMTreeTest {
     @Test
     public void getRoot() 
     {
+        System.out.println("getRootObject()");
         SMTreeNode<T> expResult = new SMTreeNode<T>(new T());
         SMTree<T> instance = new SMTree<T>(expResult);
         SMTreeNode<T> result = instance.getRoot();
@@ -45,6 +47,7 @@ public class SMTreeTest {
      */
     @Test
     public void setRoot() {
+        System.out.println("setRoot()");
         SMTreeNode<T> val = new SMTreeNode<T>(new T());
         SMTree<T> instance = new SMTree<T>();
         instance.setRoot(val);
@@ -57,6 +60,7 @@ public class SMTreeTest {
     @Test
     public void addSubSMTree_left() {
                 
+        System.out.println("addSubSMTree_left()");
         SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
         SMTree<T> instance = new SMTree<T>(raiz);
         
@@ -74,6 +78,7 @@ public class SMTreeTest {
    @Test
     public void addSubSMTree_right() {
         
+        System.out.println("addSubSMTree_right()");
         SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
         SMTree<T> instance = new SMTree<T>(raiz);
         
@@ -91,6 +96,8 @@ public class SMTreeTest {
    
    @Test
     public void addSubSMTree_child() {
+       
+        System.out.println("addSubSMTree_child()");
         SMTree<T> subtree = new SMTree<T>(new SMTreeNode<T>(new T()));
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
         Kinship k = Kinship.CHILD;
@@ -105,6 +112,8 @@ public class SMTreeTest {
      */
     @Test
     public void addSMTreeNode_left() {
+        
+        System.out.println("addSMTreeNode_left()");
         SMTreeNode<T> padre = new SMTreeNode<T>(new T());
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
         
@@ -120,6 +129,7 @@ public class SMTreeTest {
    
     @Test
     public void addSMTreeNode_right() {
+        System.out.println("addSMTreeNode_right()");
         SMTreeNode<T> n = new SMTreeNode<T>(new T());
         
         SMTreeNode<T> padre = new SMTreeNode<T>(new T());
@@ -136,6 +146,8 @@ public class SMTreeTest {
     
     @Test
     public void addSMTreeNode_child() {
+        
+        System.out.println("addSMTreeNode_child()");
         SMTreeNode<T> n = new SMTreeNode<T>(new T());
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
         Kinship k = Kinship.CHILD;
@@ -151,6 +163,8 @@ public class SMTreeTest {
     @Test
     public void removeSMTreeNode() 
     {
+        
+        System.out.println("removeSMTreeNode()");
         SMTreeNode<T> n = new SMTreeNode<T>(new T());
         SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
         SMTree<T> instance = new SMTree<T>(raiz);
@@ -166,8 +180,12 @@ public class SMTreeTest {
             fail("removeSMTreeNode devolvió false.");
         
         SMTreeNode<T> aux = raiz.getFirstChild();
-        while(aux.getNext() != null)
+        
+        while(aux != null)
+        {
             assertNotSame(n, aux);
+            aux = aux.getNext();
+        }
     }
 
     /**
@@ -176,6 +194,7 @@ public class SMTreeTest {
     @Test
     public void substitute() 
     {
+        System.out.println("substitute()");
         Random random = new Random();
         
         int num_pruebas = random.nextInt(100) + 20;
@@ -227,6 +246,8 @@ public class SMTreeTest {
      */
     @Test
     public void substituteObject() {
+        
+        System.out.println("substituteObject()");
         Random random = new Random();
         
         int num_pruebas = random.nextInt(100) + 20;
@@ -278,6 +299,8 @@ public class SMTreeTest {
      */
     @Test
     public void removeObject() {
+        
+        System.out.println("removeObject()");
         T object = new T();
         SMTreeNode<T> n = new SMTreeNode<T>(object);
         SMTreeNode<T> raiz = new SMTreeNode<T>(new T());
@@ -294,8 +317,12 @@ public class SMTreeTest {
             fail("removeSMTreeNode devolvió false.");
         
         SMTreeNode<T> aux = raiz.getFirstChild();
-        while(aux.getNext() != null)
+        
+        while(aux != null)
+        {
             assertNotSame(object, aux.getObject());
+            aux = aux.getNext();
+        }
     }
 
     /**
@@ -304,6 +331,8 @@ public class SMTreeTest {
     @Test
     public void addObject() 
     {
+        
+        System.out.println("addObject()");
         Random random = new Random();
         int r = random.nextInt(50) + 10;
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
@@ -334,6 +363,8 @@ public class SMTreeTest {
      */
     @Test
     public void equals() {
+        
+        System.out.println("equals()");
         Random random = new Random();
         
         int rand = random.nextInt(100) + 50;
@@ -345,6 +376,7 @@ public class SMTreeTest {
             
         for(int j = 1; j < rand; j++)
         {
+            System.out.println(j);
             int max = random.nextInt(100) + 10;
 
             SMTreeNode<T> aux1;
