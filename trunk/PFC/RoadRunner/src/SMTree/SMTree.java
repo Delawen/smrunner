@@ -6,6 +6,7 @@ import java.util.Iterator;
 import roadrunner.RoadRunner.ExitLevel;
 
 // #[regen=yes,id=DCE.BDD5EA36-857A-98F5-E253-BFF7C656B696]
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 // </editor-fold> 
 public class SMTree<T> implements Cloneable{
 
@@ -123,6 +124,8 @@ public class SMTree<T> implements Cloneable{
                 //si tiene hijos lo añadimos al final
                 else
                 {
+                    where.getLastChild().setNext(n);
+                    n.setPrevious(where.getLastChild());
                     where.setLastChild(n);
                 }
                 
@@ -130,6 +133,8 @@ public class SMTree<T> implements Cloneable{
                 n.setParent(where);
                 break;
             case RIGHTSIBLING:
+                //where sera el hermano izquierdo de 'n'
+                
                 /**
                  * Casos:
                  * 1. No tiene hermano derecho: Cuidado con actualizar el lastchild del padre
@@ -162,8 +167,9 @@ public class SMTree<T> implements Cloneable{
                     //le asignamos padre a 'n'         
                     n.setParent(where.getParent());
                 }
-                
+                break;   
             case LEFTSIBLING:
+                //where sera el hermano derecho de 'n'
                 /**
                  * Casos:
                  * 1. No tiene hermano izquierdo: ojo con actualizar firstchild del padre
@@ -196,21 +202,24 @@ public class SMTree<T> implements Cloneable{
                     //le asignamos padre a 'n'         
                     n.setParent(where.getParent());
                 }
+                break;
         }
         
         // Y añadimos todos los nodos los descendientes de 'n'         
         
        //TODO: recorrer solo el subarbol
-        IteratorStrategy it = new ForwardItemIterator();
+        ForwardItemIterator it = new ForwardItemIterator(n);
         
-        it.goTo(n);
+        //it.goTo(n);
         
-        while(it.hasNext())
+        boolean success = true;
+        
+        while(it.hasNext() && success)
         {
-            mapa.add(it.next());
+            success = mapa.add(it.next());
         }
         
-        return true;
+        return success;
     }
     
     
@@ -476,7 +485,8 @@ public class SMTree<T> implements Cloneable{
 }
 
     public IteratorStrategy iterator () {
-        return new Iterator("FowardItemIterator");
+        //return new Iterator("FowardItemIterator");
+        return null;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -487,9 +497,9 @@ public class SMTree<T> implements Cloneable{
         IteratorStrategy it;
         
         if(type.equals("FowardItemIterator"))
-                it = new ForwardItemIterator();
+                it = null;//new ForwardItemIterator();
         else
-            throw new NoSuchMethodException("No está implementado un iterador para "+type);
+            throw new UnsupportedOperationException("No está implementado un iterador para "+type);
  
         return it;
     }
@@ -505,20 +515,24 @@ public class SMTree<T> implements Cloneable{
     
     
     //TODO
+    @Override
     public boolean equals(Object o)
     {
-        IteratorStrategy itThis = new ForwardItemIterator();
-        IteratorStrategy itObject = new ForwardItemIterator();
-        
-        boolean equals = true;
+        ForwardItemIterator itThis = new ForwardItemIterator( ((SMTree) o).getRoot());
+        ForwardItemIterator itObject = new ForwardItemIterator( ((SMTree) o).getRoot());
         SMTreeNode nodeThis;
         SMTreeNode nodeObject;
+        boolean equals = true;
+        
         while(itThis.hasNext() && equals)
         {
             nodeThis = itThis.next();
             nodeObject = itObject.next();
             equals = nodeObject.equals(nodeObject);  
         }
+        
+        if(itThis.hasNext() || itObject.hasNext())
+            equals = false;
         
         return equals;
     }

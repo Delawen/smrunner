@@ -9,11 +9,12 @@ import java.util.Stack;
 public abstract class WrapperIterator<T> implements IteratorStrategy<T>
 {
 
-    private Stack<SMTreeNode<T>> array;
+    protected Stack<SMTreeNode<T>> array;
         
     public WrapperIterator(SMTreeNode<T> nodoInicial)
     {
         super();
+        array = new Stack<SMTreeNode<T>>();
         inicializarArray(nodoInicial);
     }
     
