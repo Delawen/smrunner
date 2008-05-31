@@ -9,10 +9,7 @@ import java.util.List;
 import java.util.Stack;
 // </editor-fold> 
 public class ForwardItemIterator<T> extends WrapperIterator<T> 
-{
-    private Stack<SMTreeNode<T>> array;
-
-    
+{ 
     public ForwardItemIterator(SMTreeNode<T> nodoInicial)
     {
         super(nodoInicial);
@@ -21,8 +18,8 @@ public class ForwardItemIterator<T> extends WrapperIterator<T>
 
     void inicializarArray(SMTreeNode<T> nodoInicial) 
     {
-        this.array = new Stack<SMTreeNode<T>>();
-        this.array.add(nodoInicial);
+        array.clear();
+        array.add(nodoInicial);
         recorrerHermanos(nodoInicial.getFirstChild());
     }
 
@@ -30,7 +27,7 @@ public class ForwardItemIterator<T> extends WrapperIterator<T>
     {
         while(node != null)
         {
-            this.array.add(node);
+            array.add(node);
             recorrerHermanos(node.getFirstChild());
             node = node.getNext();
         }
