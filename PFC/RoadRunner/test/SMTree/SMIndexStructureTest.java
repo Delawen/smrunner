@@ -19,7 +19,9 @@ import static org.junit.Assert.*;
  */
 public class SMIndexStructureTest {
 
-    public SMIndexStructureTest() {
+    public SMIndexStructureTest() 
+    {
+        System.out.println("SMIndexStructureTest");
     }
 
     /**
@@ -27,6 +29,7 @@ public class SMIndexStructureTest {
      */
     @Test
     public void addAndGet() {
+        System.out.println("addAndGet()");
         T t = new T();
         SMTreeNode<T> n = new SMTreeNode<T>(t);
         SMIndexStructure<T> instance = new SMIndexStructure<T>();
@@ -60,6 +63,7 @@ public class SMIndexStructureTest {
     @Test
     public void remove() 
     {
+        System.out.println("remove()");
         T t = new T();
         SMIndexStructure<T> instance = new SMIndexStructure<T>();
         
@@ -71,7 +75,7 @@ public class SMIndexStructureTest {
             int k = r.nextInt(100);
             for(int i = 1; i < k; i++)
             {
-                SMTreeNode<T> node = new SMTreeNode<T>(new T());
+                 SMTreeNode<T> node = new SMTreeNode<T>(new T());
                  instance.add(node);
             }
 

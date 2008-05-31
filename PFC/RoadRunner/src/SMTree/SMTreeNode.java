@@ -119,20 +119,12 @@ public class SMTreeNode<T> implements Cloneable{
     
 
     //Clonación de Nodos:
+    @Override
     public SMTreeNode clone() throws CloneNotSupportedException
     {
         
         SMTreeNode clon = (SMTreeNode)super.clone();
         clon.setObject(getClone(clon.getObject()));
-        /*
-         * No podemos clonar las referencias porque entonces entraríamos
-         * en un bucle infinito:
-        clon.setFirstChild((SMTreeNode)getClone(clon.getFirstChild()));
-        clon.setLastChild((SMTreeNode)getClone(clon.getLastChild()));
-        clon.setParent((SMTreeNode)getClone(clon.getParent()));
-        clon.setNext((SMTreeNode)getClone(this.getNext()));
-        clon.setPrevious((SMTreeNode)getClone(this.getPrevious()));
-         */
         return clon;
     }
     
@@ -174,6 +166,7 @@ public class SMTreeNode<T> implements Cloneable{
     {
         if(!(o instanceof SMTreeNode))
             return false;
+        
         SMTreeNode node = (SMTreeNode)o;
         if(!node.getObject().equals(this.getObject())
                 || node.firstChild != this.firstChild

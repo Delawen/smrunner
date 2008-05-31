@@ -210,20 +210,20 @@ public class SMTree<T> implements Cloneable{
         
         // Y añadimos todos los nodos los descendientes de 'n'         
         
-       //TODO: recorrer solo el subarbol
-        ForwardItemIterator it = new ForwardItemIterator(n);
-        
-        //it.goTo(n);
-        
-        boolean success = true;
-        
-        while(it.hasNext() && success)
-        {
-            success = mapa.add(it.next());
+           //TODO: recorrer solo el subarbol
+            ForwardItemIterator it = new ForwardItemIterator(n);
+
+            //it.goTo(n);
+
+            boolean success = true;
+
+            while(it.hasNext() && success)
+            {
+                success = mapa.add(it.next());
+            }
+
+            return success;
         }
-        
-        return success;
-    }
     
     
     /**
@@ -521,23 +521,28 @@ public class SMTree<T> implements Cloneable{
     @Override
     public boolean equals(Object o)
     {
-        ForwardItemIterator itThis = new ForwardItemIterator( ((SMTree) o).getRoot());
-        ForwardItemIterator itObject = new ForwardItemIterator( ((SMTree) o).getRoot());
-        SMTreeNode nodeThis;
-        SMTreeNode nodeObject;
-        boolean equals = true;
+        if(!(o instanceof SMTree))
+            return false;
         
-        while(itThis.hasNext() && equals)
-        {
-            nodeThis = itThis.next();
-            nodeObject = itObject.next();
-            equals = nodeObject.equals(nodeObject);  
-        }
+        ForwardItemIterator<T> itThis = new ForwardItemIterator(this.getRoot());
+        ForwardItemIterator<T> itObject = new ForwardItemIterator( ((SMTree<T>) o).getRoot());
+        
+        while(itThis.hasNext() && itObject.hasNext())
+            if(! itThis.next().equals(itObject.next()))
+                return false;
         
         if(itThis.hasNext() || itObject.hasNext())
-            equals = false;
+            return false;
         
-        return equals;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + (this.root != null ? this.root.hashCode() : 0);
+        hash = 79 * hash + (this.mapa != null ? this.mapa.hashCode() : 0);
+        return hash;
     }
 
     public SMIndexStructure getMapa() {
