@@ -42,6 +42,8 @@ public class SMIndexStructure<T>
     {
         if(index == null)
             throw new NullPointerException("");
+        else if (n == null)
+            throw new NullPointerException("Añadiendo un nodo nullo al Map");  
           
         // Si el nodo (valor) no esta contenido:
         if(!index.containsValue(n))
