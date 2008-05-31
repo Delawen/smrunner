@@ -19,6 +19,21 @@ package SMTree;
             id = Contador.getId();
         }
         
+        private T(int id)
+        {
+            this();
+            this.id = id;
+        }
+        
+        
+    @Override
+        public T clone()
+        {
+            T t = new T(this.getId());
+            
+            return t;
+        }
+        
         public int getId()
         {
             return id;
