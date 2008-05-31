@@ -476,7 +476,7 @@ public class SMTree<T> implements Cloneable{
 }
 
     public IteratorStrategy iterator () {
-        return null;
+        return new Iterator("FowardItemIterator");
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -491,7 +491,7 @@ public class SMTree<T> implements Cloneable{
         else
             throw new NoSuchMethodException("No está implementado un iterador para "+type);
  
-        return null;
+        return it;
     }
     
     //TODO
