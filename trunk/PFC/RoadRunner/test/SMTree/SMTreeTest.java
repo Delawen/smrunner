@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 public class SMTreeTest {
 
     public SMTreeTest() {
+        System.out.println("SMTreeTest");
     }
 
     /**
@@ -233,8 +234,8 @@ public class SMTreeTest {
             if(!instance.substitute(from, Enclosure.NOT_ENCLOSED, to, Enclosure.ENCLOSED.NOT_ENCLOSED, n))
                 fail("addSMTreeNode devolvió false.");
             
-            assertEquals(from.getNext(), n);
-            assertEquals(to.getPrevious(), n);
+            assertEquals(from.getNext(), n.getRoot());
+            assertEquals(to.getPrevious(), n.getRoot());
             assertEquals(n.getRoot().getParent(), raiz);
             
         }
@@ -284,12 +285,12 @@ public class SMTreeTest {
                 aux = new SMTreeNode<T>(new T());
             }
 
-            if(!instance.substituteObject(from, Enclosure.NOT_ENCLOSED, to, Enclosure.ENCLOSED.NOT_ENCLOSED, n))
+            if(!instance.substituteObject(from, Enclosure.NOT_ENCLOSED, to, Enclosure.ENCLOSED.NOT_ENCLOSED, what))
                 fail("addSMTreeNode devolvió false.");
             
-            assertEquals(instance.getMapa().get(from).getNext(), n);
-            assertEquals(instance.getMapa().get(to).getPrevious(), n);
-            assertEquals(n.getRoot().getParent(), raiz);
+            assertEquals(instance.getMapa().get(from).getNext().getObject(), what);
+            assertEquals(instance.getMapa().get(to).getPrevious().getObject(), what);
+            assertEquals(instance.getMapa().get(what).getParent(), raiz);
             
         }
     }
@@ -410,7 +411,6 @@ public class SMTreeTest {
                     raiz2 = aux2;
                 }
             }
-            
             assertEquals(instance, instance2);
         }
 

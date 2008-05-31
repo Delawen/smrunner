@@ -54,10 +54,8 @@ public class SMIndexStructure<T>
             return false;
         }
         //El nodo existe ya en el Mapa, con el mismo Nodo.Object, por tanto no hacemos nada
-        else
-            return false;
-        
         return true;
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -67,6 +65,8 @@ public class SMIndexStructure<T>
     {
         if(this.index == null)
             throw new NullPointerException("El indice del arbol es nulo");
+        
+        index.remove(item);
         
     }
     
