@@ -392,40 +392,4 @@ public class SMTreeTest {
         assertFalse(instance.equals(instance2));
 
     }
-
-    /**
-     * Test of getMapa method, of class SMTree.
-     */
-    @Test
-    public void getMapa() {
-        //Caso base:
-        SMTreeNode<T> node = new SMTreeNode<T>(new T());
-        SMTree<T> instance = new SMTree<T>(node);
-        SMIndexStructure<T> mapa = new SMIndexStructure<T>(node);
-        assertEquals(mapa, instance.getMapa());
-        
-        //Caso con un hijo:
-        SMTreeNode<T> node2 = new SMTreeNode<T>(new T());
-        instance.addSMTreeNode(node2, node, Kinship.CHILD);
-        mapa.add(node2);
-        assertEquals(mapa, instance.getMapa());
-        
-        //Caso complejo:
-        node2 = new SMTreeNode<T>(new T());
-        instance.addSMTreeNode(node2, node, Kinship.LEFTSIBLING);
-        mapa.add(node2);        
-        node2 = new SMTreeNode<T>(new T());
-        instance.addSMTreeNode(node2, node, Kinship.RIGHTSIBLING);
-        mapa.add(node2);
-        SMTreeNode<T> node3 = new SMTreeNode<T>(new T());
-        instance.addSMTreeNode(node3, node2, Kinship.CHILD);
-        mapa.add(node3);
-        assertEquals(mapa, instance.getMapa());
-        
-        //Caso con removes:
-        instance.removeFastSMTreeNode(node2);
-        mapa.remove(node2);
-        mapa.remove(node3);
-        assertEquals(mapa, instance.getMapa());
-    }
 }
