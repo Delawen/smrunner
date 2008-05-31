@@ -544,5 +544,11 @@ public class SMTree<T> implements Cloneable{
     public void setMapa(SMIndexStructure mapa) {
         this.mapa = mapa;
     }
+    
+    public String toString() {
+        
+        return null;
+        
+    }
 
 }
