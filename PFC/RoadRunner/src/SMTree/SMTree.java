@@ -62,6 +62,9 @@ public class SMTree<T> implements Cloneable{
     // #[regen=yes,regenBody=yes,id=DCE.0F12C6C0-0E3C-D31C-8C24-A027D7896501]
     // </editor-fold> 
     public void setRoot (SMTreeNode val) {
+        if(val ==null)
+            throw new NullPointerException("El valor que se intentó introducir como raiz es nulo.");
+        
         if(root != null)
             mapa.remove(root.getObject());
         this.root = val;
