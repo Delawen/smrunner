@@ -135,7 +135,7 @@ public class RoadRunner {
                 try{ Thread.sleep(5);} catch (Exception ex) {}
                 break;
             case SLEEPandEXIT:
-                System.err.println("Error & sleen and exit: "+ message);
+                System.err.println("Error & sleep and exit: "+ message);
                 try{ Thread.sleep(5);} catch (Exception ex) {}
                 System.exit(-1);
                 break;
