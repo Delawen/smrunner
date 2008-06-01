@@ -5,6 +5,8 @@
 
 package SMTree;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -430,5 +432,134 @@ public class SMTreeTest {
 
         assertFalse(instance.equals(instance2));
 
+    }
+    
+    @Test
+    public void testComplejo()
+    {
+        System.out.println("testComplejo()");
+        System.out.println(">>Creación de un árbol simple");
+
+        Random r = new Random();
+        int vueltas = r.nextInt(100) + 20;
+
+        SMTree<T> arbol = new SMTree<T>(new SMTreeNode<T>(new T()));
+
+        SMTreeNode<T> nodo1 = new SMTreeNode<T>(new T());
+        SMTreeNode<T> nodo2 = new SMTreeNode<T>(new T());
+        SMTreeNode<T> nodo3 = new SMTreeNode<T>(new T());
+        SMTreeNode<T> nodo4 = new SMTreeNode<T>(new T());
+        SMTreeNode<T> nodo5 = new SMTreeNode<T>(new T());
+
+        arbol.addSMTreeNode(nodo1, arbol.getRoot(), Kinship.CHILD);
+        arbol.addSMTreeNode(nodo2, arbol.getRoot(), Kinship.CHILD);
+        arbol.addSMTreeNode(nodo3, arbol.getRoot(), Kinship.CHILD);
+        arbol.addSMTreeNode(nodo4, arbol.getRoot(), Kinship.CHILD);
+        arbol.addSMTreeNode(nodo5, arbol.getRoot(), Kinship.CHILD);
+
+        SMTreeNode<T> aux = nodo1;
+
+        while (aux != null) {
+            if (aux.getParent() != arbol.getRoot()) {
+                fail("El padre del hijo de la raíz debería ser la raíz.");
+            }
+            aux = aux.getNext();
+        }
+        aux = nodo1;
+
+        System.out.println(">>Generando un árbol complejo");
+        for (int i = 0; i < vueltas; i++) {
+            SMTreeNode<T> aux2 = new SMTreeNode<T>(new T());
+            Kinship k;
+            if (r.nextBoolean()) {
+                k = Kinship.CHILD;
+            } else if (r.nextBoolean()) {
+                k = Kinship.LEFTSIBLING;
+            } else {
+                k = Kinship.RIGHTSIBLING;
+            }
+            arbol.addSMTreeNode(aux2, aux, k);
+
+            //Actualizamos aleatoriamente los nodoX
+            switch (r.nextInt(8)) {
+                case 0:
+                    nodo1 = aux2;
+                    break;
+                case 2:
+                    nodo3 = aux2;
+                    break;
+                case 4:
+                    nodo5 = aux2;
+                    break;
+                default:
+                    break;
+            }
+
+            //Actualizamos aleatoriamente el aux:
+            switch (r.nextInt(7)) {
+                case 0:
+                    aux = nodo1;
+                    break;
+                case 1:
+                    aux = nodo2;
+                    break;
+                case 2:
+                    aux = nodo3;
+                    break;
+                case 3:
+                    aux = nodo4;
+                    break;
+                case 4:
+                    aux = nodo5;
+                    break;
+                default:
+                    break;
+            }
+        }
+        SMTree<T> clon = null;
+        try{
+            clon = arbol.clone();
+            if(!clon.equals(arbol))
+                fail("O el clon o el equals no funcionan");
+        } catch (CloneNotSupportedException ex) 
+        {
+            Logger.getLogger(SMTreeTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("No permitía la clonación :/");
+        }
+
+     System.out.println(">>Sustituciones:");
+     System.out.println(">>>>Sustitucion de Arbol");
+     
+     SMTree<T> sustitucion = new SMTree<T>(new SMTreeNode<T>(new T()));
+     sustitucion.addObject(new T(), sustitucion.getRoot(), Kinship.CHILD);
+     
+     arbol.substitute(nodo2, Enclosure.NOT_ENCLOSED, nodo4, Enclosure.NOT_ENCLOSED, sustitucion);
+     assertNotNull(arbol.getMapa().get(nodo2.getObject()));
+     assertNotNull(arbol.getMapa().get(nodo4.getObject()));
+     assertNotNull(arbol.getMapa().get(sustitucion.getRoot().getObject()));
+     assertNotNull(arbol.getMapa().get(sustitucion.getRoot().getFirstChild().getObject()));
+     
+     System.out.println(">>>>Sustitucion de Objeto");
+     
+     T t = new T();
+     
+     arbol.substituteObject(nodo2.getObject(), Enclosure.ENCLOSED, nodo4.getObject(), Enclosure.ENCLOSED, t);
+     assertNull(arbol.getMapa().get(nodo2.getObject()));
+     assertNull(arbol.getMapa().get(nodo4.getObject()));
+     assertNotNull(arbol.getMapa().get(t));
+     assertTrue(arbol.getMapa().get(t).getParent().equals(arbol.getRoot()));
+     
+     System.out.println(">>Eliminaciones");
+     System.out.println(">>>>Eliminacion de Arboles");
+     arbol.removeFastSMTreeNode(arbol.getMapa().get(t));
+     assertNull(arbol.getMapa().get(t));
+     nodo2 = clon.getRoot().getFirstChild().getNext();
+     clon.removeFastSMTreeNode(nodo2);
+     assertNull(arbol.getMapa().get(nodo2.getObject()));
+     
+     System.out.println(">>>>Eliminación de Objetos");
+     nodo4 = clon.getRoot().getLastChild();
+     clon.removeObject(nodo4.getObject());
+     assertNull(arbol.getMapa().get(nodo4.getObject()));
     }
 }
