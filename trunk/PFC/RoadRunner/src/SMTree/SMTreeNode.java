@@ -177,5 +177,11 @@ public class SMTreeNode<T> implements Cloneable{
             return false;
         return true;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "[Node: " + this.getObject().toString() + "]";
+    }
 }
 
