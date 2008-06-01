@@ -25,6 +25,12 @@ package SMTree;
             this.id = id;
         }
         
+    @Override
+        public String toString()
+        {
+            return "{" + this.id + "}";
+        }
+        
         
     @Override
         public T clone()
