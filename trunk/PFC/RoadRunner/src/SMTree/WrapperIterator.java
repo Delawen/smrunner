@@ -1,21 +1,18 @@
 package SMTree;
 
+import java.util.AbstractList;
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-import java.util.Iterator;
-// #[regen=yes,id=DCE.566CA952-367C-1D55-D669-947718A197AB]
-import java.util.Stack;
-// </editor-fold> 
+
 public abstract class WrapperIterator<T> implements IteratorStrategy<T>
 {
 
-    protected Stack<SMTreeNode<T>> array;
+    protected AbstractList<SMTreeNode<T>> array;
         
     public WrapperIterator(SMTreeNode<T> nodoInicial)
     {
         super();
-        array = new Stack<SMTreeNode<T>>();
-        inicializarArray(nodoInicial);
+        inicializarVector();
+        introducirElementos(nodoInicial);
     }
     
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -30,7 +27,7 @@ public abstract class WrapperIterator<T> implements IteratorStrategy<T>
         return false;
     }
 
-    abstract void inicializarArray(SMTreeNode<T> nodoInicial);
+    abstract void introducirElementos(SMTreeNode<T> nodoInicial);
 
     public void remove() 
     {
@@ -42,7 +39,9 @@ public abstract class WrapperIterator<T> implements IteratorStrategy<T>
     // </editor-fold> 
     public SMTreeNode<T> next () 
     {
-        return this.array.pop();
+        SMTreeNode<T> res = this.array.get(0);
+        this.array.remove(0);
+        return res;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -50,20 +49,16 @@ public abstract class WrapperIterator<T> implements IteratorStrategy<T>
     // </editor-fold> 
     public boolean hasNext () 
     {
-        return !this.array.empty();
+        return !this.array.isEmpty();
     }
     
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.83C74261-AEF1-2AFD-05D3-C7582DC2B24A]
-    // </editor-fold> 
     public boolean goTo (SMTreeNode<T> nodo) 
     {
-        if(this.array.search(nodo) == -1)
-            return false; 
-            
-        inicializarArray(nodo);
+        introducirElementos(nodo);
         return true;
     }
+
+    abstract void inicializarVector(); 
 }
 
