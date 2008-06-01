@@ -16,7 +16,7 @@ public class ForwardItemIterator<T> extends WrapperIterator<T>
     }
 
 
-    void inicializarArray(SMTreeNode<T> nodoInicial) 
+    void introducirElementos(SMTreeNode<T> nodoInicial) 
     {
         array.clear();
         array.add(nodoInicial);
@@ -31,6 +31,13 @@ public class ForwardItemIterator<T> extends WrapperIterator<T>
             recorrerHermanos(node.getFirstChild());
             node = node.getNext();
         }
+    }
+    
+
+    @Override
+    public void inicializarVector() 
+    {
+        array = new Stack<SMTreeNode<T>>();
     }
 }
 
