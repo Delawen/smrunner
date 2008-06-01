@@ -23,7 +23,7 @@ public abstract class WrapperIterator<T> implements IteratorStrategy<T>
         SMTreeNode<T> nodo = next();
         if(o.equals(nodo))
             return true;
-        this.array.add(nodo);
+        this.array.add(this.array.size(), nodo);
         return false;
     }
 

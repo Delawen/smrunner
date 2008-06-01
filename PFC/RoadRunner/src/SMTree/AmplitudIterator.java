@@ -13,7 +13,7 @@ import java.util.Stack;
 public class AmplitudIterator<T> extends WrapperIterator<T> 
 { 
     //Se van guardando los hijos de los nodos que recorremos del nivel actual:
-    private LinkedList<SMTreeNode<T>> hijosActuales;
+    private int indice;
     
     public AmplitudIterator(SMTreeNode<T> nodoInicial)
     {
@@ -24,45 +24,55 @@ public class AmplitudIterator<T> extends WrapperIterator<T>
     public void inicializarVector() 
     {
         array = new LinkedList<SMTreeNode<T>>();
-        hijosActuales = new LinkedList<SMTreeNode<T>>();
+        this.indice = 0;
     }
 
     void introducirElementos(SMTreeNode<T> nodoInicial) 
     {
+        indice = 0;
         array.clear();
         this.array.add(nodoInicial);
-        agregarHijos(nodoInicial);
-    }
-
-    private void agregarHijos(SMTreeNode<T> nodo) 
-    {
-        SMTreeNode<T> aux = nodo.getFirstChild();
-        while (aux != null) {
-            this.hijosActuales.add(aux);
-            aux = aux.getNext();
-        }
     }
 
     private void recorrerHijos() 
     {
-        int i = 0;
-        SMTreeNode<T> aux = this.hijosActuales.get(i);
-        while(aux != null)
+        //Vamos metiendo en el array todos los nodos del siguiente nivel
+        LinkedList<SMTreeNode<T>> provisional = new LinkedList<SMTreeNode<T>>();
+        
+        if(!this.array.isEmpty())
         {
-            array.add(aux);
-            agregarHijos(aux);
-            aux = this.array.get(i);
-            i++;
+            for(int i = 0; i < this.array.size(); i++)
+            {
+                SMTreeNode<T> aux = this.array.get(i).getFirstChild();
+                while(aux != null)
+                {
+                    provisional.add(aux);
+                    aux = aux.getNext();
+                }
+            }
+            this.array = provisional;
+            this.indice = 0;
         }
     }
 
     @Override
     public SMTreeNode<T> next () 
     {
-        if(this.array.isEmpty())
+        //Si hemos llegado al final del array, es que pasamos al siguiente nivel:
+        if(indice == this.array.size())
             recorrerHijos();
-        return super.next();
+        
+        //Sacamos el nodo de la posicion índice:
+        SMTreeNode<T> res = this.array.get(indice);
+        indice++;
+        return res;
     }
     
+    public boolean hasNext () 
+    {
+        if(this.array.size() == this.indice)
+            recorrerHijos();
+        return !this.array.isEmpty();
+    }
 }
 

@@ -458,36 +458,10 @@ public class SMTree<T> implements Cloneable{
         
         return addSMTreeNode(new SMTreeNode(o), where, k);
     }
-
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.01E67DBC-7BE9-89D2-7807-C5806F837A45]
-    // </editor-fold> 
-    
-    public abstract class IteratorStrategy implements Iterator 
-    {
-        // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
-        // #[regen=yes,id=DCE.9CBAB27E-DB77-5A22-806A-6641CA402434]
-        // </editor-fold>  
-        public abstract SMTreeNode next (); 
  
-        // <editor-fold defaultstate="collapsed" desc=" UML Marker ">  
-        // #[regen=yes,id=DCE.530847C3-D5FF-A47B-87EC-2ACF19D100C4] 
-        // </editor-fold>  
-        public abstract boolean hasNext (); 
- 
-        // <editor-fold defaultstate="collapsed" desc=" UML Marker ">  
-        // #[regen=yes,id=DCE.2A4E1EC6-85DC-FB22-85E5-4B55B251D6F5] 
-        // </editor-fold>  
-        public abstract boolean goTo (SMTreeNode Unnamed); 
+   
 
-        private SMTreeNode<T> getRoot() 
-        { 
-            return root;
-        } 
-}
-
-    public IteratorStrategy iterator () {
+    public IteratorStrategy<T> iterator () {
         //return new Iterator("FowardItemIterator");
         return null;
     }
@@ -495,16 +469,20 @@ public class SMTree<T> implements Cloneable{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.BE3836CA-6B50-60BB-11D2-D9C2EFA03088]
     // </editor-fold> 
-    public IteratorStrategy iterator (String type) {
+    public IteratorStrategy<T> iterator (String type) {
         
-        IteratorStrategy it;
+        WrapperIterator<T> it;
         
-        if(type.equals("FowardItemIterator"))
-                it = null;//new ForwardItemIterator();
+        if(type.equals("forwardItemIterator"))
+                it = new ForwardItemIterator<T>(this.getRoot());
+        else if(type.equals("backwardItemIterator"))
+            it = new BackwardItemIterator<T>(this.getRoot());
+        else if (type.equals("amplitud"))
+            it = new AmplitudIterator<T>(this.getRoot());
         else
             throw new UnsupportedOperationException("No está implementado un iterador para "+type);
  
-        return it;
+        return (IteratorStrategy)it;
     }
     
     //TODO
