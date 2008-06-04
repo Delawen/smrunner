@@ -3,6 +3,7 @@ package SMTree;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import roadrunner.RoadRunner.ExitLevel;
 
 // #[regen=yes,id=DCE.BDD5EA36-857A-98F5-E253-BFF7C656B696]
@@ -531,10 +532,88 @@ public class SMTree<T> implements Cloneable{
         this.mapa = mapa;
     }
     
-    public String toString() {
-        
-        return null;
+    public String toString() 
+    {
+        toStringIterator it = new toStringIterator<T>(this.getRoot());
+        return it.toString();
         
     }
+    public class toStringIterator<T> extends WrapperIterator<T> 
+    { 
+        //Se van guardando los hijos de los nodos que recorremos del nivel actual:
+        private int indice;
+        private String toString;
 
+        public toStringIterator(SMTreeNode<T> nodoInicial)
+        {
+            super(nodoInicial);
+            this.toString = "";
+        }
+
+        @Override
+        public void inicializarVector() 
+        {
+            this.array = new LinkedList<SMTreeNode<T>>();
+            this.indice = 0;
+        }
+
+        void introducirElementos(SMTreeNode<T> nodoInicial) 
+        {
+            this.indice = 0;
+            this.array.add(nodoInicial);
+        }
+
+        private void recorrerHijos() 
+        {
+            //Vamos metiendo en el array todos los nodos del siguiente nivel
+            LinkedList<SMTreeNode<T>> provisional = new LinkedList<SMTreeNode<T>>();
+
+            if(!this.array.isEmpty())
+            {
+                this.toString = "\n";
+                for(int i = 0; i < this.array.size(); i++)
+                {
+                    SMTreeNode<T> aux = this.array.get(i).getFirstChild();
+                    while(aux != null)
+                    {
+                        provisional.add(aux);
+                        aux = aux.getNext();
+                    }
+                }
+                this.array = provisional;
+                this.indice = 0;
+            }
+        }
+
+        @Override
+        public SMTreeNode<T> next () 
+        {
+            //Si hemos llegado al final del array, es que pasamos al siguiente nivel:
+            if(indice == this.array.size())
+                recorrerHijos();
+
+            //Sacamos el nodo de la posicion índice:
+            SMTreeNode<T> res = this.array.get(indice);
+            indice++;
+            return res;
+        }
+
+        public boolean hasNext () 
+        {
+            if(this.array.size() == this.indice)
+                recorrerHijos();
+            return !this.array.isEmpty();
+        }
+        
+        @Override
+        public String toString()
+        {
+            toString = "";
+            while(this.hasNext())
+            {
+                toString += "<" + this.next().toString() + "> ";
+            }
+            return toString;
+        }
+    }
 }

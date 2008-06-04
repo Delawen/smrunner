@@ -1,7 +1,6 @@
 package tokenizador;
 
 import java.util.List;
-import roadrunner.Repair; 
 import roadrunner.node.Item; 
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -12,8 +11,8 @@ public class Token extends Item implements iToken {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.9F7698EC-F107-2F48-D68A-4CFF9B3D5644]
     // </editor-fold> 
-    public Repair match (Item i) {
-        return null;
+    public boolean match (Item i) {
+        return false;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
