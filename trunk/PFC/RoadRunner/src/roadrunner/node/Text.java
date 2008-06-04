@@ -6,6 +6,11 @@ package roadrunner.node;
 public class Text extends Item 
 {
 
+    public Text(String text)
+    {
+        super();
+        this.setContent(text);
+    }
     /**
      * Comprueba si dos Text hacen matching.
      * 
