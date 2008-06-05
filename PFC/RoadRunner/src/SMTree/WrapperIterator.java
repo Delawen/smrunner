@@ -5,7 +5,7 @@ import java.util.AbstractList;
 
 public abstract class WrapperIterator<T> implements IteratorStrategy<T>
 {
-
+        
     protected AbstractList<SMTreeNode<T>> array;
         
     public WrapperIterator(SMTreeNode<T> nodoInicial)
