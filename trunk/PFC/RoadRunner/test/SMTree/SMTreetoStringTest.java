@@ -56,6 +56,6 @@ public class SMTreetoStringTest
         arbol.addSMTreeNode(node1_1_2_2, node1_1_2, Kinship.CHILD);
         System.out.println("SMTree toString() Test");
         System.out.println(arbol.toString());
+//    }
     }
-
 }

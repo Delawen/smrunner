@@ -570,7 +570,7 @@ public class SMTree<T> implements Cloneable{
 
             if(!this.array.isEmpty())
             {
-                this.toString = "\n";
+                this.toString += "\n";
                 for(int i = 0; i < this.array.size(); i++)
                 {
                     SMTreeNode<T> aux = this.array.get(i).getFirstChild();
