@@ -6,6 +6,7 @@ DUDAS
 CORREGIR
 ========
 * Iteradores utilizados sn SMTree
+* Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
 
 TODO
 ====
@@ -14,6 +15,15 @@ TODO
 * Iterador que devuelva items y no nodos
 * Nueva clase Token con metodos isTag, isCloseTag, isCloseTagOf(Token), isOpenTag,isOpenTagOf(Token)
 * Wrapper.eat => hacer lo del EOF, ademas el sample.next() ahora mismo esta mal!! ya veremos que hacemos...
+
+
+06-06-2008
+==========
+[S 20:00] Wrapper casi listo, pero con muchos fallos a falta de decidir que hacemos con Sample/token y corregir los Iteradores
+
+03-03-2008
+==========
+[M XX:XX] Items: Token, tupla, etc.
 
 31-05-2008
 ==========

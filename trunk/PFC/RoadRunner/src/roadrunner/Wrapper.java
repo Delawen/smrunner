@@ -1,10 +1,16 @@
 package roadrunner;
 
+import SMTree.ForwardItemIterator;
+import SMTree.ForwardTokenIterator;
+import SMTree.IteratorStrategy;
 import SMTree.SMTree; 
 import SMTree.SMTreeNode; 
+import SMTree.WrapperIterator;
+import java.util.Stack;
 import roadrunner.node.Item; 
 import roadrunner.operator.Operator; 
 import tokenizador.Token; 
+import tokenizador.iTokenizedWPIterator;
 
 /**
  *  @author delawen
@@ -13,24 +19,22 @@ import tokenizador.Token;
 // #[regen=yes,id=DCE.6DA19461-88AB-136F-23B7-1FB2AC471B20]
 // </editor-fold> 
 public class Wrapper {
+    
+    SMTree<Item> treeWrapper;
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.4C4FEE21-B6CA-E719-277C-03EDB616EFAF]
     // </editor-fold> 
     public Wrapper () {
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.31D367F5-BDD6-CAE3-A9D9-5743EBBE8AFF]
-    // </editor-fold> 
-    public Wrapper (Sample s) {
+        super();
+        treeWrapper = new SMTree<Item>();
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.CB10757A-C05C-4F36-13C5-A851167056BD]
     // </editor-fold> 
-    public Mismatch eat (Item i, Operator.Direction d) {
-        return null;
+    public Mismatch eat (Sample s, Operator.Direction d) {
+        return eat(s, s.get(0), treeWrapper.getRootObject(), d);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -44,28 +48,105 @@ public class Wrapper {
     // #[regen=yes,id=DCE.25072B5A-1792-FB27-791C-BE9076EBAA29]
     // </editor-fold> 
     public Mismatch eat (Sample s) {
-        return null;
+        return eat(s,Operator.Direction.DOWNWARDS);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E5C3243F-4177-9A70-094F-C76645D7AD05]
     // </editor-fold> 
-    public boolean isWellFormed (Item from, Item to) {
-        return true;
+    public boolean isWellFormed (Token from, Token to) {
+        
+        if(from==null || to==null)
+           throw new NullPointerException("");
+        
+        if(from==to && !from.isTag())
+            return true;
+        else if (from==to)
+            return false;
+        
+        boolean isWellFormed = true;
+        
+        Stack<Token> openTags = new Stack();
+        
+        ForwardTokenIterator it = treeWrapper.iterator(new ForwardTokenIterator(null));
+
+        it.goTo(from);
+
+        do
+        {
+            Token t = it.next();
+            if(t.isOpenTag())
+                openTags.push(t);
+            else if (t.isCloseTag() && openTags.firstElement().isOpenTagOf(t))
+                    openTags.pop();
+            else
+                isWellFormed = false;
+            
+        } while(it.hasNext() && t!=to && isWellFormed);
+        
+        if(!openTags.empty())
+            isWellFormed=false;
+        
+        return isWellFormed;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.D1F274E3-DD20-5A57-9D69-04D250213967]
     // </editor-fold> 
-    public boolean substitute (SMTreeNode from, SMTreeNode to, SMTree what) {
-        return true;
+    public boolean substitute (Item from, Enclosure inclusionFrom, Item to, Enclosure inclusionTo, SMTree what) {
+        return treeWrapper.substituteObject(from, inclusionFrom, to, inclusionTo, what);
+    }
+    
+     public boolean substitute (Item from, Enclosure inclusionFrom, Item to, Enclosure inclusionTo, Wrapper what) {
+        return treeWrapper.substituteObject(from, inclusionFrom, to, inclusionTo, what.treeWrapper);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.9AAF649B-4F9D-8FA4-3FC3-287DCD953037]
     // </editor-fold> 
-    public Mismatch eat (Sample s, SMTreeNode n, Token t, Operator.Direction d) {
-        return null;
+    public Mismatch eat (Sample s, Token t, Item n, Operator.Direction d) {
+               //TODO Este metodo esta mal hasta que decidamos que hacemos con el sample.next()
+        
+        ForwardTokenIterator itWrapper;
+        iTokenizedWPIterator itSample;
+        Mismatch m;
+        
+        
+        /* Segun el recorrido creamos un tipo de iterador */
+        if(Operator.Direction.DOWNWARDS == d)
+        {
+            itWrapper = treeWrapper.iterator("ForwardTokenIterator");
+            //TODO
+            itSample = s.startIterator();
+        }
+        else if(Operator.Direction.UPWARDS == d)
+        {
+            itWrapper = treeWrapper.iterator("BackwardTokenIterator");
+            //TODO
+            itSample = s.startIterator();
+        }
+ 
+        itWrapper.goTo(n);
+        itSample.goTo(t);
+
+        /*mientras no se produzca un mismatch y no me coma entero el sample o el wrapper*/
+        while(itSample.hasNext() && itWrapper.hasNext() && m==null)
+        {
+            Token tokenSample = itSample.next();
+            
+            if(!itWrapper.isNext(tokenSample))
+                m = new Mismatch(this,s, itWrapper.next(), tokenSample);     
+        }
+       
+        /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
+         * entonces lanzamos otro mismatch
+         */
+        if(itWrapper.hasNext() && m==null)    
+            m = new Mismatch(this,s, itWrapper.next(),itSample.EOF);
+        else if(itSample.hasNext() && m==null)
+            m = new Mismatch(this,s, itWrapper.EOF,itSample.next());
+        
+        return m;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
