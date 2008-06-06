@@ -1,11 +1,7 @@
 package roadrunner;
 
-import SMTree.ForwardItemIterator;
 import SMTree.ForwardTokenIterator;
-import SMTree.IteratorStrategy;
 import SMTree.SMTree; 
-import SMTree.SMTreeNode; 
-import SMTree.WrapperIterator;
 import java.util.Stack;
 import roadrunner.node.Item; 
 import roadrunner.operator.Operator; 
@@ -71,10 +67,10 @@ public class Wrapper {
         ForwardTokenIterator it = treeWrapper.iterator(new ForwardTokenIterator(null));
 
         it.goTo(from);
-
+        Token t;
         do
         {
-            Token t = it.next();
+            t = it.next();
             if(t.isOpenTag())
                 openTags.push(t);
             else if (t.isCloseTag() && openTags.firstElement().isOpenTagOf(t))
