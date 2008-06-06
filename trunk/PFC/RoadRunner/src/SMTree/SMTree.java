@@ -48,6 +48,11 @@ public class SMTree<T> implements Cloneable{
         mapa.add(root);
     
     }
+    
+    public T getRootObject()
+    {
+        return this.root.getObject();
+    }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,regenBody=yes,id=DCE.DD54EFD1-598F-73DE-644E-F324B2283F77]
