@@ -2,12 +2,9 @@ package SMTree;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import roadrunner.RoadRunner.ExitLevel;
 
-// #[regen=yes,id=DCE.BDD5EA36-857A-98F5-E253-BFF7C656B696]
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 // </editor-fold> 
 public class SMTree<T> implements Cloneable{
 
@@ -212,7 +209,7 @@ public class SMTree<T> implements Cloneable{
         // Y añadimos todos los nodos los descendientes de 'n'         
         
            //TODO: recorrer solo el subarbol
-            ForwardItemIterator it = new ForwardItemIterator(n);
+            ForwardItemIterator<T> it = new ForwardItemIterator(this);
 
             //it.goTo(n);
 
@@ -220,7 +217,7 @@ public class SMTree<T> implements Cloneable{
 
             while(it.hasNext() && success)
             {
-                success = mapa.add(it.next());
+                success = mapa.add(getNode(it.next()));
             }
 
             return success;
@@ -461,29 +458,12 @@ public class SMTree<T> implements Cloneable{
     }
  
    
-
-    public IteratorStrategy<T> iterator () {
-        //return new Iterator("FowardItemIterator");
-        return null;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.BE3836CA-6B50-60BB-11D2-D9C2EFA03088]
-    // </editor-fold> 
-    public IteratorStrategy<T> iterator (String type) {
-        
-        WrapperIterator<T> it;
-        
-        if(type.equals("forwardItemIterator"))
-                it = new ForwardItemIterator<T>(this.getRoot());
-        else if(type.equals("backwardItemIterator"))
-            it = new BackwardItemIterator<T>(this.getRoot());
-        else if (type.equals("amplitud"))
-            it = new AmplitudIterator<T>(this.getRoot());
-        else
-            throw new UnsupportedOperationException("No está implementado un iterador para "+type);
- 
-        return (IteratorStrategy)it;
+    
+    public WrapperIterator<T> iterator (WrapperIterator<T> it) throws Exception 
+    {
+        if(it.initialize(this))
+            return it;
+        else throw new Exception("The Iterator was tampered.");
     }
     
     //TODO
@@ -503,8 +483,8 @@ public class SMTree<T> implements Cloneable{
         if(!(o instanceof SMTree))
             return false;
         
-        ForwardItemIterator<T> itThis = new ForwardItemIterator(this.getRoot());
-        ForwardItemIterator<T> itObject = new ForwardItemIterator( ((SMTree<T>) o).getRoot());
+        ForwardItemIterator<T> itThis = new ForwardItemIterator(this);
+        ForwardItemIterator<T> itObject = new ForwardItemIterator((SMTree<T>) o);
         
         while(itThis.hasNext() && itObject.hasNext())
             if(! itThis.next().equals(itObject.next()))
@@ -532,50 +512,48 @@ public class SMTree<T> implements Cloneable{
         this.mapa = mapa;
     }
     
+    public SMTreeNode<T> getNode(T objeto)
+    {
+        return this.getMapa().get(objeto);
+    }
+    
+    @Override
     public String toString() 
     {
-        toStringIterator it = new toStringIterator<T>(this.getRoot());
+        toStringIterator<T> it = new toStringIterator<T>(this);
         return it.toString();
-        
     }
-    public class toStringIterator<T> extends WrapperIterator<T> 
-    { 
+    
+    public class toStringIterator<T> extends WrapperIterator<T> {
+
         //Se van guardando los hijos de los nodos que recorremos del nivel actual:
         private int indice;
         private String toString;
 
-        public toStringIterator(SMTreeNode<T> nodoInicial)
-        {
-            super(nodoInicial);
+        public toStringIterator(SMTree<T> arbol) {
+            super(arbol);
             this.toString = "";
         }
 
         @Override
-        public void inicializarVector() 
-        {
-            this.array = new LinkedList<SMTreeNode<T>>();
+        public void inicializarVector() {
+            this.array = new ArrayList<SMTreeNode<T>>();
             this.indice = 0;
         }
 
-        void introducirElementos(SMTreeNode<T> nodoInicial) 
-        {
+        void introducirElementos(SMTreeNode<T> nodoInicial) {
             this.indice = 0;
             this.array.add(nodoInicial);
         }
 
-        private void recorrerHijos() 
-        {
-            //Vamos metiendo en el array todos los nodos del siguiente nivel
-            LinkedList<SMTreeNode<T>> provisional = new LinkedList<SMTreeNode<T>>();
-
-            if(!this.array.isEmpty())
-            {
+        private void recorrerHijos() {
+            ArrayList<SMTreeNode<T>> provisional = new ArrayList<SMTreeNode<T>>();
+            if (!this.array.isEmpty()) {
                 this.toString += "\n";
-                for(int i = 0; i < this.array.size(); i++)
-                {
+                for (int i = 0; i < this.array.size(); i++) {
+
                     SMTreeNode<T> aux = this.array.get(i).getFirstChild();
-                    while(aux != null)
-                    {
+                    while (aux != null) {
                         provisional.add(aux);
                         aux = aux.getNext();
                     }
@@ -586,34 +564,31 @@ public class SMTree<T> implements Cloneable{
         }
 
         @Override
-        public SMTreeNode<T> next () 
-        {
+        public T next() {
             //Si hemos llegado al final del array, es que pasamos al siguiente nivel:
-            if(indice == this.array.size())
+            if (indice == this.array.size()) {
                 recorrerHijos();
-
-            //Sacamos el nodo de la posicion índice:
+            }
             SMTreeNode<T> res = this.array.get(indice);
             indice++;
-            return res;
+            return res.getObject();
         }
 
-        public boolean hasNext () 
-        {
-            if(this.array.size() == this.indice)
+        public boolean hasNext() {
+            if (this.array.size() == this.indice) {
                 recorrerHijos();
+            }
             return !this.array.isEmpty();
         }
-        
+
         @Override
-        public String toString()
-        {
+        public String toString() {
             toString = "";
-            while(this.hasNext())
-            {
+            while (this.hasNext()) {
                 toString += "<" + this.next().toString() + "> ";
             }
             return toString;
         }
     }
+
 }
