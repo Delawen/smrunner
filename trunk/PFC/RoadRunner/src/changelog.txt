@@ -19,7 +19,7 @@ TODO
 
 06-06-2008
 ==========
-[S 20:00] Wrapper casi listo, pero con muchos fallos a falta de decidir que hacemos con Sample/token y corregir los Iteradores
+[S 20:00] Wrapper casi listo, pero con muchos errores a falta de decidir que hacemos con Sample/token y corregir los Iteradores
 
 03-03-2008
 ==========
