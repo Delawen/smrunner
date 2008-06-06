@@ -8,6 +8,10 @@ CORREGIR
 TODO
 ====
 * Smtree.clone
+* Iterador  goto(Item)
+* Iterador que devuelva items y no nodos
+* Token que añada isTag, isCloseTag, isCloseTagOf(Token), isOpenTag,isOpenTagOf(Token)
+* Wrapper.eat => hacer lo del EOF
 
 31-05-2008
 ==========
