@@ -27,7 +27,7 @@ public class CompositeItem extends Item
     @Override
     public boolean equals(Object i)
     {
-        if(!(i instanceof List))
+        if(!(i instanceof CompositeItem))
             return false;
         return ((Item)i).getContent().equals(this.getContent());
     }

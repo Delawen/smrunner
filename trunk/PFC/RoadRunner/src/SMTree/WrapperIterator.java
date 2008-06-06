@@ -1,18 +1,36 @@
 package SMTree;
 
 import java.util.AbstractList;
+import java.util.Iterator;
 
 
-public abstract class WrapperIterator<T> implements IteratorStrategy<T>
+public abstract class WrapperIterator<T> implements Iterator<T>
 {
         
     protected AbstractList<SMTreeNode<T>> array;
+    protected SMTree<T> arbol;
         
-    public WrapperIterator(SMTreeNode<T> nodoInicial)
+    public WrapperIterator(SMTree<T> arbol)
     {
         super();
+        initialize(arbol);
+    }
+    
+    public WrapperIterator()
+    {
+        super();
+        this.arbol = null;
+        this.array = null;
+    }
+    
+    boolean initialize(SMTree<T> arbol)
+    {   
+        if(this.arbol != null || this.array != null)
+            return false;
+        this.arbol = arbol;
         inicializarVector();
-        introducirElementos(nodoInicial);
+        introducirElementos(arbol.getRoot());
+        return true;
     }
     
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -20,7 +38,7 @@ public abstract class WrapperIterator<T> implements IteratorStrategy<T>
     // </editor-fold> 
     public boolean isNext (T o) 
     {
-        SMTreeNode<T> nodo = next();
+        SMTreeNode<T> nodo = search(next());
         if(o.equals(nodo))
             return true;
         this.array.add(this.array.size(), nodo);
@@ -37,11 +55,11 @@ public abstract class WrapperIterator<T> implements IteratorStrategy<T>
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.245215D2-1215-CC60-AB9E-6019D1E6A4AD]
     // </editor-fold> 
-    public SMTreeNode<T> next () 
+    public T next () 
     {
         SMTreeNode<T> res = this.array.get(0);
         this.array.remove(0);
-        return res;
+        return res.getObject();
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -53,10 +71,15 @@ public abstract class WrapperIterator<T> implements IteratorStrategy<T>
     }
     
 
-    public boolean goTo (SMTreeNode<T> nodo) 
+    public boolean goTo (T objeto) 
     {
-        introducirElementos(nodo);
+        introducirElementos(search(objeto));
         return true;
+    }
+    
+    private SMTreeNode<T> search(T objeto)
+    {
+        return arbol.getNode(objeto);
     }
 
     abstract void inicializarVector(); 

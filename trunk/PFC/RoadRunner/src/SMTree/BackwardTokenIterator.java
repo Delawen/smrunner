@@ -10,9 +10,14 @@ public class BackwardTokenIterator<T> extends BackwardItemIterator<T>
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.93BE15DF-FD80-2FC4-0A43-46EF676EFD61]
     // </editor-fold> 
-    public BackwardTokenIterator(SMTreeNode<T> nodo) 
+    public BackwardTokenIterator(SMTree<T> tree) 
     {
-        super(nodo);
+        super(tree);
+    }
+        
+    public BackwardTokenIterator() 
+    {
+        super();
     }
 
 }

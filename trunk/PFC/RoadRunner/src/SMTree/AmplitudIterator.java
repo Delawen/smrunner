@@ -15,9 +15,14 @@ public class AmplitudIterator<T> extends WrapperIterator<T>
     //Se van guardando los hijos de los nodos que recorremos del nivel actual:
     private int indice;
     
-    public AmplitudIterator(SMTreeNode<T> nodoInicial)
+    public AmplitudIterator(SMTree<T> nodoInicial)
     {
         super(nodoInicial);
+    }
+    
+    public AmplitudIterator()
+    {
+        super();
     }
 
     @Override
@@ -56,7 +61,7 @@ public class AmplitudIterator<T> extends WrapperIterator<T>
     }
 
     @Override
-    public SMTreeNode<T> next () 
+    public T next () 
     {
         //Si hemos llegado al final del array, es que pasamos al siguiente nivel:
         if(indice == this.array.size())
@@ -65,7 +70,7 @@ public class AmplitudIterator<T> extends WrapperIterator<T>
         //Sacamos el nodo de la posicion índice:
         SMTreeNode<T> res = this.array.get(indice);
         indice++;
-        return res;
+        return res.getObject();
     }
     
     public boolean hasNext () 
