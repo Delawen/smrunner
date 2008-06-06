@@ -73,7 +73,7 @@ public class IteratorTest
     // public void hello() {}
     
     @Test
-    public void amplitudIterator()
+    public void amplitudIterator() throws Exception
     {
         System.out.println("AmplitudIterator");
         
@@ -94,13 +94,12 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        IteratorStrategy<String> it = arbol.iterator("amplitud");
+        WrapperIterator<String> it = arbol.iterator(new AmplitudIterator());
         while(it.hasNext() && itorden.hasNext())
         {
-            SMTreeNode<String> next = it.next();
-            if(!next.equals(itorden.next()))
-                fail("El orden no es el correcto, nos hemos encontrado con: " + next);
-            //System.out.println(next);
+            String next = it.next();
+            String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
+            assertEquals(next, otro);
         }
         
         assertFalse(it.hasNext());
@@ -108,7 +107,7 @@ public class IteratorTest
     }
     
     @Test
-    public void backwardItemIterator()
+    public void backwardItemIterator() throws Exception
     {
         System.out.println("backwardItemIterator");
         
@@ -130,13 +129,12 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        IteratorStrategy<String> it = arbol.iterator("backwardItemIterator");
+        WrapperIterator<String> it = arbol.iterator(new BackwardItemIterator());
         while(it.hasNext() && itorden.hasNext())
         {
-            SMTreeNode<String> next = it.next();
-            if(!next.equals(itorden.next()))
-                fail("El orden no es el correcto, nos hemos encontrado con: " + next);
-            //System.out.println(next);
+            String next = it.next();
+            String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
+            assertEquals(next, otro);
         }
         
         assertFalse(it.hasNext());
@@ -144,7 +142,7 @@ public class IteratorTest
     }
 
     @Test
-    public void forwardItemIterator()
+    public void forwardItemIterator() throws Exception
     {
         System.out.println("forwardItemIterator");
                 
@@ -165,13 +163,12 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        IteratorStrategy<String> it = arbol.iterator("forwardItemIterator");
+        WrapperIterator<String> it = arbol.iterator(new ForwardItemIterator());
         while(it.hasNext() && itorden.hasNext())
         {
-            SMTreeNode<String> next = it.next();
-            if(!next.equals(itorden.next()))
-                fail("El orden no es el correcto, nos hemos encontrado con: " + next);
-            //System.out.println(next);
+            String next = it.next();
+            String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
+            assertEquals(next, otro);
         }
         
         assertFalse(it.hasNext());
