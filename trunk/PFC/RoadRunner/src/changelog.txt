@@ -1,16 +1,16 @@
 DUDAS
 =====
-* isNext hace internamente un next si es cierto, pero y sino tambien?
+* isNext hace internamente un next si es true, pero y sino tambien?
 
 
 CORREGIR
 ========
-* Iteradores utilizados sn SMTree
+* Iteradores utilizados en SMTree
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
 
 TODO
 ====
-* Smtree.clone
+* Smtree.clone Smtree.equals ¿Smtree.node.equals?
 * Iterador  goto(Item)
 * Iterador que devuelva items y no nodos
 * Nueva clase Token con metodos isTag, isCloseTag, isCloseTagOf(Token), isOpenTag,isOpenTagOf(Token)
