@@ -53,10 +53,7 @@ public abstract class Item {
      * @return boolean
      */
     @Override
-    public boolean equals(Object i)
-    {
-        return(i instanceof Item);
-    }
+    public abstract boolean equals(Object i);
 
 }
 
