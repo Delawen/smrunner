@@ -5,12 +5,16 @@ import java.util.Stack;
 
 public class BackwardItemIterator<T> extends WrapperIterator<T> 
 {   
-    public BackwardItemIterator(SMTreeNode<T> nodoInicial)
+    public BackwardItemIterator(SMTree<T> arbol)
     {
-        super(nodoInicial);
+        super(arbol);
     }
 
-
+    public BackwardItemIterator()
+    {
+        super();
+    }
+    
     void introducirElementos(SMTreeNode<T> nodoInicial) 
     {
         this.array = new Stack<SMTreeNode<T>>();

@@ -10,11 +10,15 @@ import java.util.Stack;
 // </editor-fold> 
 public class ForwardItemIterator<T> extends WrapperIterator<T> 
 { 
-    public ForwardItemIterator(SMTreeNode<T> nodoInicial)
+    public ForwardItemIterator(SMTree<T> arbol)
     {
-        super(nodoInicial);
+        super(arbol);
     }
-
+    
+    public ForwardItemIterator()
+    {
+        super();
+    }
 
     void introducirElementos(SMTreeNode<T> nodoInicial) 
     {

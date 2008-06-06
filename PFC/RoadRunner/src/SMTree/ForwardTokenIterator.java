@@ -10,9 +10,14 @@ public class ForwardTokenIterator<T> extends ForwardItemIterator<T>
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.7EAB83E3-9E0E-01A1-BFA6-A83760548689]
     // </editor-fold> 
-    public ForwardTokenIterator(SMTreeNode<T> node) 
+    public ForwardTokenIterator(SMTree<T> tree) 
     {
-        super(node);
+        super(tree);
+    }    
+    
+    public ForwardTokenIterator() 
+    {
+        super();
     }
     
 }
