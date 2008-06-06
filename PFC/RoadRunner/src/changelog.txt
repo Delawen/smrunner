@@ -1,5 +1,7 @@
 DUDAS
 =====
+* isNext hace internamente un next si es cierto, pero y sino tambien?
+
 
 CORREGIR
 ========
@@ -10,8 +12,8 @@ TODO
 * Smtree.clone
 * Iterador  goto(Item)
 * Iterador que devuelva items y no nodos
-* Token que añada isTag, isCloseTag, isCloseTagOf(Token), isOpenTag,isOpenTagOf(Token)
-* Wrapper.eat => hacer lo del EOF
+* Nueva clase Token con metodos isTag, isCloseTag, isCloseTagOf(Token), isOpenTag,isOpenTagOf(Token)
+* Wrapper.eat => hacer lo del EOF, ademas el sample.next() ahora mismo esta mal!! ya veremos que hacemos...
 
 31-05-2008
 ==========
