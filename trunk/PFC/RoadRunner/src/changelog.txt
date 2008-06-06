@@ -4,7 +4,6 @@ DUDAS
 CORREGIR
 ========
 * Iteradores utilizados sn SMTree
-* java.lang.NullPointerException at SMTree.WrapperIterator.hasNext(WrapperIterator.java:52)
 
 TODO
 ====
