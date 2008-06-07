@@ -1,12 +1,10 @@
 package roadrunner;
 
-import SMTree.ForwardTokenIterator;
-import SMTree.SMTree; 
+import SMTree.*;
 import java.util.Stack;
-import roadrunner.node.Item; 
+import roadrunner.node.*; 
 import roadrunner.operator.Operator; 
-import tokenizador.Token; 
-import tokenizador.iTokenizedWPIterator;
+import tokenizador.*;
 
 /**
  *  @author delawen
@@ -64,7 +62,7 @@ public class Wrapper {
         
         Stack<Token> openTags = new Stack();
         
-        ForwardTokenIterator it = treeWrapper.iterator(new ForwardTokenIterator(null));
+        WrapperIterator<Item> it = treeWrapper.iterator(new ForwardTokenIterator());
 
         it.goTo(from);
         Token t;
@@ -103,7 +101,7 @@ public class Wrapper {
     public Mismatch eat (Sample s, Token t, Item n, Operator.Direction d) {
                //TODO Este metodo esta mal hasta que decidamos que hacemos con el sample.next()
         
-        ForwardTokenIterator itWrapper;
+        WrapperIterator<Item> itWrapper;
         iTokenizedWPIterator itSample;
         Mismatch m;
         
@@ -111,13 +109,13 @@ public class Wrapper {
         /* Segun el recorrido creamos un tipo de iterador */
         if(Operator.Direction.DOWNWARDS == d)
         {
-            itWrapper = treeWrapper.iterator("ForwardTokenIterator");
+            itWrapper = treeWrapper.iterator(new ForwardTokenIterator());
             //TODO
             itSample = s.startIterator();
         }
         else if(Operator.Direction.UPWARDS == d)
         {
-            itWrapper = treeWrapper.iterator("BackwardTokenIterator");
+            itWrapper = treeWrapper.iterator(new BackwardTokenIterator());
             //TODO
             itSample = s.startIterator();
         }
