@@ -37,7 +37,18 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.427658C6-1191-36DF-4083-89350220184A]
     // </editor-fold> 
-    public Mismatch () {
+    private Mismatch () 
+    {
+        super();
+    }
+
+    public Mismatch(Wrapper w, Sample s, Item next, Token token) 
+    {
+        this();
+        this.w = w;
+        this.s = s;
+        this.node = next;
+        this.token = token;
     }
 
     /**
@@ -47,7 +58,9 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.01E56D69-3DAD-DE81-75E0-FB76D0A099C5]
     // </editor-fold> 
-    private void setWrapper (Wrapper newVar) {
+    private void setWrapper (Wrapper w) 
+    {
+        this.w = w;
     }
 
     /**
@@ -57,8 +70,9 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.3FD7D9D7-97AD-9969-B595-53B779E574DD]
     // </editor-fold> 
-    private Wrapper getWrapper () {
-        return null;
+    private Wrapper getWrapper () 
+    {
+        return w;
     }
 
     /**
@@ -68,7 +82,8 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.7B4CA25A-4E79-CC3F-458D-7A41DBE32CE3]
     // </editor-fold> 
-    private void setSample (Sample newVar) {
+    private void setSample (Sample s) {
+        this.s = s;
     }
 
     /**
@@ -79,7 +94,7 @@ public class Mismatch {
     // #[regen=yes,id=DCE.78553C79-1CE9-3A81-EC12-22E9D141DEFF]
     // </editor-fold> 
     private Sample getSample () {
-        return null;
+        return s;
     }
 
     /**
@@ -89,7 +104,8 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.95675F08-D761-DE9C-604C-0DACAB276FA6]
     // </editor-fold> 
-    private void setToken (Token newVar) {
+    private void setToken (Token t) {
+        this.token = t;
     }
 
     /**
@@ -100,7 +116,7 @@ public class Mismatch {
     // #[regen=yes,id=DCE.5E28F9F9-EF3E-4AC4-A404-1EFA3E5E543F]
     // </editor-fold> 
     private Token getToken () {
-        return null;
+        return token;
     }
 
     /**
@@ -110,7 +126,9 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.5E6C5B63-F927-5965-9A31-6F456AA31841]
     // </editor-fold> 
-    private void setNode (Item newVar) {
+    private void setNode (Item node) 
+    {
+        this.node = node;
     }
 
     /**
@@ -121,7 +139,7 @@ public class Mismatch {
     // #[regen=yes,id=DCE.2289E4A1-6F63-0060-5153-EAE1B2F29A29]
     // </editor-fold> 
     private Item getNode () {
-        return null;
+        return node;
     }
 
 }
