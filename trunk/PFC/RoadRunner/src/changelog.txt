@@ -1,6 +1,9 @@
 DUDAS
 =====
 * isNext hace internamente un next si es true, pero y sino tambien?
+* Cuidado con "#VAR".match("texto") y "texto".match("#VAR"). Ambos hacen match, 
+pero si estoy comparando dos Wrapper tendria que modificar el wrapper sobre el que comparo para que tenga "#VAR" y no "text"
+* En token tengo match(String)... para que?
 
 
 CORREGIR
