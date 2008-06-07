@@ -472,11 +472,11 @@ public class SMTree<T> implements Cloneable{
  
    
     
-    public WrapperIterator<T> iterator (WrapperIterator<T> it) throws Exception 
+    public WrapperIterator<T> iterator (WrapperIterator<T> it) 
     {
         if(it.initialize(this))
             return it;
-        else throw new Exception("The Iterator was tampered.");
+        else throw new IllegalArgumentException("The Iterator was tampered.");
     }
     
     //TODO
@@ -554,9 +554,10 @@ public class SMTree<T> implements Cloneable{
             this.indice = 0;
         }
 
-        void introducirElementos(SMTreeNode<T> nodoInicial) {
+        boolean introducirElementos(SMTreeNode<T> nodoInicial) {
             this.indice = 0;
             this.array.add(nodoInicial);
+            return true;
         }
 
         private void recorrerHijos() {

@@ -1,20 +1,11 @@
 package roadrunner;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import roadrunner.node.Token; 
-import tokenizador.TokenizedWebPage; 
+import roadrunner.node.Token;  
 import tokenizador.iTokenizedWPIterator; 
 
-/**
- *  #[regen=yes,id=DCE.CBE0A245-4CF7-9D51-BA67-F984227CC7AF]
- *  </editor-fold>
- */
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.CB19DE7C-E508-EC15-7F09-5611D1809B4F]
-// </editor-fold> 
 public class Sample{
     
     private List<Token> tokens;
@@ -39,9 +30,9 @@ public class Sample{
         tokens.add(t);
     }
     
-    public Iterator iterator(){
-        return new webPageBackwardIterator();
-        return new webPageForwardIterator();
+    public webPageIterator iterator(Class iteratorClass)
+    {
+        return (webPageIterator) iteratorClass.newInstance();
     }
     
     public Token getToken(int index)
@@ -52,7 +43,7 @@ public class Sample{
         tokens.get(index);
     }
     
-    public interface webPageIterator extends ListIterator
+    public interface webPageIterator extends ListIterator<Token>
     {
         public void goTo(Token t);
     }
@@ -60,7 +51,7 @@ public class Sample{
     
     public class webPageForwardIterator implements webPageIterator
     {
-        private ListIterator it = tokens.listIterator();
+        private ListIterator<Token> it = tokens.listIterator();
         
         public void goTo(Token t)
         {
@@ -79,7 +70,7 @@ public class Sample{
             return it.hasNext();
         }
 
-        public Object next() {
+        public Token next() {
             return it.next();
         }
 
@@ -87,7 +78,7 @@ public class Sample{
             return it.hasPrevious();
         }
 
-        public Object previous() {
+        public Token previous() {
             return it.previous();
         }
 
@@ -103,21 +94,20 @@ public class Sample{
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public void set(Object arg0) {
+        public void set(Token arg0) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public void add(Object arg0) {
+        public void add(Token arg0) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-    
     
     }
 
 
     public class webPageBackwardIterator implements webPageIterator
     {
-        private ListIterator it = tokens.listIterator();
+        private ListIterator<Token> it = tokens.listIterator();
         
         public void goTo(Token t)
         {
@@ -136,7 +126,7 @@ public class Sample{
             return it.hasPrevious();
         }
 
-        public Object next() {
+        public Token next() {
             return it.previous();
         }
 
@@ -144,7 +134,7 @@ public class Sample{
            return it.hasNext();
         }
 
-        public Object previous() {
+        public Token previous() {
            return it.next();
         }
 
@@ -160,14 +150,12 @@ public class Sample{
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public void set(Object arg0) {
+        public void set(Token arg0) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public void add(Object arg0) {
+        public void add(Token arg0) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-    
-    
     }
 }

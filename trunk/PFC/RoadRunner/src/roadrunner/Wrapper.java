@@ -2,7 +2,6 @@ package roadrunner;
 
 import roadrunner.node.Token;
 import SMTree.*;
-import java.util.ListIterator;
 import java.util.Stack;
 import roadrunner.node.*; 
 import roadrunner.operator.Operator; 
@@ -103,30 +102,28 @@ public class Wrapper {
     public Mismatch eat (Sample s, Token t, Item n, Operator.Direction d) {
                //TODO Este metodo esta mal hasta que decidamos que hacemos con el sample.next()
         
-        WrapperIterator<Item> itWrapper;
-        Sample.webPageIterator itSample;
-        Mismatch m;
+        WrapperIterator<Item> itWrapper = null;
+        Sample.webPageIterator itSample = null;
+        Mismatch m = null;
         
         
         /* Segun el recorrido creamos un tipo de iterador */
         if(Operator.Direction.DOWNWARDS == d)
         {
             itWrapper = treeWrapper.iterator(new ForwardTokenIterator());
-            //TODO
-            itSample = s.iterator(...);
+            itSample = s.iterator(Sample.webPageForwardIterator.class);
         }
         else if(Operator.Direction.UPWARDS == d)
         {
             itWrapper = treeWrapper.iterator(new BackwardTokenIterator());
-            //TODO
-            itSample = s.iterator(...);
+            itSample = s.iterator(Sample.webPageBackwardIterator.class);
         }
  
         itWrapper.goTo(n);
         itSample.goTo(t);
         
-        Token tokenSample;
-        Item itemWrapper;
+        Token tokenSample = null;
+        Item itemWrapper = null;
 
         /*mientras no se produzca un mismatch y no me coma entero el sample o el wrapper*/
         while(itSample.hasNext() && itWrapper.hasNext() && m==null)
@@ -138,8 +135,6 @@ public class Wrapper {
                 itemWrapper = itWrapper.next();
                 m = new Mismatch(this,s, itemWrapper, tokenSample);     
             }
-            else
-                itemWrapper = itWrapper.next();
         }
        
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 

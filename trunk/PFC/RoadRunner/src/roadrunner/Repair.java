@@ -1,19 +1,19 @@
 package roadrunner;
 
+import SMTree.Enclosure;
 import roadrunner.node.Item; 
+import roadrunner.node.Token;
 
 /**
  *  Class Reparator
  */
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.F6F4E641-5285-CDA4-51E7-851FD43DDF02]
-// </editor-fold> 
+
 public class Repair {
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.5B7BE72A-6E68-D633-2696-9863FFE14726]
     // </editor-fold> 
-    private int indexSample;
+    private Token indexSample;
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.709BBBCC-469F-1E73-D246-CA2EC5B65DCA]
@@ -24,11 +24,6 @@ public class Repair {
     // #[regen=yes,id=DCE.B5BB2F2F-0B18-0478-6ABB-B06AECFBFE2C]
     // </editor-fold> 
     private Item initialItem;
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.55AE72F6-4C3C-C530-9E7B-27C4D8BA6C1C]
-    // </editor-fold> 
-    private Repair innerReparations;
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.DDED8D46-033F-2822-1A4E-EC6AD7CC35B8]
@@ -51,7 +46,14 @@ public class Repair {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.A9690EB5-2028-42B2-52EE-2E4436C67C8A]
     // </editor-fold> 
-    public Repair () {
+    Repair (Mismatch m) 
+    {
+        this.toRepair = m.getWrapper();
+        this.State = State.BUILDING;
+        this.finalItem = null;
+        this.indexSample = m.getToken();
+        this.initialItem = m.getNode();
+        this.reparator = new Wrapper();
     }
 
     /**
@@ -61,8 +63,12 @@ public class Repair {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.17049E1D-56BE-8651-8071-C93CB6101A5A]
     // </editor-fold> 
-    public Item apply () {
-        return null;
+    public boolean apply () 
+    {
+        if(this.getState() == State.SUCESSFULL)
+            return this.toRepair.substitute(initialItem, Enclosure.ENCLOSED, finalItem, Enclosure.ENCLOSED, this.reparator.treeWrapper);
+        else
+            return false;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -73,40 +79,17 @@ public class Repair {
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,regenBody=yes,id=DCE.6FFA022A-5713-ABD7-4D04-29305EE409BF]
-    // </editor-fold> 
-    public boolean setState (StateRepair val) {
-        this.State = val;
-        return true;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,regenBody=yes,id=DCE.F8C5773A-3751-7A4B-0815-C91D288CE10D]
     // </editor-fold> 
-    public int getIndexSample () {
+    public Token getIndexSample () {
         return indexSample;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,regenBody=yes,id=DCE.2E3AE83B-3308-8319-5462-98D5283330FA]
     // </editor-fold> 
-    public boolean setIndexSample (int val) {
+    public boolean setIndexSample (Token val) {
         this.indexSample = val;
-        return true;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,regenBody=yes,id=DCE.87911518-58E4-2FCF-5886-CA5ED9B31BE8]
-    // </editor-fold> 
-    public Repair getInnerReparations () {
-        return innerReparations;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,regenBody=yes,id=DCE.84994080-E1F2-8BD7-3EE1-BAEC06ACBA2B]
-    // </editor-fold> 
-    public boolean setInnerReparations (Repair val) {
-        this.innerReparations = val;
         return true;
     }
 
@@ -147,7 +130,9 @@ public class Repair {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.0D08D228-D9B8-BC87-26A0-583C37874397]
     // </editor-fold> 
-    private boolean setInitialItem (Item newVar) {
+    private boolean setInitialItem (Item newVar) 
+    {
+        this.initialItem = newVar;
         return true;
     }
 
@@ -159,7 +144,7 @@ public class Repair {
     // #[regen=yes,id=DCE.4DE02864-0651-C152-EA19-C84F0661A4EF]
     // </editor-fold> 
     private Item getInitialItem () {
-        return null;
+        return this.initialItem;
     }
 
     /**
@@ -170,6 +155,7 @@ public class Repair {
     // #[regen=yes,id=DCE.A612CF07-2E67-D0AE-AF61-225418511B49]
     // </editor-fold> 
     private boolean setFinalItem (Item newVar) {
+        this.finalItem = newVar;
         return true;
     }
 
@@ -181,30 +167,7 @@ public class Repair {
     // #[regen=yes,id=DCE.3E292062-99DF-C5E1-97FE-BF6BFE7CE86F]
     // </editor-fold> 
     private Item getFinalItem () {
-        return null;
+        return this.finalItem;
     }
-
-    /**
-     *  Set the value of reparacion
-     *                       @param newVar the new value of reparacion
-     */
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,regenBody=yes,id=DCE.032345DD-827C-141D-F3F7-0EF1EF04133C]
-    // </editor-fold> 
-    private boolean setItem (Item newVar) {
-        return true;
-    }
-
-    /**
-     *  Get the value of reparacion
-     *                       @return the value of reparacion
-     */
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,regenBody=yes,id=DCE.B392E422-8B1C-E2FA-01F3-870D92AA403D]
-    // </editor-fold> 
-    private Item getItem () {
-        return initialItem;
-    }
-
 }
 
