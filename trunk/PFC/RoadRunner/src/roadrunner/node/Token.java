@@ -1,5 +1,6 @@
-package tokenizador;
+package roadrunner.node;
 
+import tokenizador.*;
 import java.util.List;
 import roadrunner.node.Item; 
 
@@ -11,10 +12,9 @@ public class Token extends Item implements iToken {
     public enum Type {OPENTAG,CLOSETAG,TEXT,VARIABLE,EOF};
     public Type type;
     
-    public Token(String content, Type t){
+    public Token(String content){
         super();
         setContent(content);
-        setType(t);    
     }
     
     @Override

@@ -1,6 +1,8 @@
 package roadrunner;
 
+import roadrunner.node.Token;
 import SMTree.*;
+import java.util.ListIterator;
 import java.util.Stack;
 import roadrunner.node.*; 
 import roadrunner.operator.Operator; 
@@ -28,7 +30,7 @@ public class Wrapper {
     // #[regen=yes,id=DCE.CB10757A-C05C-4F36-13C5-A851167056BD]
     // </editor-fold> 
     public Mismatch eat (Sample s, Operator.Direction d) {
-        return eat(s, s.get(0), treeWrapper.getRootObject(), d);
+        return eat(s, s.getToken(0), treeWrapper.getRootObject(), d);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -68,7 +70,7 @@ public class Wrapper {
         Token t;
         do
         {
-            t = it.next();
+            t = (Token)it.next();
             if(t.isOpenTag())
                 openTags.push(t);
             else if (t.isCloseTag() && openTags.firstElement().isOpenTagOf(t))
@@ -102,7 +104,7 @@ public class Wrapper {
                //TODO Este metodo esta mal hasta que decidamos que hacemos con el sample.next()
         
         WrapperIterator<Item> itWrapper;
-        iTokenizedWPIterator itSample;
+        Sample.webPageForwardIterator itSample; //TODO: hacerlo mas bonito
         Mismatch m;
         
         
@@ -111,34 +113,42 @@ public class Wrapper {
         {
             itWrapper = treeWrapper.iterator(new ForwardTokenIterator());
             //TODO
-            itSample = s.startIterator();
+            itSample = s.iterator(...);
         }
         else if(Operator.Direction.UPWARDS == d)
         {
             itWrapper = treeWrapper.iterator(new BackwardTokenIterator());
             //TODO
-            itSample = s.startIterator();
+            itSample = s.iterator(...);
         }
  
         itWrapper.goTo(n);
         itSample.goTo(t);
+        
+        Token tokenSample;
+        Item itemWrapper;
 
         /*mientras no se produzca un mismatch y no me coma entero el sample o el wrapper*/
         while(itSample.hasNext() && itWrapper.hasNext() && m==null)
         {
-            Token tokenSample = itSample.next();
+            tokenSample = itSample.next();
             
             if(!itWrapper.isNext(tokenSample))
-                m = new Mismatch(this,s, itWrapper.next(), tokenSample);     
+            {
+                itemWrapper = itWrapper.next();
+                m = new Mismatch(this,s, itemWrapper, tokenSample);     
+            }
+            else
+                itemWrapper = itWrapper.next();
         }
        
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
          * entonces lanzamos otro mismatch
          */
-        if(itWrapper.hasNext() && m==null)    
-            m = new Mismatch(this,s, itWrapper.next(),itSample.EOF);
-        else if(itSample.hasNext() && m==null)
-            m = new Mismatch(this,s, itWrapper.EOF,itSample.next());
+        if(itWrapper.hasNext() && m==null && tokenSample.isEOF())    
+            m = new Mismatch(this,s, itWrapper.next(),tokenSample);
+        else if(itSample.hasNext() && m==null && ((Token)itemWrapper).isEOF())
+            m = new Mismatch(this,s, itemWrapper,(Token) itSample.next());
         
         return m;
     }
