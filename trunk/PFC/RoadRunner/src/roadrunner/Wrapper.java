@@ -104,7 +104,7 @@ public class Wrapper {
                //TODO Este metodo esta mal hasta que decidamos que hacemos con el sample.next()
         
         WrapperIterator<Item> itWrapper;
-        Sample.webPageForwardIterator itSample; //TODO: hacerlo mas bonito
+        Sample.webPageIterator itSample;
         Mismatch m;
         
         

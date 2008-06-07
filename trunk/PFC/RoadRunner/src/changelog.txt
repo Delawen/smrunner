@@ -14,6 +14,7 @@ CORREGIR
 
 TODO
 ====
+* Sample.Iterador por Tipos
 * Smtree.clone Smtree.equals ¿Smtree.node.equals?
 * Iterador  goto(Item)
 * Iterador que devuelva items y no nodos

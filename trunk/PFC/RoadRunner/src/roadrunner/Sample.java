@@ -52,8 +52,13 @@ public class Sample{
         tokens.get(index);
     }
     
+    public interface webPageIterator extends ListIterator
+    {
+        public void goTo(Token t);
+    }
     
-    public class webPageForwardIterator implements ListIterator
+    
+    public class webPageForwardIterator implements webPageIterator
     {
         private ListIterator it = tokens.listIterator();
         
@@ -110,7 +115,7 @@ public class Sample{
     }
 
 
-    public class webPageBackwardIterator implements ListIterator
+    public class webPageBackwardIterator implements webPageIterator
     {
         private ListIterator it = tokens.listIterator();
         
