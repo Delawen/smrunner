@@ -32,11 +32,12 @@ public class AmplitudIterator<T> extends WrapperIterator<T>
         this.indice = 0;
     }
 
-    void introducirElementos(SMTreeNode<T> nodoInicial) 
+    boolean introducirElementos(SMTreeNode<T> nodoInicial) 
     {
         indice = 0;
         array.clear();
         this.array.add(nodoInicial);
+        return true;
     }
 
     private void recorrerHijos() 
@@ -80,4 +81,5 @@ public class AmplitudIterator<T> extends WrapperIterator<T>
         return !this.array.isEmpty();
     }
 }
+
 

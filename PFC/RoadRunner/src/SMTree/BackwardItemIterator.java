@@ -15,11 +15,12 @@ public class BackwardItemIterator<T> extends WrapperIterator<T>
         super();
     }
     
-    void introducirElementos(SMTreeNode<T> nodoInicial) 
+    boolean introducirElementos(SMTreeNode<T> nodoInicial) 
     {
         this.array = new Stack<SMTreeNode<T>>();
         this.array.add(nodoInicial);
         recorrerHermanos(nodoInicial.getLastChild());
+        return true;
     }
 
     private void recorrerHermanos(SMTreeNode<T> node) 

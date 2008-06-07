@@ -45,7 +45,7 @@ public abstract class WrapperIterator<T> implements Iterator<T>
         return false;
     }
 
-    abstract void introducirElementos(SMTreeNode<T> nodoInicial);
+    abstract boolean introducirElementos(SMTreeNode<T> nodoInicial);
 
     public void remove() 
     {
@@ -73,8 +73,9 @@ public abstract class WrapperIterator<T> implements Iterator<T>
 
     public boolean goTo (T objeto) 
     {
-        introducirElementos(search(objeto));
-        return true;
+        if(this.arbol.getNode(objeto) != null)
+            return introducirElementos(search(objeto));
+        return false;
     }
     
     private SMTreeNode<T> search(T objeto)

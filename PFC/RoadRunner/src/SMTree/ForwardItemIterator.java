@@ -20,11 +20,12 @@ public class ForwardItemIterator<T> extends WrapperIterator<T>
         super();
     }
 
-    void introducirElementos(SMTreeNode<T> nodoInicial) 
+    boolean introducirElementos(SMTreeNode<T> nodoInicial) 
     {
         array.clear();
         array.add(nodoInicial);
         recorrerHermanos(nodoInicial.getFirstChild());
+        return true;
     }
 
     private void recorrerHermanos(SMTreeNode<T> node) 
