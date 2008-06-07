@@ -8,7 +8,7 @@ public abstract class Item {
     /**
      * Contenido del item
      */
-    private String content;
+    protected String content;
 
     /**
      * Comprueba si los items hacen matching
