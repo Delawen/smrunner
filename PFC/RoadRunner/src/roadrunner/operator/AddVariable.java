@@ -9,7 +9,7 @@ import roadrunner.Repair;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.80EF1EB2-DF19-D615-0B7A-1D3D66A616F8]
 // </editor-fold> 
-public class AddVariable extends Operator {
+public class AddVariable extends IOperator {
 
     /**
      *  Fields
@@ -21,12 +21,11 @@ public class AddVariable extends Operator {
     public AddVariable () {
     }
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.AD830D82-D522-022F-090C-23493D572863]
-    // </editor-fold> 
-    public Repair apply (Mismatch m, Operator.Direction d, Operator.Webpage where) {
-        return null;
+    @Override
+    public Repair apply(Mismatch m, DirectionOperator d, WebPageOperator where) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
 
 }
 
