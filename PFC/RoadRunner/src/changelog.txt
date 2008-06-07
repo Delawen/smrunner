@@ -10,6 +10,7 @@ CORREGIR
 ========
 * Iteradores utilizados en SMTree
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
+* Existe Variable mmmm,cambiar Token entonces.
 
 TODO
 ====
