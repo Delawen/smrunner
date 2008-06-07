@@ -437,6 +437,14 @@ public class SMTree<T> implements Cloneable{
         return substitute(f,inclusionFrom, t,inclusionTo,b);
     }
 
+    
+    public boolean substituteObject (T from, Enclosure inclusionFrom,
+            T to, Enclosure inclusionTo, SMTree<T> byTree) 
+    {
+        SMTreeNode<T> f = this.mapa.get(from);
+        SMTreeNode<T> t = this.mapa.get(to);
+        return substitute(f,inclusionFrom, t,inclusionTo,byTree);
+    }
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.A75CE315-A8D3-C755-EC0F-EF80CB8DAFEE]
     // </editor-fold> 

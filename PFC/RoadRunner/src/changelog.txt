@@ -21,6 +21,11 @@ TODO
 * Redefinir Sample y Token. Sample puede ser una simple lista
 
 
+07-06-2008
+==========
+[S 17:00] Movido Token a paquete roadrunner.node
+[S 16:00] Token casi listo. Modificaciones en Item
+
 06-06-2008
 ==========
 [S 20:00] Wrapper casi listo, pero con muchos errores a falta de decidir que hacemos con Sample/token y corregir los Iteradores
