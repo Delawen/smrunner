@@ -1,6 +1,10 @@
 package roadrunner;
 
-import tokenizador.Token; 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import roadrunner.node.Token; 
 import tokenizador.TokenizedWebPage; 
 import tokenizador.iTokenizedWPIterator; 
 
@@ -11,35 +15,154 @@ import tokenizador.iTokenizedWPIterator;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.CB19DE7C-E508-EC15-7F09-5611D1809B4F]
 // </editor-fold> 
-public class Sample implements TokenizedWebPage {
+public class Sample{
+    
+    private List<Token> tokens;
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.131D4BD3-2EF7-EFCB-A6A7-93092A953735]
-    // </editor-fold> 
-    public Token get (int index) {
-        return null;
+    public Sample(String page)
+    {
+        tokens = new LinkedList<Token>();
+        iTokenizedWPIterator tp = new iTokenizedWPIterator(page); //TODO
+        
+        TokenJuanma tj;
+        TokenNuestro t;
+
+        while(tp.hasNext())
+        {
+            tj = tp.next();
+            t = tj.convertirAnuestroToken();
+            tokens.add(t);
+        }
+        
+        t = new Token("&EOF;");
+        
+        tokens.add(t);
+    }
+    
+    public Iterator iterator(){
+        return new webPageBackwardIterator();
+        return new webPageForwardIterator();
+    }
+    
+    public Token getToken(int index)
+    {
+        if(index >= tokens.size())
+            throw new IndexOutOfBoundsException("Accediendo a un indice inexistente en el Sample ");
+        
+        tokens.get(index);
+    }
+    
+    
+    public class webPageForwardIterator implements ListIterator
+    {
+        private ListIterator it = tokens.listIterator();
+        
+        public void goTo(Token t)
+        {
+            it = tokens.listIterator();
+            while(it.hasNext())
+            {
+                if(t==it.next())
+                {
+                    it.previous();
+                    break;
+                }
+            }
+        }
+
+        public boolean hasNext() {
+            return it.hasNext();
+        }
+
+        public Object next() {
+            return it.next();
+        }
+
+        public boolean hasPrevious() {
+            return it.hasPrevious();
+        }
+
+        public Object previous() {
+            return it.previous();
+        }
+
+        public int nextIndex() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public int previousIndex() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void set(Object arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void add(Object arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    
+    
     }
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.B5ABF0E7-2C34-F7CC-B0B0-B25291029239]
-    // </editor-fold> 
-    public int size () {
-        return 0;
-    }
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.FCF82E08-75C6-D6BF-8BCF-743305372FAA]
-    // </editor-fold> 
-    public iTokenizedWPIterator startIterator () {
-        return null;
-    }
+    public class webPageBackwardIterator implements ListIterator
+    {
+        private ListIterator it = tokens.listIterator();
+        
+        public void goTo(Token t)
+        {
+            it = tokens.listIterator();
+            while(it.hasNext())
+            {
+                if(t==it.next())
+                {
+                    it.next();
+                    break;
+                }
+            }
+        }
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.7E1EBE1B-1952-795F-FF5B-27A8B4F09900]
-    // </editor-fold> 
-    public iTokenizedWPIterator endIterator () {
-        return null;
-    }
+        public boolean hasNext() {
+            return it.hasPrevious();
+        }
 
+        public Object next() {
+            return it.previous();
+        }
+
+        public boolean hasPrevious() {
+           return it.hasNext();
+        }
+
+        public Object previous() {
+           return it.next();
+        }
+
+        public int nextIndex() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public int previousIndex() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void set(Object arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void add(Object arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    
+    
+    }
 }
-
