@@ -29,6 +29,13 @@ public class SMTree<T> implements Cloneable{
         this.root = root;
         this.mapa = new SMIndexStructure(root);
     }
+    
+    public SMTree (T rootObject)
+    {
+        super();
+        this.root = new SMTreeNode<T>(rootObject);
+        this.mapa = new SMIndexStructure(this.root);
+    }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.AE7C2899-18A2-2421-2B1E-F759FB35FB7D]
