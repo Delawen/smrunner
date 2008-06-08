@@ -1,9 +1,11 @@
 package roadrunner;
 
+import roadrunner.Mismatch;
 import roadrunner.node.Token;
 import SMTree.*;
 import java.util.Stack;
 import roadrunner.node.*; 
+import roadrunner.operator.DirectionOperator;
 import roadrunner.operator.Operator; 
 import tokenizador.*;
 
@@ -24,11 +26,23 @@ public class Wrapper {
         super();
         treeWrapper = new SMTree<Item>();
     }
+    
+    public Wrapper(SMTree<Item> tree)
+    {
+        super();
+        this.treeWrapper = tree;
+    }
+    
+    
+    public SMTree<Item> getTree()
+    {
+        return this.treeWrapper;
+    }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.CB10757A-C05C-4F36-13C5-A851167056BD]
     // </editor-fold> 
-    public Mismatch eat (Sample s, Operator.Direction d) {
+    public Mismatch eat (Sample s, DirectionOperator d) {
         return eat(s, s.getToken(0), treeWrapper.getRootObject(), d);
     }
 
@@ -43,7 +57,7 @@ public class Wrapper {
     // #[regen=yes,id=DCE.25072B5A-1792-FB27-791C-BE9076EBAA29]
     // </editor-fold> 
     public Mismatch eat (Sample s) {
-        return eat(s,Operator.Direction.DOWNWARDS);
+        return eat(s,DirectionOperator.DOWNWARDS);
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -99,7 +113,7 @@ public class Wrapper {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.9AAF649B-4F9D-8FA4-3FC3-287DCD953037]
     // </editor-fold> 
-    public Mismatch eat (Sample s, Token t, Item n, Operator.Direction d) {
+    public Mismatch eat (Sample s, Token t, Item n, DirectionOperator d) {
                //TODO Este metodo esta mal hasta que decidamos que hacemos con el sample.next()
         
         WrapperIterator<Item> itWrapper = null;
@@ -108,12 +122,12 @@ public class Wrapper {
         
         
         /* Segun el recorrido creamos un tipo de iterador */
-        if(Operator.Direction.DOWNWARDS == d)
+        if(DirectionOperator.DOWNWARDS == d)
         {
             itWrapper = treeWrapper.iterator(new ForwardTokenIterator());
             itSample = s.iterator(Sample.webPageForwardIterator.class);
         }
-        else if(Operator.Direction.UPWARDS == d)
+        else if(DirectionOperator.UPWARDS == d)
         {
             itWrapper = treeWrapper.iterator(new BackwardTokenIterator());
             itSample = s.iterator(Sample.webPageBackwardIterator.class);
@@ -151,14 +165,14 @@ public class Wrapper {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.2CC0A58C-7557-67C2-0019-AB130B76E324]
     // </editor-fold> 
-    public SMTree search (Item i, Sample S, Operator.Direction d) {
+    public SMTree search (Item i, Sample S, DirectionOperator d) {
         return null;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.F925FF52-82A2-AFA9-A17C-8A6B6DE5DDAF]
     // </editor-fold> 
-    public SMTree search (Item i, Wrapper w, Operator.Direction d) {
+    public SMTree search (Item i, Wrapper w, DirectionOperator d) {
         return null;
     }
 

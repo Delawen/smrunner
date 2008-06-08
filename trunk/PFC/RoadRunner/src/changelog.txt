@@ -3,15 +3,24 @@ DUDAS
 * isNext hace internamente un next si es true, pero y sino tambien?
 * Cuidado con "#VAR".match("texto") y "texto".match("#VAR"). Ambos hacen match, 
 pero si estoy comparando dos Wrapper tendria que modificar el wrapper sobre el que comparo para que tenga "#VAR" y no "text"
+* En addVariable, linea 55, ¿cómo se crea un token variable?
 
 
 CORREGIR
 ========
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
+* Si se une variable y text, el mismatch entonces no debe tener un item, sino otro token
 
 TODO
 ====
 * Smtree.clone Smtree.equals ¿Smtree.node.equals?
+
+
+
+08-06-2008
+==========
+[M 14:00] addVariable
+[M 13:00] Sample, Wrapper, Operators, Repair y Mismatch: añadidas funciones y visibilidades
 
 
 07-06-2008
