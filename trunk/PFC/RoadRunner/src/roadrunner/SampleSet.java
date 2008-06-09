@@ -13,7 +13,7 @@ public class SampleSet {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.5641DB21-58F1-D770-83AE-34E574F5FBA8]
     // </editor-fold> 
-    private ArrayList<Sample> sample;
+    private ArrayList<Sample> samples;
 
     /**
      *  Fields
@@ -39,14 +39,14 @@ public class SampleSet {
     // #[regen=yes,regenBody=yes,id=DCE.CAE4629D-C9F4-7099-74FF-2E42020D7963]
     // </editor-fold> 
     public ArrayList<Sample> getSample () {
-        return sample;
+        return samples;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,regenBody=yes,id=DCE.5A7079E4-7EA0-1E98-6AA5-34CA26B0D067]
     // </editor-fold> 
     public void setSample (ArrayList<Sample> val) {
-        this.sample = val;
+        this.samples = val;
     }
 
 }

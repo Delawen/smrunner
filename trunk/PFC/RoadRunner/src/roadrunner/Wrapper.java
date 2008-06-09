@@ -27,6 +27,20 @@ public class Wrapper {
         treeWrapper = new SMTree<Item>();
     }
     
+    public Wrapper(Item rootItem)
+    {
+        this();
+        treeWrapper.setRootObject(rootItem);
+        
+    
+    }
+    
+    public Wrapper(Item rootItem,Item firstChildRoot)
+    {
+        this(rootItem);
+        treeWrapper.addObject(firstChildRoot, treeWrapper.getRoot(), Kinship.CHILD);
+    }
+    
     public Wrapper(SMTree<Item> tree)
     {
         super();
@@ -63,27 +77,41 @@ public class Wrapper {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E5C3243F-4177-9A70-094F-C76645D7AD05]
     // </editor-fold> 
-    public boolean isWellFormed (Token from, Token to) {
+    public boolean isWellFormed (Text from,Enclosure inclusionFrom, Text to,Enclosure inclusionTo) {
         
         if(from==null || to==null)
            throw new NullPointerException("");
+        
+        // las regiones vacias estaran bien formadas
+        if(from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
+            return true;
+        
+        boolean isWellFormed = true;
+        Stack<Text> openTags = new Stack(); 
+        WrapperIterator<Item> it = treeWrapper.iterator(new ForwardTokenIterator());
+
+        //Si 'to' no esta incluido, no desechamos
+        if(Enclosure.NOT_ENCLOSED == inclusionTo)
+        {
+            it.goTo(to);
+            to = it.previous();
+        }
+        
+        it.goTo(from);
+            
+        //Si 'from' no esta incluido, no desechamos
+        if(Enclosure.NOT_ENCLOSED == inclusionFrom)
+            it.next();
         
         if(from==to && !from.isTag())
             return true;
         else if (from==to)
             return false;
         
-        boolean isWellFormed = true;
-        
-        Stack<Token> openTags = new Stack();
-        
-        WrapperIterator<Item> it = treeWrapper.iterator(new ForwardTokenIterator());
-
-        it.goTo(from);
-        Token t;
+        Text t;
         do
         {
-            t = (Token)it.next();
+            t = (Text)it.next();
             if(t.isOpenTag())
                 openTags.push(t);
             else if (t.isCloseTag() && openTags.firstElement().isOpenTagOf(t))
@@ -154,27 +182,59 @@ public class Wrapper {
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
          * entonces lanzamos otro mismatch
          */
-        if(itWrapper.hasNext() && m==null && tokenSample.isEOF())    
+        if(itWrapper.hasNext() && m==null && tokenSample instanceof Text && ((Text)tokenSample).isEOF())    
             m = new Mismatch(this,s, itWrapper.next(),tokenSample);
-        else if(itSample.hasNext() && m==null && ((Token)itemWrapper).isEOF())
-            m = new Mismatch(this,s, itemWrapper,(Token) itSample.next());
+        else if(itSample.hasNext() && m==null && itemWrapper instanceof Text && ((Text)itemWrapper).isEOF())
+            m = new Mismatch(this,s, itemWrapper,itSample.next());
         
         return m;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.2CC0A58C-7557-67C2-0019-AB130B76E324]
-    // </editor-fold> 
-    public SMTree search (Item i, Sample S, DirectionOperator d) {
-        return null;
-    }
-
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.F925FF52-82A2-AFA9-A17C-8A6B6DE5DDAF]
     // </editor-fold> 
-    public SMTree search (Item i, Wrapper w, DirectionOperator d) {
-        return null;
-    }
+    public Token search (Token t, Token from,int occurrence, DirectionOperator d) {
+        
+        WrapperIterator<Item> itWrapper = null;
+        
+        if(DirectionOperator.DOWNWARDS == d)
+            itWrapper = treeWrapper.iterator(new ForwardTokenIterator());    
+        else if(DirectionOperator.UPWARDS == d)
+            itWrapper = treeWrapper.iterator(new BackwardTokenIterator());
+        
+        if(!itWrapper.goTo(from))
+            return null;
+        
+        Token token=null;
+        boolean find=false;
 
+        while(itWrapper.hasNext() && !find)
+        {
+            token = (Token) itWrapper.next();
+            
+            if(t.equals(token))
+                find = true;         
+        }
+        
+        if(!find)
+            token=null;
+        
+        return token;
+    }
+    
+    public Wrapper cloneSubWrapper(Item from)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public Wrapper cloneSubWrapper(Item from, Item newParent)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public Wrapper cloneSubWrapper(Item from, Item to, Item newParent)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }  
 }
 
