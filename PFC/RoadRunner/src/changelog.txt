@@ -9,6 +9,7 @@ pero si estoy comparando dos Wrapper tendria que modificar el wrapper sobre el q
 * ¿HOOK NUNCA PUEDE TENER REPARACIONES INTERNAS?
 * isWellFormed en una unica direccion?
 * ¿como trata el search los #vARIABLE?
+* ¿goto? :S
 
 CORREGIR
 ========
