@@ -5,7 +5,7 @@ import roadrunner.*;
 import roadrunner.node.Item;
 import roadrunner.node.Text;
 import roadrunner.node.Token;
-import roadrunner.node.Token.Type;
+import roadrunner.node.Variable;
 
 /**
  *  Class addVariable
@@ -24,7 +24,7 @@ public class AddVariable extends IOperator
         Repair reparacion = new Repair(m);
         Item n = m.getNode();
         Token t = m.getToken();
-        if(! (n instanceof Text) && (t.isText()))
+        if(!(n instanceof Text) || !(t instanceof Text))
         {
             reparacion.setState(StateRepair.FAILED);
         }
@@ -52,9 +52,7 @@ public class AddVariable extends IOperator
             reparacion.setState(StateRepair.SUCESSFULL);
             
             //reparator:
-            Token newToken = new Token("");
-            newToken.setType(Type.VARIABLE);
-            reparacion.setReparator(new Wrapper(new SMTree<Item>(newToken)));
+            reparacion.setReparator(new Wrapper(new Variable()));
         }
             
         return reparacion;

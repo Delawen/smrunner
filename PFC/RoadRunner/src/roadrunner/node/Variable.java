@@ -3,8 +3,13 @@ package roadrunner.node;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.43392123-E85C-8D5D-0464-7640817C4CF6]
 // </editor-fold> 
-public class Variable extends Item 
+public class Variable extends Token 
 {
+    
+    public Variable()
+    {
+        setContent("&VARIABLE;");
+    }
 
     /**
      * Hace matching si el objeto i es una variable o un texto, da igual cual.

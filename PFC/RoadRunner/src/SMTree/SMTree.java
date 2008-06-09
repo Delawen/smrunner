@@ -611,5 +611,50 @@ public class SMTree<T> implements Cloneable{
             return toString;
         }
     }
+    
+    public SMTree cloneSubTree(T from)
+    {
+       if(from==null)
+            throw new NullPointerException("");
+          
+    throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public SMTree cloneSubTree(SMTreeNode from)
+    {
+       if(from==null)
+            throw new NullPointerException("");
+          
+    throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public SMTree cloneSubTree(T from,T newParent)
+    {
+        if(from==null || newParent==null)
+            throw new NullPointerException("");
+        
+    throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public SMTree cloneSubTree(SMTreeNode from,SMTreeNode newParent)
+    {
+        if(from==null || newParent==null)
+            throw new NullPointerException("");
+        
+    throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public SMTree cloneSubTree(T from,T to,T newParent)
+    {
+        if(from==null || to==null || newParent==null)
+            throw new NullPointerException("");
+        
+    throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public SMTree cloneSubTree(SMTreeNode from, SMTreeNode to, SMTreeNode newParent)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }
