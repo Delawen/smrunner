@@ -1,88 +1,89 @@
 package SMTree;
 
-import java.util.AbstractList;
-import java.util.Iterator;
+import java.util.ListIterator;
 
 
-public abstract class WrapperIterator<T> implements Iterator<T>
+public abstract class WrapperIterator<T> implements ListIterator<T>
 {
         
-    protected AbstractList<SMTreeNode<T>> array;
-    protected SMTree<T> arbol;
+    protected SMTreeNode<T> lastNode;
+    private SMTree<T> tree;
+    private SMTreeNode<T> rootIterator;
         
-    public WrapperIterator(SMTree<T> arbol)
-    {
-        super();
-        initialize(arbol);
-    }
-    
     public WrapperIterator()
     {
         super();
-        this.arbol = null;
-        this.array = null;
+        this.tree = null;
+        this.rootIterator = null;
     }
     
-    boolean initialize(SMTree<T> arbol)
-    {   
-        if(this.arbol != null || this.array != null)
+    public WrapperIterator(SMTree<T> tree)
+    {
+        super();
+        this.tree = tree;
+        this.rootIterator = tree.getRoot();
+    }
+    
+     public boolean goTo (T objeto) 
+    {
+        SMTreeNode aux = getTree().getNode(objeto);
+        if(aux==null)
             return false;
-        this.arbol = arbol;
-        inicializarVector();
-        introducirElementos(arbol.getRoot());
+        
+        // movemos el puntero al nodo al que queremos ir, pero tenemos que desplazarnos
+        // para que el iterador el siguiente elemento que devuelva sea el que especificamos
+        lastNode = aux; 
+        if(hasPrevious())
+            lastNode = getTree().getNode(previous());
+        else
+            lastNode = null; // Si no tiene anterior, es porque es el primer elemento a recorrer
+        
         return true;
     }
-    
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.6C7D0D32-B042-86FF-2B3A-5AD6D127016A]
-    // </editor-fold> 
-    public boolean isNext (T o) 
-    {
-        SMTreeNode<T> nodo = search(next());
-        if(o.equals(nodo))
-            return true;
-        this.array.add(this.array.size(), nodo);
-        return false;
+     
+ 
+    public abstract boolean isNext (T o);
+
+    public abstract T next ();
+    public  abstract boolean hasNext ();
+    public abstract boolean hasPrevious();
+    public abstract T previous();
+
+    public int nextIndex() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    abstract boolean introducirElementos(SMTreeNode<T> nodoInicial);
+    public int previousIndex() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
+    public void set(T arg0) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void add(T arg0) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
     public void remove() 
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.245215D2-1215-CC60-AB9E-6019D1E6A4AD]
-    // </editor-fold> 
-    public T next () 
-    {
-        SMTreeNode<T> res = this.array.get(0);
-        this.array.remove(0);
-        return res.getObject();
+
+    public SMTree<T> getTree() {
+        return tree;
     }
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.19EB4119-4E9F-6A37-A53B-97B36533E2E8]
-    // </editor-fold> 
-    public boolean hasNext () 
-    {
-        return !this.array.isEmpty();
-    }
-    
-
-    public boolean goTo (T objeto) 
-    {
-        if(this.arbol.getNode(objeto) != null)
-            return introducirElementos(search(objeto));
-        return false;
-    }
-    
-    private SMTreeNode<T> search(T objeto)
-    {
-        return arbol.getNode(objeto);
+    public void setTree(SMTree<T> arbol) {
+        this.tree = arbol;
     }
 
-    abstract void inicializarVector(); 
+    public SMTreeNode<T> getRootIterator() {
+        return rootIterator;
+    }
+
+    public void setRootIterator(SMTreeNode<T> rootIterator) {
+        this.rootIterator = rootIterator;
+    }
 }
 

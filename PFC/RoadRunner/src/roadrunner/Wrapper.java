@@ -4,6 +4,8 @@ import roadrunner.Mismatch;
 import roadrunner.node.Token;
 import SMTree.*;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import roadrunner.node.*; 
 import roadrunner.operator.DirectionOperator;
 import roadrunner.operator.Operator; 
@@ -31,8 +33,10 @@ public class Wrapper {
     {
         this();
         treeWrapper.setRootObject(rootItem);
-        
-    
+    }
+
+    public Wrapper(Wrapper w) {
+        treeWrapper = w.getTree().clone();
     }
     
     public Wrapper(Item rootItem,Item firstChildRoot)
@@ -88,13 +92,13 @@ public class Wrapper {
         
         boolean isWellFormed = true;
         Stack<Text> openTags = new Stack(); 
-        WrapperIterator<Item> it = treeWrapper.iterator(new ForwardTokenIterator());
+        WrapperIterator<Item> it = treeWrapper.iterator(ForwardTokenIterator.class);
 
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
             it.goTo(to);
-            to = it.previous();
+            to = (Text)it.previous();
         }
         
         it.goTo(from);
@@ -152,12 +156,12 @@ public class Wrapper {
         /* Segun el recorrido creamos un tipo de iterador */
         if(DirectionOperator.DOWNWARDS == d)
         {
-            itWrapper = treeWrapper.iterator(new ForwardTokenIterator());
+            itWrapper = treeWrapper.iterator(ForwardTokenIterator.class);
             itSample = s.iterator(Sample.webPageForwardIterator.class);
         }
         else if(DirectionOperator.UPWARDS == d)
         {
-            itWrapper = treeWrapper.iterator(new BackwardTokenIterator());
+            itWrapper = treeWrapper.iterator(BackwardTokenIterator.class);
             itSample = s.iterator(Sample.webPageBackwardIterator.class);
         }
  
@@ -198,9 +202,9 @@ public class Wrapper {
         WrapperIterator<Item> itWrapper = null;
         
         if(DirectionOperator.DOWNWARDS == d)
-            itWrapper = treeWrapper.iterator(new ForwardTokenIterator());    
+            itWrapper = treeWrapper.iterator(ForwardTokenIterator.class);    
         else if(DirectionOperator.UPWARDS == d)
-            itWrapper = treeWrapper.iterator(new BackwardTokenIterator());
+            itWrapper = treeWrapper.iterator(BackwardTokenIterator.class);
         
         if(!itWrapper.goTo(from))
             return null;
@@ -220,6 +224,43 @@ public class Wrapper {
             token=null;
         
         return token;
+    }
+    
+    public WrapperIterator<Item> iterator (Class iteratorClass)
+    {
+        WrapperIterator<Item> wi = null;
+        try {
+            wi = (WrapperIterator<Item>) iteratorClass.newInstance();
+        } catch (InstantiationException ex) {
+            Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        wi.setTree(treeWrapper);
+        wi.setRootIterator(treeWrapper.getRoot());
+        
+        return wi;
+    }
+    
+    public WrapperIterator<Item> iterator (Class iteratorClass, Item virtualRootWrapper)
+    {
+        WrapperIterator<Item> wi = null;
+        try {
+            wi = (WrapperIterator<Item>) iteratorClass.newInstance();
+        } catch (InstantiationException ex) {
+            Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        SMTreeNode<Item> virtualRootNode = treeWrapper.getNode(virtualRootWrapper);
+        if(virtualRootNode==null)
+            throw new NullPointerException("La raiz virtual para recorrer el wrapper no existe");
+        
+        wi.setTree(treeWrapper);
+        wi.setRootIterator(virtualRootNode);
+        
+        return wi;
     }
     
     public Wrapper cloneSubWrapper(Item from)

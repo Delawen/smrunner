@@ -1,5 +1,7 @@
 package tokenizador;
 
+import roadrunner.node.Token;
+
 
 /**
  *  @author delawen

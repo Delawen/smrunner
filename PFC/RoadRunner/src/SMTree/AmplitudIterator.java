@@ -15,70 +15,34 @@ public class AmplitudIterator<T> extends WrapperIterator<T>
     //Se van guardando los hijos de los nodos que recorremos del nivel actual:
     private int indice;
     
-    public AmplitudIterator(SMTree<T> nodoInicial)
-    {
-        super(nodoInicial);
-    }
-    
     public AmplitudIterator()
     {
         super();
     }
 
     @Override
-    public void inicializarVector() 
-    {
-        array = new LinkedList<SMTreeNode<T>>();
-        this.indice = 0;
-    }
-
-    boolean introducirElementos(SMTreeNode<T> nodoInicial) 
-    {
-        indice = 0;
-        array.clear();
-        this.array.add(nodoInicial);
-        return true;
-    }
-
-    private void recorrerHijos() 
-    {
-        //Vamos metiendo en el array todos los nodos del siguiente nivel
-        LinkedList<SMTreeNode<T>> provisional = new LinkedList<SMTreeNode<T>>();
-        
-        if(!this.array.isEmpty())
-        {
-            for(int i = 0; i < this.array.size(); i++)
-            {
-                SMTreeNode<T> aux = this.array.get(i).getFirstChild();
-                while(aux != null)
-                {
-                    provisional.add(aux);
-                    aux = aux.getNext();
-                }
-            }
-            this.array = provisional;
-            this.indice = 0;
-        }
+    public boolean isNext(T o) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public T next () 
-    {
-        //Si hemos llegado al final del array, es que pasamos al siguiente nivel:
-        if(indice == this.array.size())
-            recorrerHijos();
-        
-        //Sacamos el nodo de la posicion índice:
-        SMTreeNode<T> res = this.array.get(indice);
-        indice++;
-        return res.getObject();
+    public T next() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    public boolean hasNext () 
-    {
-        if(this.array.size() == this.indice)
-            recorrerHijos();
-        return !this.array.isEmpty();
+
+    @Override
+    public boolean hasNext() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean hasPrevious() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public T previous() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
 
