@@ -48,6 +48,7 @@ TODO
             * search()
 [S 00:00] Modificado Iteradores:
             * ahora se pueden crear usando el .class
+            * los iteradores tienen una raizvirtual para hacer recorridos de subarboles
             * WrapperIterator implementa ahora a ListIterator para que tenga metodos como previous()
             * Aun queda por ver si el previous y el hasprevious funcionan bien.
 
