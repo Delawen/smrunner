@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import roadrunner.node.Text;
 import roadrunner.node.Token;  
 import roadrunner.operator.DirectionOperator;
@@ -16,6 +18,7 @@ public class Sample{
 
     public Sample(String page)
     {
+        /*
         tokens = new LinkedList<Token>();
         iTokenizedWPIterator tp = new iTokenizedWPIterator(page); //TODO
         
@@ -32,6 +35,7 @@ public class Sample{
         t = new Token("&EOF;");
         
         tokens.add(t);
+         * */
     }
     
     public Token search (Token t, Token from, int occurrence, DirectionOperator d) {
@@ -115,7 +119,15 @@ public class Sample{
     
     public webPageIterator iterator(Class iteratorClass)
     {
-        return (webPageIterator) iteratorClass.newInstance();
+        webPageIterator wpi=null;
+        try {
+            wpi = (webPageIterator) iteratorClass.newInstance();
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return wpi;
     }
     
     public Token getToken(int index)
@@ -123,7 +135,7 @@ public class Sample{
         if(index >= tokens.size())
             throw new IndexOutOfBoundsException("Accediendo a un indice inexistente en el Sample ");
         
-        tokens.get(index);
+        return tokens.get(index);
     }
     
     public interface webPageIterator extends ListIterator<Token>

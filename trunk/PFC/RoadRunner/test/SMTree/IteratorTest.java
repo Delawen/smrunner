@@ -94,7 +94,7 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        WrapperIterator<String> it = arbol.iterator(new AmplitudIterator());
+        WrapperIterator<String> it = arbol.iterator(AmplitudIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
             String next = it.next();
@@ -126,10 +126,25 @@ public class IteratorTest
         orden.add(node1_1_2_1);
         orden.add(node1_1_1);
         
+
+ orden.clear();
+        orden.add(node1_4_2);
+        orden.add(node1_4_1);
+        orden.add(node1_4);
+        orden.add(node1_3);
+        orden.add(node1_2);    
+        orden.add(node1_1_2_2);
+        orden.add(node1_1_2_1);
+        orden.add(node1_1_2);
+        orden.add(node1_1_1);
+        orden.add(node1_1); 
+        orden.add(node1);       
+        
+        
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        WrapperIterator<String> it = arbol.iterator(new BackwardItemIterator());
+        WrapperIterator<String> it = arbol.iterator(BackwardItemIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
             String next = it.next();
@@ -163,7 +178,7 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        WrapperIterator<String> it = arbol.iterator(new ForwardItemIterator());
+        WrapperIterator<String> it = arbol.iterator(ForwardItemIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
             String next = it.next();
