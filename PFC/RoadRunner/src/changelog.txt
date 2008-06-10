@@ -8,31 +8,56 @@ pero si estoy comparando dos Wrapper tendria que modificar el wrapper sobre el q
 * ¿Quien lanzaba un operador primero en el wrapper y luego en el sample? ¿Operator? Si es asi hay que corregirlo
 * ¿HOOK NUNCA PUEDE TENER REPARACIONES INTERNAS?
 * isWellFormed en una unica direccion?
-* ¿como trata el search los #vARIABLE?
-* ¿goto? :S
+* ¿como trata el search los #vARIABLE? Deberia ser capaz de decir que "hola" lo ha encontrado cuando vea un "#VAR", aunque es posible que sea arriesgado hacer esto.
+* [sugerencia] yo separaria los iteradores de recorrer los arboles de los que recorrer el wrapper.
+* ¿para que sirve compositeItem? xD
 
 CORREGIR
 ========
-* Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
-* Si se une variable y text, el mismatch entonces no debe tener un item, sino otro token
+
 
 TODO
 ====
-* Smtree.clone Smtree.equals ¿Smtree.node.equals?
-* !!! Hacer un previous y quiza un isPrevious() para el wrapper
-* Estaria bien unos metodos que te dieran tanto en el sample como en el wrapper el siguiente y el anterior elemento a uno dado
-sin necesidad de tener que crear un iterador pq solo quieres un elemento que es su vecino
+* Adaptar el tokenizador de juanma.
+[NOTA: Dejame todo esto de abajo a mi y empieza a hacer el addplus o si quieres seguir el addoptional]
+* smtindex.clone  smtindex.equals
+* Smtree.clone Smtree.equals smtree.clonesubtree
+* Smtreenode.clone Smtreenode.equals
+* wrapper.clone wrapper.equals wrapper.clonesubwrapper
+* BackwardItemIterator
+* ForwardTokenIterator
+* BackwardTokenIterator
+* Cambiar nombre a AmplitudIterator por LevelIterator o algo asi e implementarlo (lo hago yo que tengo la idea en un papel)
+* Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
 
 09-06-2008
 ==========
-[S 13:00] Tanto wrapper como sample tienen su propio metodo isWellFormed
-[S 12:00] Nuevos constructores para Wrapper: miratelos que son para no tener que 
-manejar arboles SMTree en los operadores. Por ejemplo:
-            Token newToken = new Variable();
-            reparacion.setReparator(new Wrapper(new SMTree<Item>(newToken)));
-      Ahora seria:
-            reparacion.setReparator(new Wrapper(new Variable()));
-[S 11:30] Wrapper.search(...) y Sample.search(...)
+[S 00:00] Sample
+            * isWellFormed()
+            * search()
+[S 00:00] AddOptional
+            * Hecho al 50% aunque ese 50% esta cogido con pinzas y no me convence.
+[S 00:00] SMTree:
+            * metodos cloneSubTree(TODO) para clonar zonas del arbol, ideal para usarlo en wrapper.
+            * Algunas de las sobrecargas de clonesubtree permiten decirle [from... to] y el otro parametro que se le pasa sera el padre que tendran
+[S 00:00] Wrapper:
+            * Nuevos constructores
+            * metodo iterator() para abstraernos ya de los arboles
+            * metodos cloneSubWrapper(TODO): similar a los cloneSubtree pero este devuelve un wrapper interno clonado, ideal para las reparaciones
+            * isWellFormed()
+            * search()
+[S 00:00] Modificado Iteradores:
+            * ahora se pueden crear usando el .class
+            * WrapperIterator implementa ahora a ListIterator para que tenga metodos como previous()
+            * Aun queda por ver si el previous y el hasprevious funcionan bien.
+
+[S 12:00] Nuevos constructores para Wrapper
+            *miratelos que son para no tener que manejar arboles SMTree en los operadores. 
+            *Por ejemplo en vez de esto:
+                    Token newToken = new Variable();
+                    reparacion.setReparator(new Wrapper(new SMTree<Item>(newToken)));
+            * Ahora seria:
+                    reparacion.setReparator(new Wrapper(new Variable()));
 [S 10:00] Correccion en el diseño: Text y Variable ya no son directamente Items, sino que heredan de Tokens que a su vez son Items
 [S 09:30] Correcciones en Text y Variable
 [S 09:30] Token pasa a ser abstracta
