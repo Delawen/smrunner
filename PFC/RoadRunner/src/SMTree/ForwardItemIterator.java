@@ -1,13 +1,5 @@
 package SMTree;
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-
-import java.util.ArrayList;
-import java.util.List;
-
-// #[regen=yes,id=DCE.4F937AF2-FA3C-57D0-0C39-485D889F11FB]
-import java.util.Stack;
-// </editor-fold> 
 public class ForwardItemIterator<T> extends WrapperIterator<T> 
 { 
     
@@ -24,9 +16,8 @@ public class ForwardItemIterator<T> extends WrapperIterator<T>
     @Override
     public T next() {
         SMTreeNode<T> resultNode=null;
-        T result;
         
-        if(lastNode == null && getTree().getRoot()!=null)
+        if(lastNode == null && getRootIterator()!=null)
             resultNode = getRootIterator();
         else if(lastNode.getFirstChild() != null)
             resultNode = lastNode.getFirstChild();
@@ -45,20 +36,15 @@ public class ForwardItemIterator<T> extends WrapperIterator<T>
         }
         
         
-        if(resultNode != null)
-        {
-            lastNode = resultNode;
-            result = resultNode.getObject();
-        }
-        else
+        if(resultNode == null)
             throw new IllegalStateException("¿No se supone que habia next()?");
-    
-        return result; 
+        
+        lastNode = resultNode;
+        return resultNode.getObject(); 
     }
-
     @Override
     public boolean hasNext() {
-        boolean hasNext = lastNode == null && getTree().getRoot()!=null;
+        boolean hasNext = lastNode == null && getRootIterator()!=null;
         if(lastNode != null && !hasNext)
         {
             hasNext |= lastNode.getFirstChild() != null;

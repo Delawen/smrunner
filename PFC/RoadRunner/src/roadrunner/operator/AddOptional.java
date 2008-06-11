@@ -4,6 +4,8 @@ import SMTree.BackwardItemIterator;
 import SMTree.Enclosure;
 import SMTree.ForwardItemIterator;
 import SMTree.WrapperIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import roadrunner.Mismatch; 
 import roadrunner.Repair; 
 import roadrunner.Sample;
@@ -114,8 +116,12 @@ public class AddOptional extends IOperator {
                 return rep;
             }
 
-            Wrapper wrapperReparator = new Wrapper(
-                    w.cloneSubWrapper(firstTokenOptional, lastTokenOptional , new Optional()));
+            Wrapper wrapperReparator = null;
+            try {
+                wrapperReparator = new Wrapper(w.cloneSubWrapper(firstTokenOptional, lastTokenOptional, new Optional()));
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(AddOptional.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             rep.setReparator(wrapperReparator);
             rep.setFinalItem(lastTokenOptional);

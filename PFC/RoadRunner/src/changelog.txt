@@ -19,16 +19,21 @@ CORREGIR
 TODO
 ====
 * Adaptar el tokenizador de juanma.
+* Decidir si es mejor recorrer primero el padre y luego los hijos, o dejar el padre para el final
 [NOTA: Dejame todo esto de abajo a mi y empieza a hacer el addplus o si quieres seguir el addoptional]
 * smtindex.clone  smtindex.equals
 * Smtree.clone Smtree.equals smtree.clonesubtree
 * Smtreenode.clone Smtreenode.equals
 * wrapper.clone wrapper.equals wrapper.clonesubwrapper
-* BackwardItemIterator
 * ForwardTokenIterator
 * BackwardTokenIterator
-* Cambiar nombre a AmplitudIterator por LevelIterator o algo asi e implementarlo (lo hago yo que tengo la idea en un papel)
+* Cambiar nombre a AmplitudIterator por LevelIterator o algo asi
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
+
+11-06-2008
+==========
+[S 15:00] AmplitudIterador
+[S 13:00] BackwardItemIterator
 
 09-06-2008
 ==========
