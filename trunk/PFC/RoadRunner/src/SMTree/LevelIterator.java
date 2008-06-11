@@ -33,12 +33,14 @@ public class LevelIterator<T> extends WrapperIterator<T>
                 {              
                     auxChild = aux.getFirstChild();
                     nodes.add(auxChild);
-                    s.add(auxChild);
+                    if(auxChild.getLastChild()!=null)
+                        s.add(auxChild);
                     while(auxChild!=null && auxChild.getNext()!=null)
                     {
                         auxChild = auxChild.getNext();
                         nodes.add(auxChild);
-                        s.add(auxChild);
+                        if(auxChild.getLastChild()!=null)
+                            s.add(auxChild);
                     }
                 }
             }
