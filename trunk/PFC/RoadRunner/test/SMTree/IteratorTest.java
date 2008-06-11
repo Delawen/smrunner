@@ -75,7 +75,7 @@ public class IteratorTest
     @Test
     public void amplitudIterator() throws Exception
     {
-        System.out.println("AmplitudIterator");
+        System.out.println("LevelIterator");
         
         //Creamos manualmente el orden:
         LinkedList<SMTreeNode<String>> orden = new LinkedList<SMTreeNode<String>>();
@@ -94,7 +94,7 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        WrapperIterator<String> it = arbol.iterator(AmplitudIterator.class);
+        WrapperIterator<String> it = arbol.iterator(LevelIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
             String next = it.next();
@@ -113,7 +113,7 @@ public class IteratorTest
         
         //Creamos manualmente el orden:
         LinkedList<SMTreeNode<String>> orden = new LinkedList<SMTreeNode<String>>();
-        
+   /*     
         orden.add(node1);
         orden.add(node1_4);
         orden.add(node1_4_2);
@@ -126,8 +126,7 @@ public class IteratorTest
         orden.add(node1_1_2_1);
         orden.add(node1_1_1);
         
-
- orden.clear();
+*/
         orden.add(node1_4_2);
         orden.add(node1_4_1);
         orden.add(node1_4);

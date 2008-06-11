@@ -35,7 +35,7 @@ public class Wrapper {
         treeWrapper.setRootObject(rootItem);
     }
 
-    public Wrapper(Wrapper w) {
+    public Wrapper(Wrapper w) throws CloneNotSupportedException {
         treeWrapper = w.getTree().clone();
     }
     
