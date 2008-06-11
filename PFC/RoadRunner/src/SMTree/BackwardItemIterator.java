@@ -11,7 +11,13 @@ public class BackwardItemIterator<T> extends WrapperIterator<T>
 
     @Override
     public boolean isNext(T o) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        SMTreeNode temp = lastNode;    
+        boolean result = next().equals(o);
+        
+        if(!result)
+            lastNode = temp;
+
+        return result;
     }
 
     @Override
