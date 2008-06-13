@@ -58,9 +58,9 @@ public class AddOptional extends IOperator {
         if(where == WebPageOperator.WRAPPER)
         {
             int ocurrence = 0;
-            boolean finded = true;
+            boolean searching = true;
             
-            while(finded)
+            while(searching)
             {
                 // Buscamos el token que aparecera justo detra de la supuesta opcionalidad
                 lastTokenOptional =  w.search(t, (Token) n, ocurrence, d);
@@ -69,7 +69,7 @@ public class AddOptional extends IOperator {
                 // porque no se puede crear reparacion con addoptional en el wrapper
                 if(lastTokenOptional == null)
                 {
-                    finded = false;
+                    searching = false;
                 }
                 // Si lo hemos encontrado tenemos que ver si es una porcion
                 // de codigo bien formada, sino seguimos buscando la siguiente ocurrencia
@@ -77,7 +77,7 @@ public class AddOptional extends IOperator {
                      ocurrence++;
                 else
                 {
-                    finded = true;
+                    searching = false;
                     // y ahora si que nos quedamos con el token ultimo de la opcionalidad
                     itW.goTo(lastTokenOptional);
                     lastTokenOptional = (Token) itW.previous();
@@ -85,7 +85,9 @@ public class AddOptional extends IOperator {
                 }
             }
             
-            if(!finded)
+            
+            // Si no hemos localizado el comienzo y el final del SquareOptional...
+            if(lastTokenOptional == null || firstTokenOptional == null)
             {
                 rep.setState(StateRepair.FAILED);
                 return rep;
@@ -124,13 +126,83 @@ public class AddOptional extends IOperator {
             }
 
             rep.setReparator(wrapperReparator);
+            rep.setInitialItem(firstTokenOptional);
             rep.setFinalItem(lastTokenOptional);
             rep.setState(StateRepair.SUCESSFULL);
             rep.setIndexSample(null); // TODO no se que se pone aquis
         }
         else if(where == WebPageOperator.SAMPLE)
-        {
-         ;
+        {     
+            int ocurrence = 0;
+            boolean searching = true;
+            
+            while(searching)
+            {
+                // Buscamos el token que aparecera justo detra de la supuesta opcionalidad
+                lastTokenOptional =  s.search((Token) n, t, ocurrence, d);
+
+                // Si no lo hemos encontrado paramos de buscar
+                // porque no se puede crear reparacion con addoptional en el wrapper
+                if(lastTokenOptional == null)
+                {
+                    searching = false;
+                }
+                // Si lo hemos encontrado tenemos que ver si es una porcion
+                // de codigo bien formada, sino seguimos buscando la siguiente ocurrencia
+                else if(!s.isWellFormed( (Text) t, Enclosure.ENCLOSED, (Text) lastTokenOptional, Enclosure.NOT_ENCLOSED))
+                     ocurrence++;
+                else
+                {
+                    searching = false;
+                    // y ahora si que nos quedamos con el token ultimo de la opcionalidad
+                    itS.goTo(lastTokenOptional);
+                    lastTokenOptional = (Token) itS.previous();
+                    firstTokenOptional = (Token) t;
+                }
+            }
+            
+            
+            // Si no hemos localizado el comienzo y el final del SquareOptional...
+            if(lastTokenOptional == null || firstTokenOptional == null)
+            {
+                rep.setState(StateRepair.FAILED);
+                return rep;
+            }
+            
+            
+            // Creamos el nuevo WrapperReparator
+
+            //TODO : Revisar la logica que tiene esto porque algo no me convence...
+            
+            /** Queremos evitar convertir un elemento de una lista en un hook
+             *      W                       S
+             *      <b>1</b>                <b>1</b>
+             *      m::<b>:: 2</b>          m::<a>:: 1<a/>
+             *      <a>1</a>
+             */
+            
+            itS.goTo(t);
+            Token tokenInmediatelyBeforeT = itS.previous();
+            itS.goTo(t);
+            Token tokenInmediatelyAfterT = itS.next();
+            
+            if(!lastTokenOptional.equals(tokenInmediatelyBeforeT) && 
+                    !firstTokenOptional.equals(tokenInmediatelyAfterT))
+            {
+                // falla: estabamos ante una lista.
+                rep.setState(StateRepair.FAILED);
+                return rep;
+            }
+
+            Wrapper wrapperReparator = s.getAsWrapper(
+                    firstTokenOptional, Enclosure.ENCLOSED, 
+                    lastTokenOptional,  Enclosure.ENCLOSED, new Optional());
+            
+            rep.setReparator(wrapperReparator);
+            rep.setInitialItem(...);
+            rep.setFinalItem(....);
+            rep.setState(StateRepair.SUCESSFULL);
+            rep.setIndexSample(null); // TODO no se que se pone aquis
         }
     
         return rep;     

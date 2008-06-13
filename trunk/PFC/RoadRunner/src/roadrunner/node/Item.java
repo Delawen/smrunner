@@ -3,7 +3,7 @@ package roadrunner.node;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.58D4B716-AA5D-2E4D-A254-A86DA56B6204]
 // </editor-fold> 
-public abstract class Item {
+public abstract class Item implements Cloneable{
 
     /**
      * Contenido del item
@@ -54,6 +54,7 @@ public abstract class Item {
      */
     @Override
     public abstract boolean equals(Object i);
+    public abstract Object clone(Object o);
 
 }
 
