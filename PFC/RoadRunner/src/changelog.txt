@@ -14,6 +14,12 @@ pero si estoy comparando dos Wrapper tendria que modificar el wrapper sobre el q
 
 CORREGIR
 ========
+* addOptional:
+    - Cuando la opcionalidad se ha encontrado en el Sample tenemos que añadirla en el wrapper,
+        el problema es que ahora mismo no tenemos forma de crear reparaciones a las que pueda decirles
+        que la reparacion va delante o despues de algo, no es suficiente con decir [from... to] porque en 
+        este caso añadimos algo nuevo al wrapper que no existe.
+    - Lo anterior hace que Repair.apply() considere tambien ese caso.
 
 
 TODO
@@ -29,6 +35,15 @@ TODO
 * BackwardTokenIterator
 * Cambiar nombre a AmplitudIterator por LevelIterator o algo asi
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
+
+
+13-06-2008
+==========
+[S 11:30] Sample:
+            * nuevo metodo getAsWrapper para poder obtener como un wrapper un trozo del sample
+[S 11:30] Los Items permiten clonacion... (TODO)
+[S 11:00] addOptional
+            * terminado?
 
 11-06-2008
 ==========

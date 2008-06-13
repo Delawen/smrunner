@@ -146,4 +146,9 @@ public class Text extends Token
         
         return open.getContent().regionMatches(true,1,close.getContent(),2, lengthTagName);    
     }
+
+    @Override
+    public Object clone(Object o) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

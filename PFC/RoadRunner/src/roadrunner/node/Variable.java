@@ -34,5 +34,10 @@ public class Variable extends Token
         return (i instanceof Variable);
     }
 
+    @Override
+    public Object clone(Object o) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
 

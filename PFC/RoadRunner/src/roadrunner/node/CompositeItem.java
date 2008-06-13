@@ -31,5 +31,10 @@ public class CompositeItem extends Item
             return false;
         return ((Item)i).getContent().equals(this.getContent());
     }
+
+    @Override
+    public Object clone(Object o) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
 

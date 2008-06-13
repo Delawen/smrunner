@@ -1,16 +1,17 @@
 package roadrunner;
 
 import SMTree.Enclosure;
-import java.util.LinkedList;
+import SMTree.Kinship;
+import SMTree.SMTree;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import roadrunner.node.Item;
 import roadrunner.node.Text;
 import roadrunner.node.Token;  
 import roadrunner.operator.DirectionOperator;
-import tokenizador.iTokenizedWPIterator; 
 
 public class Sample{
     
@@ -114,7 +115,66 @@ public class Sample{
         if(!openTags.empty())
             isWellFormed=false;
         
-        return isWellFormed;
+        return isWellFormed; 
+    }
+    
+    public Wrapper getAsWrapper(Token from, Enclosure inclusionFrom, Token to, Enclosure inclusionTo, Item newParent)
+    {
+        Wrapper w = null;
+        boolean success = false;
+        SMTree<Item> tree = null;
+        webPageIterator it = new webPageForwardIterator();
+        
+        if(inclusionFrom == Enclosure.NOT_ENCLOSED)
+        {
+            if(!it.goTo(from))
+                throw new IllegalStateException("No se ha podido un wrapper del sample: Los indices son erroneos");
+            it.next(); // desechamos from
+            from = it.next();
+        }
+        if(inclusionTo == Enclosure.NOT_ENCLOSED)
+        {
+            if(!it.goTo(to))
+                throw new IllegalStateException("No se ha podido un wrapper del sample: Los indices son erroneos");
+            to = it.previous();
+        
+        }
+        
+        /**
+         * Regiones vacias:
+         * 1. (from,to) siendo from==to
+         * 2. [from,to) siendo from==to
+         * 3. (from,to] siendo from==to
+         * 4. from == null
+         * 5. to == null
+         */
+        if( (from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
+                || from==null || to==null)
+        {
+            return null;
+        }
+        
+        if(!it.goTo(from))
+            return null;
+        
+        tree = new SMTree();
+        tree.setRootObject(newParent);
+        Token t;
+        
+        do
+        {   
+            t = it.next();
+            tree.addObject(t, tree.getRoot() , Kinship.CHILD);
+        }  while(it.hasNext() && t!=to);
+        
+        // TODO esto quiza sobre:
+        if(!it.hasNext() && t!=to)
+            return null;
+        
+        //añadimos 'to'
+        tree.addObject(it.next(), tree.getRoot() , Kinship.CHILD);
+        
+        return new Wrapper(tree);
     }
     
     public webPageIterator iterator(Class iteratorClass)
@@ -151,6 +211,10 @@ public class Sample{
         public boolean goTo(Token t)
         {
             boolean result=false;
+            
+            if(!tokens.contains(t))
+                return false;
+            
             it = tokens.listIterator();
             while(it.hasNext() && !result)
             {
@@ -209,6 +273,10 @@ public class Sample{
         public boolean goTo(Token t)
         {
             boolean result=false;
+            
+            if(!tokens.contains(t))
+                return false;
+            
             it = tokens.listIterator();
             while(it.hasNext() && !result)
             {
