@@ -1,6 +1,8 @@
-package SMTree;
+package SMTree.iterator;
 
-public class ForwardItemIterator<T> extends WrapperIterator<T> 
+import SMTree.*;
+
+public class ForwardItemIterator<T> extends SMTreeIterator<T> 
 { 
     
     public ForwardItemIterator()

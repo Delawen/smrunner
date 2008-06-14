@@ -1,24 +1,24 @@
-package SMTree;
+package SMTree.iterator;
 
-import roadrunner.EdibleIterator;
-import roadrunner.node.Item;
+import roadrunner.iterator.*;
+import SMTree.*;
 
 
-public abstract class WrapperIterator<T> implements EdibleIterator
+public abstract class SMTreeIterator<T>
 {
         
     protected SMTreeNode<T> lastNode;
     private SMTree<T> tree;
     private SMTreeNode<T> rootIterator;
         
-    public WrapperIterator()
+    public SMTreeIterator()
     {
         super();
         this.tree = null;
         this.rootIterator = null;
     }
     
-    public WrapperIterator(SMTree<T> tree)
+    public SMTreeIterator(SMTree<T> tree)
     {
         super();
         this.tree = tree;

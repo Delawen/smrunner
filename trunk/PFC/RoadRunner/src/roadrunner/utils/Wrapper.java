@@ -1,6 +1,12 @@
-package roadrunner;
+package roadrunner.utils;
 
-import roadrunner.Mismatch;
+import roadrunner.iterator.EdibleIterator;
+import SMTree.utils.Enclosure;
+import SMTree.utils.Kinship;
+import roadrunner.iterator.ForwardTokenIterator;
+import roadrunner.iterator.BackwardTokenIterator;
+import SMTree.iterator.SMTreeIterator;
+import roadrunner.utils.Mismatch;
 import roadrunner.node.Token;
 import SMTree.*;
 import java.util.Stack;
@@ -92,7 +98,7 @@ public class Wrapper implements Edible{
         
         boolean isWellFormed = true;
         Stack<Text> openTags = new Stack(); 
-        WrapperIterator<Item> it = treeWrapper.iterator(ForwardTokenIterator.class);
+        SMTreeIterator<Item> it = treeWrapper.iterator(ForwardTokenIterator.class);
 
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
@@ -156,12 +162,12 @@ public class Wrapper implements Edible{
         /* Segun el recorrido creamos un tipo de iterador */
         if(DirectionOperator.DOWNWARDS == d)
         {
-            itWrapper = treeWrapper.iterator(ForwardTokenIterator.class);
+            itWrapper = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
             itSample = e.iterator(Sample.webPageForwardIterator.class);
         }
         else if(DirectionOperator.UPWARDS == d)
         {
-            itWrapper = treeWrapper.iterator(BackwardTokenIterator.class);
+            itWrapper = (EdibleIterator) treeWrapper.iterator(BackwardTokenIterator.class);
             itSample = e.iterator(Sample.webPageBackwardIterator.class);
         }
  
@@ -259,36 +265,39 @@ public class Wrapper implements Edible{
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
          * entonces lanzamos otro mismatch
          */
-        if(itWrapper.hasNext() && m==null)
+        if(m == null)
         {
-            token = (Token)itSample.next();
-            if(token instanceof Text && ((Text)token).isEOF())
+            if(itWrapper.hasNext())
             {
-                Object items = itWrapper.next();
-                if(items instanceof Item)
-                    itemWrapper = (Item)items;
-                else
-                    itemWrapper = ((java.util.List<Item>)items).get(0);
+                token = (Token)itSample.next();
+                if(token instanceof Text && ((Text)token).isEOF())
+                {
+                    Object items = itWrapper.next();
+                    if(items instanceof Item)
+                        itemWrapper = (Item)items;
+                    else
+                        itemWrapper = ((java.util.List<Item>)items).get(0);
 
-                m = new Mismatch(this, e, itemWrapper, token);
-            }
-            else
-                throw new RuntimeException("El sample terminó y no era un EOF.");
-        }
-        else if(itSample.hasNext() && m==null)
-        {
-            itemWrapper = (Token)itWrapper.next();
-            if(itemWrapper instanceof Text && ((Text)itemWrapper).isEOF())
-            {
-                Object items = itSample.next();
-                if(items instanceof Token)
-                    token = (Token)items;
+                    m = new Mismatch(this, e, itemWrapper, token);
+                }
                 else
-                    token = (Token)((java.util.List<Item>)items).get(0);
-                m = new Mismatch(this, e, itemWrapper,token);
+                    throw new RuntimeException("El sample terminó y no era un EOF.");
             }
-            else
-                throw new RuntimeException("El wrapper terminó y no era un EOF.");
+            else if(itSample.hasNext())
+            {
+                itemWrapper = (Token)itWrapper.next();
+                if(itemWrapper instanceof Text && ((Text)itemWrapper).isEOF())
+                {
+                    Object items = itSample.next();
+                    if(items instanceof Token)
+                        token = (Token)items;
+                    else
+                        token = (Token)((java.util.List<Item>)items).get(0);
+                    m = new Mismatch(this, e, itemWrapper,token);
+                }
+                else
+                    throw new RuntimeException("El wrapper terminó y no era un EOF.");
+            }
         }
         
         return m;
@@ -300,7 +309,7 @@ public class Wrapper implements Edible{
     // </editor-fold> 
     public Token search (Token t, Token from,int occurrence, DirectionOperator d) {
         
-        WrapperIterator<Item> itWrapper = null;
+        SMTreeIterator<Item> itWrapper = null;
         
         if(DirectionOperator.DOWNWARDS == d)
             itWrapper = treeWrapper.iterator(ForwardTokenIterator.class);    
@@ -327,11 +336,11 @@ public class Wrapper implements Edible{
         return token;
     }
     
-    public WrapperIterator<Item> iterator (Class iteratorClass)
+    public EdibleIterator iterator (Class iteratorClass)
     {
-        WrapperIterator<Item> wi = null;
+        EdibleIterator wi = null;
         try {
-            wi = (WrapperIterator<Item>) iteratorClass.newInstance();
+            wi = (EdibleIterator) iteratorClass.newInstance();
         } catch (InstantiationException ex) {
             Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
@@ -343,11 +352,11 @@ public class Wrapper implements Edible{
         return wi;
     }
     
-    public WrapperIterator<Item> iterator (Class iteratorClass, Item virtualRootWrapper)
+    public SMTreeIterator<Item> iterator (Class iteratorClass, Item virtualRootWrapper)
     {
-        WrapperIterator<Item> wi = null;
+        SMTreeIterator<Item> wi = null;
         try {
-            wi = (WrapperIterator<Item>) iteratorClass.newInstance();
+            wi = (SMTreeIterator<Item>) iteratorClass.newInstance();
         } catch (InstantiationException ex) {
             Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {

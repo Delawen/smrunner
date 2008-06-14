@@ -1,8 +1,8 @@
-package roadrunner;
+package roadrunner.utils;
 
 import roadrunner.*;
-import roadrunner.Mismatch;
-import SMTree.Enclosure;
+import roadrunner.utils.Mismatch;
+import SMTree.utils.Enclosure;
 import roadrunner.node.Item; 
 import roadrunner.node.Token;
 

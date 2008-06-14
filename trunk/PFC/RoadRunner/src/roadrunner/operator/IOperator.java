@@ -1,7 +1,7 @@
 package roadrunner.operator;
 
-import roadrunner.Mismatch; 
-import roadrunner.Repair; 
+import roadrunner.utils.Mismatch; 
+import roadrunner.utils.Repair; 
 
 /**
  *  Class operator

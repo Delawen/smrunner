@@ -1,7 +1,8 @@
-package roadrunner;
+package roadrunner.utils;
 
-import SMTree.Enclosure;
-import SMTree.Kinship;
+import roadrunner.iterator.EdibleIterator;
+import SMTree.utils.Enclosure;
+import SMTree.utils.Kinship;
 import SMTree.SMTree;
 import java.util.List;
 import java.util.ListIterator;

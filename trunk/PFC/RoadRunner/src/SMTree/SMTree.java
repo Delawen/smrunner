@@ -2,6 +2,11 @@ package SMTree;
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 
+import SMTree.SMIndexStructure;
+import SMTree.utils.Enclosure;
+import SMTree.utils.Kinship;
+import SMTree.iterator.ForwardItemIterator;
+import SMTree.iterator.SMTreeIterator;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -223,7 +228,7 @@ public class SMTree<T> implements Cloneable{
         // Y añadimos todos los nodos los descendientes de 'n'         
         
            //TODO: recorrer solo el subarbol
-           WrapperIterator<T> it = this.iterator(ForwardItemIterator.class);
+           SMTreeIterator<T> it = this.iterator(ForwardItemIterator.class);
 
             //it.goTo(n);
 
@@ -479,11 +484,11 @@ public class SMTree<T> implements Cloneable{
         return addSMTreeNode(new SMTreeNode(o), where, k);
     }
  
-    public WrapperIterator<T> iterator (Class iteratorClass)
+    public SMTreeIterator<T> iterator (Class iteratorClass)
     {
-        WrapperIterator<T> wi = null;
+        SMTreeIterator<T> wi = null;
         try {
-            wi = (WrapperIterator<T>) iteratorClass.newInstance();
+            wi = (SMTreeIterator<T>) iteratorClass.newInstance();
         } catch (InstantiationException ex) {
             Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
@@ -495,13 +500,13 @@ public class SMTree<T> implements Cloneable{
         return wi;
     }
     
-    public WrapperIterator<T> iterator (Class iteratorClass, SMTreeNode virtualRoot) 
+    public SMTreeIterator<T> iterator (Class iteratorClass, SMTreeNode virtualRoot) 
     {
         if(virtualRoot==null)
             throw new NullPointerException("");
-        WrapperIterator<T> wi =null;
+        SMTreeIterator<T> wi =null;
         try {
-            wi = (WrapperIterator<T>) iteratorClass.newInstance();
+            wi = (SMTreeIterator<T>) iteratorClass.newInstance();
         } catch (InstantiationException ex) {
             Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
@@ -531,8 +536,8 @@ public class SMTree<T> implements Cloneable{
         if(!(o instanceof SMTree))
             return false;
    
-        WrapperIterator<T> itThis = this.iterator(ForwardItemIterator.class);
-        WrapperIterator<T> itObject = ((SMTree<T>) o).iterator(ForwardItemIterator.class);
+        SMTreeIterator<T> itThis = this.iterator(ForwardItemIterator.class);
+        SMTreeIterator<T> itObject = ((SMTree<T>) o).iterator(ForwardItemIterator.class);
         
         while(itThis.hasNext() && itObject.hasNext())
             if(! itThis.next().equals(itObject.next()))
@@ -571,7 +576,7 @@ public class SMTree<T> implements Cloneable{
         return "buh!";
     }
 /*    
-    public class toStringIterator<T> extends WrapperIterator<T> {
+    public class toStringIterator<T> extends SMTreeIterator<T> {
 
         //Se van guardando los hijos de los nodos que recorremos del nivel actual:
         private int indice;

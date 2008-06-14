@@ -1,20 +1,22 @@
 package roadrunner.operator;
 
-import SMTree.BackwardItemIterator;
-import SMTree.Enclosure;
-import SMTree.ForwardItemIterator;
-import SMTree.WrapperIterator;
+import SMTree.iterator.BackwardItemIterator;
+import SMTree.utils.Enclosure;
+import SMTree.iterator.ForwardItemIterator;
+import SMTree.iterator.SMTreeIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import roadrunner.Mismatch; 
-import roadrunner.Repair; 
-import roadrunner.Sample;
-import roadrunner.StateRepair;
-import roadrunner.Wrapper;
+import roadrunner.iterator.EdibleIterator;
+import roadrunner.utils.Mismatch; 
+import roadrunner.utils.Repair; 
+import roadrunner.utils.Sample;
+import roadrunner.utils.StateRepair;
+import roadrunner.utils.Wrapper;
 import roadrunner.node.Item;
 import roadrunner.node.Optional;
 import roadrunner.node.Text;
 import roadrunner.node.Token;
+import roadrunner.utils.Edible;
 
 /**
  *  Class addHook
@@ -32,12 +34,12 @@ public class AddOptional extends IOperator {
          * 
          */
        
-        Sample s = m.getSample();
+        Edible s = m.getSample();
         Wrapper w = m.getWrapper();
         Token t = m.getToken();
         Item n = m.getNode();
-        WrapperIterator<Item> itW = null;
-        Sample.webPageIterator itS = null;
+        EdibleIterator itW = null;
+        EdibleIterator itS = null;
         
         Repair rep = new Repair(m);
         rep.setState(StateRepair.BUILDING);

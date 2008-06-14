@@ -1,10 +1,10 @@
-package SMTree;
+package SMTree.iterator;
 
-import roadrunner.node.Item;
+import SMTree.*;
 
-public class BackwardItemIterator<T> extends WrapperIterator<T> 
+public class BackwardItemIterator<T> extends SMTreeIterator<T> 
 {   
-    private WrapperIterator<T> it;
+    private SMTreeIterator<T> it;
     
     public BackwardItemIterator()
     {
