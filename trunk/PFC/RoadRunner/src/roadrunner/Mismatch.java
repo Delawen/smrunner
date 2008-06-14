@@ -20,7 +20,7 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.8095D1B7-84F0-B1B5-1180-1620A5FEC76A]
     // </editor-fold> 
-    private Sample s;
+    private Edible s;
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.4E508E60-4BE8-AA2B-BE12-40260A7219A5]
@@ -43,7 +43,7 @@ public class Mismatch {
         super();
     }
 
-    Mismatch(Wrapper w, Sample s, Item next, Token token) 
+    Mismatch(Wrapper w, Edible s, Item next, Token token) 
     {
         this();
         this.w = w;
@@ -83,7 +83,7 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.7B4CA25A-4E79-CC3F-458D-7A41DBE32CE3]
     // </editor-fold> 
-    void setSample (Sample s) {
+    void setSample (Edible s) {
         this.s = s;
     }
 
@@ -94,7 +94,7 @@ public class Mismatch {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.78553C79-1CE9-3A81-EC12-22E9D141DEFF]
     // </editor-fold> 
-    public Sample getSample () {
+    public Edible getSample () {
         return s;
     }
 

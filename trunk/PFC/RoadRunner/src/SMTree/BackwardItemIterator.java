@@ -1,5 +1,7 @@
 package SMTree;
 
+import roadrunner.node.Item;
+
 public class BackwardItemIterator<T> extends WrapperIterator<T> 
 {   
     private WrapperIterator<T> it;

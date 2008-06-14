@@ -1,9 +1,10 @@
 package SMTree;
 
-import java.util.ListIterator;
+import roadrunner.EdibleIterator;
+import roadrunner.node.Item;
 
 
-public abstract class WrapperIterator<T> implements ListIterator<T>
+public abstract class WrapperIterator<T> implements EdibleIterator
 {
         
     protected SMTreeNode<T> lastNode;
@@ -34,7 +35,15 @@ public abstract class WrapperIterator<T> implements ListIterator<T>
         // para que el iterador el siguiente elemento que devuelva sea el que especificamos
         lastNode = aux; 
         if(hasPrevious())
-            lastNode = getTree().getNode(previous());
+        {
+            Object o = previous();
+            T previous;
+            if(o instanceof java.util.List)
+                previous = ((java.util.List<T>)o).get(0);
+            else
+                previous = (T)o;
+            lastNode = getTree().getNode(previous);
+        }
         else
             lastNode = null; // Si no tiene anterior, es porque es el primer elemento a recorrer
         
@@ -44,10 +53,10 @@ public abstract class WrapperIterator<T> implements ListIterator<T>
  
     public abstract boolean isNext (T o);
 
-    public abstract T next ();
+    public abstract Object next ();
     public  abstract boolean hasNext ();
     public abstract boolean hasPrevious();
-    public abstract T previous();
+    public abstract Object previous();
 
     public int nextIndex() {
         throw new UnsupportedOperationException("Not supported yet.");

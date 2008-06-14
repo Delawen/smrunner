@@ -35,6 +35,14 @@ TODO
 * BackwardTokenIterator
 * Cambiar nombre a AmplitudIterator por LevelIterator o algo asi
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
+* Separar iteradores arbol y wrapper
+
+
+14-06-2008
+==========
+[M 19:40] Wrapper.eat terminado, pero sin testear. Edible y EdibleIterator añadidos para que hagan de iteradores 
+genéricos para el sample y el wrapper (con todas las modificaciones que implica eso). Los iterators del arbol hay que
+modificarlos tambien, pero como se van a separar entre iteradores del arbol y del wrapper, no los he tocado aún.
 
 
 13-06-2008
