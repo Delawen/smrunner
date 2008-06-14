@@ -37,9 +37,15 @@ TODO
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
 * Separar iteradores arbol y wrapper
 
+15-06-2008
+==========
+[M 01:00] ForwardTokenIterator
+
 
 14-06-2008
 ==========
+[M 23:35] Iteradores item de RoadRunner heredan de los iteradores normales de SMTree.
+[M 23:25] Iteradores de SMTree dependientes sólo de SMTree. isNext pasado a SMTreeIterator
 [M 23:00] Renombrados el Forward y el Backward iterator para quitarles item del nombre.
 [M 20:25] Renombrado SMTreeIterator por SMTreeIterator y se le quitan las referencias a Items.
 Se separan los iteradores del Wrapper (que implementan Edible) de los del SMTree. Los operadores ahora no funcionan

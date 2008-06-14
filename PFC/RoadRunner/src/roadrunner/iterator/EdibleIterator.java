@@ -5,14 +5,15 @@
 
 package roadrunner.iterator;
 
-import SMTree.SMTree;
-import SMTree.SMTreeNode;
+import SMTree.*;
 import roadrunner.node.Item;
 
 /**
  *
  * @author delawen
  */
+
+//El iterador comestible :D
 public interface EdibleIterator
 {
     public boolean goTo (Item objeto);
@@ -20,8 +21,6 @@ public interface EdibleIterator
     public Object next();
     public Object previous();
     public boolean hasNext();
-
-    public void setRootIterator(SMTreeNode root);
-
+    public void setRootIterator(SMTreeNode<Item> root);
     public void setTree(SMTree<Item> treeWrapper);
 }
