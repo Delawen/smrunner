@@ -12,14 +12,9 @@ public class BackwardIterator<T> extends SMTreeIterator<T>
     }
 
     @Override
-    public boolean isNext(T o) {
-        SMTreeNode temp = lastNode;    
-        boolean result = next().equals(o);
-        
-        if(!result)
-            lastNode = temp;
-
-        return result;
+    public boolean isNext(T o) 
+    {
+        return super.isNext(o);
     }
 
     @Override

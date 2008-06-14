@@ -11,18 +11,13 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
     }
 
     @Override
-    public boolean isNext(T o) {
-        SMTreeNode temp = lastNode;    
-        boolean result = next().equals(o);
-        
-        if(!result)
-            lastNode = temp;
-
-        return result;
+    public boolean isNext(T o) 
+    {
+        return super.isNext(o);
     }
 
     @Override
-    public T next() {
+    public Object next() {
         SMTreeNode<T> resultNode=null;
         
         if(lastNode == null && getRootIterator()!=null)
@@ -50,6 +45,7 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
         lastNode = resultNode;
         return resultNode.getObject(); 
     }
+    
     @Override
     public boolean hasNext() {
         boolean hasNext = lastNode == null && getRootIterator()!=null;

@@ -51,29 +51,29 @@ public abstract class SMTreeIterator<T>
     }
      
  
-    public abstract boolean isNext (T o);
+    public boolean isNext (T o)
+    {
+        SMTreeNode temp = lastNode;    
+        Object next = next();
+        boolean result = false;
+        if(next instanceof java.util.List)
+            for(T n : (java.util.List<T>)next)
+                if(n.equals(o))
+                    result = true;
+        else
+            result = next.equals(o);
+        
+        if(!result)
+            lastNode = temp;
+
+        return result;
+    }
 
     public abstract Object next ();
     public  abstract boolean hasNext ();
     public abstract boolean hasPrevious();
     public abstract Object previous();
 
-    public int nextIndex() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public int previousIndex() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void set(T arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void add(T arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
     public void remove() 
     {
         throw new UnsupportedOperationException("Not supported yet.");
