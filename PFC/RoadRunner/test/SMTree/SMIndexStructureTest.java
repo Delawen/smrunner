@@ -5,6 +5,7 @@
 
 package SMTree;
 
+import SMTree.SMIndexStructure;
 import java.util.Random;
 import org.junit.After;
 import org.junit.AfterClass;
