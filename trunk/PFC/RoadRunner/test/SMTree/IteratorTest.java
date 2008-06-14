@@ -5,11 +5,16 @@
 
 package SMTree;
 
+import SMTree.iterator.BackwardIterator;
+import SMTree.iterator.ForwardIterator;
+import SMTree.utils.Kinship;
+import SMTree.iterator.SMTreeIterator;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import SMTree.iterator.LevelIterator;
 
 
 /**
@@ -94,10 +99,10 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        WrapperIterator<String> it = arbol.iterator(LevelIterator.class);
+        SMTreeIterator<String> it = arbol.iterator(LevelIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
-            String next = it.next();
+            String next = (String)it.next();
             String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
             assertEquals(next, otro);
         }
@@ -143,10 +148,10 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        WrapperIterator<String> it = arbol.iterator(BackwardItemIterator.class);
+        SMTreeIterator<String> it = arbol.iterator(BackwardIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
-            String next = it.next();
+            String next = (String)it.next();
             String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
             assertEquals(next, otro);
         }
@@ -177,10 +182,10 @@ public class IteratorTest
         java.util.Iterator itorden = orden.iterator();
         
         //Recorremos en amplitud y comprobamos:
-        WrapperIterator<String> it = arbol.iterator(ForwardItemIterator.class);
+        SMTreeIterator<String> it = arbol.iterator(ForwardIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
-            String next = it.next();
+            String next = (String)it.next();
             String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
             assertEquals(next, otro);
         }
