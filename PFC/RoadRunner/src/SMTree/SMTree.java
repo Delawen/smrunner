@@ -231,7 +231,7 @@ public class SMTree<T> implements Cloneable{
 
             while(it.hasNext() && success)
             {
-                success = mapa.add(getNode(it.next()));
+                success = mapa.add(getNode((T)it.next()));
             }
 
             return success;

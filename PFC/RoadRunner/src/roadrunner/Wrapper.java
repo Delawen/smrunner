@@ -17,7 +17,7 @@ import tokenizador.*;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.6DA19461-88AB-136F-23B7-1FB2AC471B20]
 // </editor-fold> 
-public class Wrapper {
+public class Wrapper implements Edible{
     
     SMTree<Item> treeWrapper;
 
@@ -145,11 +145,11 @@ public class Wrapper {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.9AAF649B-4F9D-8FA4-3FC3-287DCD953037]
     // </editor-fold> 
-    public Mismatch eat (Sample s, Token t, Item n, DirectionOperator d) {
-               //TODO Este metodo esta mal hasta que decidamos que hacemos con el sample.next()
-        
-        WrapperIterator<Item> itWrapper = null;
-        Sample.webPageIterator itSample = null;
+    public Mismatch eat (Edible e, Token t, Item n, DirectionOperator d) 
+    {
+        //Iteradores de los Edibles:
+        EdibleIterator itWrapper = null;
+        EdibleIterator itSample = null;
         Mismatch m = null;
         
         
@@ -157,42 +157,143 @@ public class Wrapper {
         if(DirectionOperator.DOWNWARDS == d)
         {
             itWrapper = treeWrapper.iterator(ForwardTokenIterator.class);
-            itSample = s.iterator(Sample.webPageForwardIterator.class);
+            itSample = e.iterator(Sample.webPageForwardIterator.class);
         }
         else if(DirectionOperator.UPWARDS == d)
         {
             itWrapper = treeWrapper.iterator(BackwardTokenIterator.class);
-            itSample = s.iterator(Sample.webPageBackwardIterator.class);
+            itSample = e.iterator(Sample.webPageBackwardIterator.class);
         }
  
+        //Nos colocamos para empezar a comer:
         itWrapper.goTo(n);
         itSample.goTo(t);
         
-        Token tokenSample = null;
         Item itemWrapper = null;
+        Token token = null;
 
         /*mientras no se produzca un mismatch y no me coma entero el sample o el wrapper*/
         while(itSample.hasNext() && itWrapper.hasNext() && m==null)
         {
-            tokenSample = itSample.next();
+            //Buscamos el siguiente del sample:
+            Object edibleToken = itSample.next();
             
-            if(!itWrapper.isNext(tokenSample))
+            //Si nos ha devuelto un único camino
+            if(edibleToken instanceof Token)
+                // y no puede ser el siguiente del wrapper
+                if(!itWrapper.isNext((Token) edibleToken))
+                {
+                    //creamos el Mismatch:
+                    Object next = itWrapper.next();
+                    if(next instanceof java.util.List) //Varios caminos, escogemos el primero:
+                        itemWrapper = ((java.util.List<Token>)next).get(0);
+                    else if(next instanceof Token)//Un único camino:
+                        itemWrapper = (Token)next;
+                    else
+                        throw new ClassCastException("El next del wrapper devolvió un tipo extraño.");
+
+                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
+                }
+            else if(edibleToken instanceof java.util.List)//Vamos probando todos los caminos
             {
-                itemWrapper = itWrapper.next();
-                m = new Mismatch(this,s, itemWrapper, tokenSample);     
+                //La pila irá guardando los caminos no recorridos:
+                Stack<Item> stack = new Stack<Item>();
+                for(Item i : (java.util.List<Item>)edibleToken)
+                    stack.add(i);
+                
+                //Mientras la pila esté llena y no haga match, vamos probando uno a uno los caminos:
+                boolean encontrado = false;
+                while(!stack.empty() && !encontrado)
+                {
+                    Item ways = stack.pop();
+                    
+                    //Si es un token, comprobamos si hace matching:
+                    if(ways instanceof Token)
+                    {
+                        if(itWrapper.isNext((Token) ways))
+                            encontrado = true;
+                    }
+                    else if(ways instanceof Item) //Los caminos se bifurcan
+                    {
+                        //Calculamos las bifurcaciones con un nuevo iterador:
+                        EdibleIterator ited;
+                        if(DirectionOperator.DOWNWARDS == d)
+                            ited = e.iterator(Sample.webPageForwardIterator.class);
+                        else
+                            ited = e.iterator(Sample.webPageBackwardIterator.class);
+                        
+                        ited.goTo((Item)ways);
+                        Object caminos = ited.next();
+                        
+                        //Añadimos las bifurcaciones
+                        if(caminos instanceof Item)
+                            stack.add((Item)caminos);
+                        else if(caminos instanceof java.util.List)
+                            for(Item camino : (java.util.List<Item>)caminos)
+                                stack.add(camino);
+                        else
+                            throw new ClassCastException("El next del wrapper ha devuelto un tipo extraño.");
+                    }
+                    else
+                        throw new ClassCastException("El next del sample ha devuelto un tipo extraño.");
+                }
+                
+                //Creamos el Mismatch si no lo ha encontrado:
+                if(!encontrado)
+                {
+                    Object next = itWrapper.next();
+                    if(next instanceof java.util.List) //Varios caminos, escogemos el primero:
+                        itemWrapper = ((java.util.List<Token>)next).get(0);
+                    else if(next instanceof Token)//Un único camino:
+                        itemWrapper = (Token)next;
+                    else
+                        throw new ClassCastException("El next del wrapper devolvió un tipo extraño.");
+
+                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
+                }
             }
+            else
+                throw new ClassCastException("La función next devolvió un tipo extraño.");
         }
        
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
          * entonces lanzamos otro mismatch
          */
-        if(itWrapper.hasNext() && m==null && tokenSample instanceof Text && ((Text)tokenSample).isEOF())    
-            m = new Mismatch(this,s, itWrapper.next(),tokenSample);
-        else if(itSample.hasNext() && m==null && itemWrapper instanceof Text && ((Text)itemWrapper).isEOF())
-            m = new Mismatch(this,s, itemWrapper,itSample.next());
+        if(itWrapper.hasNext() && m==null)
+        {
+            token = (Token)itSample.next();
+            if(token instanceof Text && ((Text)token).isEOF())
+            {
+                Object items = itWrapper.next();
+                if(items instanceof Item)
+                    itemWrapper = (Item)items;
+                else
+                    itemWrapper = ((java.util.List<Item>)items).get(0);
+
+                m = new Mismatch(this, e, itemWrapper, token);
+            }
+            else
+                throw new RuntimeException("El sample terminó y no era un EOF.");
+        }
+        else if(itSample.hasNext() && m==null)
+        {
+            itemWrapper = (Token)itWrapper.next();
+            if(itemWrapper instanceof Text && ((Text)itemWrapper).isEOF())
+            {
+                Object items = itSample.next();
+                if(items instanceof Token)
+                    token = (Token)items;
+                else
+                    token = (Token)((java.util.List<Item>)items).get(0);
+                m = new Mismatch(this, e, itemWrapper,token);
+            }
+            else
+                throw new RuntimeException("El wrapper terminó y no era un EOF.");
+        }
         
         return m;
     }
+    
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.F925FF52-82A2-AFA9-A17C-8A6B6DE5DDAF]

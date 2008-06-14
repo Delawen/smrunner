@@ -13,7 +13,7 @@ import roadrunner.node.Text;
 import roadrunner.node.Token;  
 import roadrunner.operator.DirectionOperator;
 
-public class Sample{
+public class Sample implements Edible{
     
     private List<Text> tokens;
 
@@ -56,7 +56,8 @@ public class Sample{
 
         while(itSample.hasNext() && !find)
         {
-            token = itSample.next();
+            //Al ser un sample, sabemos que sólo hay un camino:
+            token = (Token)((java.util.List<Item>)itSample.next()).get(0);
             
             if(t.equals(token))
                 find = true;         
@@ -85,7 +86,7 @@ public class Sample{
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
             it.goTo(to);
-            to = (Text) it.previous();
+            to = (Text) ((java.util.List<Item>)it.previous()).get(0);
         }
         
         it.goTo(from);
@@ -123,20 +124,20 @@ public class Sample{
         Wrapper w = null;
         boolean success = false;
         SMTree<Item> tree = null;
-        webPageIterator it = new webPageForwardIterator();
+        EdibleIterator it = new webPageForwardIterator();
         
         if(inclusionFrom == Enclosure.NOT_ENCLOSED)
         {
             if(!it.goTo(from))
                 throw new IllegalStateException("No se ha podido un wrapper del sample: Los indices son erroneos");
             it.next(); // desechamos from
-            from = it.next();
+            from = (Token)it.next();
         }
         if(inclusionTo == Enclosure.NOT_ENCLOSED)
         {
             if(!it.goTo(to))
                 throw new IllegalStateException("No se ha podido un wrapper del sample: Los indices son erroneos");
-            to = it.previous();
+            to = (Token)it.previous();
         
         }
         
@@ -163,7 +164,7 @@ public class Sample{
         
         do
         {   
-            t = it.next();
+            t = (Token)it.next();
             tree.addObject(t, tree.getRoot() , Kinship.CHILD);
         }  while(it.hasNext() && t!=to);
         
@@ -172,7 +173,7 @@ public class Sample{
             return null;
         
         //añadimos 'to'
-        tree.addObject(it.next(), tree.getRoot() , Kinship.CHILD);
+        tree.addObject((Token)it.next(), tree.getRoot() , Kinship.CHILD);
         
         return new Wrapper(tree);
     }
@@ -198,7 +199,7 @@ public class Sample{
         return tokens.get(index);
     }
     
-    public interface webPageIterator extends ListIterator<Token>
+    public interface webPageIterator extends EdibleIterator
     {
         public boolean goTo(Token t);
     }
@@ -262,6 +263,15 @@ public class Sample{
         public void add(Token arg0) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
+        public boolean goTo(Item objeto) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public boolean isNext(Item o) 
+        {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     
     }
 
@@ -322,6 +332,14 @@ public class Sample{
         }
 
         public void add(Token arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public boolean goTo(Item objeto) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public boolean isNext(Item o) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
