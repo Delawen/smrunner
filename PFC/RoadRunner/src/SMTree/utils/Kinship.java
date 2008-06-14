@@ -1,4 +1,4 @@
-package SMTree;
+package SMTree.utils;
 
 
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 

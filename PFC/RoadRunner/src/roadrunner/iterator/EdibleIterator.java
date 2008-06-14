@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package roadrunner;
+package roadrunner.iterator;
 
+import SMTree.SMTree;
+import SMTree.SMTreeNode;
 import roadrunner.node.Item;
 
 /**
@@ -18,4 +20,8 @@ public interface EdibleIterator
     public Object next();
     public Object previous();
     public boolean hasNext();
+
+    public void setRootIterator(SMTreeNode root);
+
+    public void setTree(SMTree<Item> treeWrapper);
 }

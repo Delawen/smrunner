@@ -40,6 +40,9 @@ TODO
 
 14-06-2008
 ==========
+[M 20:25] Renombrado SMTreeIterator por SMTreeIterator y se le quitan las referencias a Items.
+Se separan los iteradores del Wrapper (que implementan Edible) de los del SMTree. Los operadores ahora no funcionan
+con los nuevos next.
 [M 19:40] Wrapper.eat terminado, pero sin testear. Edible y EdibleIterator añadidos para que hagan de iteradores 
 genéricos para el sample y el wrapper (con todas las modificaciones que implica eso). Los iterators del arbol hay que
 modificarlos tambien, pero como se van a separar entre iteradores del arbol y del wrapper, no los he tocado aún.
@@ -77,7 +80,7 @@ modificarlos tambien, pero como se van a separar entre iteradores del arbol y de
 [S 00:00] Modificado Iteradores:
             * ahora se pueden crear usando el .class
             * los iteradores tienen una raizvirtual para hacer recorridos de subarboles
-            * WrapperIterator implementa ahora a ListIterator para que tenga metodos como previous()
+            * SMTreeIterator implementa ahora a ListIterator para que tenga metodos como previous()
             * Aun queda por ver si el previous y el hasprevious funcionan bien.
 
 [S 12:00] Nuevos constructores para Wrapper

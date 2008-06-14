@@ -1,24 +1,27 @@
-package SMTree;
+package roadrunner.iterator;
 
+import SMTree.*;
+import SMTree.iterator.SMTreeIterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingDeque;
+import roadrunner.node.Item;
 
-public class LevelIterator<T> extends WrapperIterator<T> 
+public class LevelIterator extends SMTreeIterator<Item> implements EdibleIterator
 { 
-    private LinkedList<SMTreeNode<T>> nodes;
-    private ListIterator<SMTreeNode<T>> it;
+    private LinkedList<SMTreeNode<Item>> nodes;
+    private ListIterator<SMTreeNode<Item>> it;
     
     public LevelIterator()
     {
         super();
-        nodes = new LinkedList<SMTreeNode<T>>();
+        nodes = new LinkedList<SMTreeNode<Item>>();
     }
     
     private void AmpliturIteratorConstructor()
     {
-        Queue<SMTreeNode<T>> s = new LinkedBlockingDeque();
+        Queue<SMTreeNode<Item>> s = new LinkedBlockingDeque();
         
         if(getRootIterator()!=null)
         {
@@ -50,14 +53,14 @@ public class LevelIterator<T> extends WrapperIterator<T>
     }
 
     @Override
-    public boolean isNext(T o) {
+    public boolean isNext(Item o) {
         if(it == null)
             AmpliturIteratorConstructor();
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public T next() {
+    public Item next() {
         if(it == null)
             AmpliturIteratorConstructor();
         return it.next().getObject();
@@ -78,11 +81,12 @@ public class LevelIterator<T> extends WrapperIterator<T>
     }
 
     @Override
-    public T previous() {
+    public Item previous() {
         if(it == null)
             AmpliturIteratorConstructor();
         return it.previous().getObject();
     }
+
 }
 
 

@@ -3,13 +3,16 @@
  * and open the template in the editor.
  */
 
-package roadrunner;
+package SMTree.utils;
 
 /**
  *
- * @author delawen
+ * @author santi
  */
-public interface Edible 
-{
-    public EdibleIterator iterator(Class type);
+public enum Enclosure {
+    ENCLOSED,
+    NOT_ENCLOSED
+
+
+
 }
