@@ -1,8 +1,8 @@
 package roadrunner.operator;
 
-import SMTree.iterator.BackwardItemIterator;
+import SMTree.iterator.BackwardIterator;
 import SMTree.utils.Enclosure;
-import SMTree.iterator.ForwardItemIterator;
+import SMTree.iterator.ForwardIterator;
 import SMTree.iterator.SMTreeIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,12 +48,12 @@ public class AddOptional extends IOperator {
         
         if(d == DirectionOperator.DOWNWARDS)
         {
-            itW = w.iterator(ForwardItemIterator.class);
+            itW = w.iterator(ForwardIterator.class);
             itS = s.iterator(Sample.webPageForwardIterator.class);
         }
         else if(d == DirectionOperator.UPWARDS)
         {
-            itW = w.iterator(BackwardItemIterator.class);
+            itW = w.iterator(BackwardIterator.class);
             itS = s.iterator(Sample.webPageBackwardIterator.class);
         }
         

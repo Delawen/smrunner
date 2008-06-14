@@ -40,6 +40,7 @@ TODO
 
 14-06-2008
 ==========
+[M 23:00] Renombrados el Forward y el Backward iterator para quitarles item del nombre.
 [M 20:25] Renombrado SMTreeIterator por SMTreeIterator y se le quitan las referencias a Items.
 Se separan los iteradores del Wrapper (que implementan Edible) de los del SMTree. Los operadores ahora no funcionan
 con los nuevos next.

@@ -5,7 +5,7 @@ package SMTree;
 import SMTree.SMIndexStructure;
 import SMTree.utils.Enclosure;
 import SMTree.utils.Kinship;
-import SMTree.iterator.ForwardItemIterator;
+import SMTree.iterator.ForwardIterator;
 import SMTree.iterator.SMTreeIterator;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -228,7 +228,7 @@ public class SMTree<T> implements Cloneable{
         // Y añadimos todos los nodos los descendientes de 'n'         
         
            //TODO: recorrer solo el subarbol
-           SMTreeIterator<T> it = this.iterator(ForwardItemIterator.class);
+           SMTreeIterator<T> it = this.iterator(ForwardIterator.class);
 
             //it.goTo(n);
 
@@ -536,8 +536,8 @@ public class SMTree<T> implements Cloneable{
         if(!(o instanceof SMTree))
             return false;
    
-        SMTreeIterator<T> itThis = this.iterator(ForwardItemIterator.class);
-        SMTreeIterator<T> itObject = ((SMTree<T>) o).iterator(ForwardItemIterator.class);
+        SMTreeIterator<T> itThis = this.iterator(ForwardIterator.class);
+        SMTreeIterator<T> itObject = ((SMTree<T>) o).iterator(ForwardIterator.class);
         
         while(itThis.hasNext() && itObject.hasNext())
             if(! itThis.next().equals(itObject.next()))

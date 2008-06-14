@@ -2,10 +2,10 @@ package SMTree.iterator;
 
 import SMTree.*;
 
-public class ForwardItemIterator<T> extends SMTreeIterator<T> 
+public class ForwardIterator<T> extends SMTreeIterator<T> 
 { 
     
-    public ForwardItemIterator()
+    public ForwardIterator()
     {
         super();
     }
