@@ -2,11 +2,11 @@ package SMTree.iterator;
 
 import SMTree.*;
 
-public class BackwardItemIterator<T> extends SMTreeIterator<T> 
+public class BackwardIterator<T> extends SMTreeIterator<T> 
 {   
     private SMTreeIterator<T> it;
     
-    public BackwardItemIterator()
+    public BackwardIterator()
     {
         super();
     }
