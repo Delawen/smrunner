@@ -132,17 +132,17 @@ public class IteratorTest
         orden.add(node1_1_1);
         
 */
+        orden.add(node1);  
+        orden.add(node1_4);
         orden.add(node1_4_2);
         orden.add(node1_4_1);
-        orden.add(node1_4);
         orden.add(node1_3);
-        orden.add(node1_2);    
+        orden.add(node1_2);  
+        orden.add(node1_1);  
+        orden.add(node1_1_2);
         orden.add(node1_1_2_2);
         orden.add(node1_1_2_1);
-        orden.add(node1_1_2);
-        orden.add(node1_1_1);
-        orden.add(node1_1); 
-        orden.add(node1);       
+        orden.add(node1_1_1);      
         
         
         java.util.Iterator itorden = orden.iterator();

@@ -39,6 +39,8 @@ TODO
 
 15-06-2008
 ==========
+[M 23:59] Iteradores de token con next, hasNext y isNext, aunque el backwards hay que comprobarlo.
+Backward(Item)Iterator modificado para que el padre vaya primero.
 [M 01:00] ForwardTokenIterator
 
 
