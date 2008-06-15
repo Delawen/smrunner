@@ -5,12 +5,13 @@ import roadrunner.utils.StateRepair;
 import roadrunner.utils.Mismatch;
 import roadrunner.utils.Wrapper;
 import roadrunner.utils.Repair;
-import SMTree.SMTree;
 import roadrunner.*;
+import roadrunner.iterator.EdibleIterator;
 import roadrunner.node.Item;
 import roadrunner.node.Text;
 import roadrunner.node.Token;
 import roadrunner.node.Variable;
+import roadrunner.utils.Edible;
 
 /**
  *  Class addVariable
@@ -42,8 +43,8 @@ public class AddVariable extends IOperator
             reparacion.setInitialItem(n);
             
             //indexSample:
-            Sample s = m.getSample();
-            Sample.webPageIterator it;
+            Sample s = (Sample) m.getSample();
+            EdibleIterator it;
             if(d == DirectionOperator.DOWNWARDS)
                 it = s.iterator(Sample.webPageForwardIterator.class);
             else
@@ -51,7 +52,7 @@ public class AddVariable extends IOperator
             
             it.goTo(t);
             
-            reparacion.setIndexSample(it.next());
+            reparacion.setIndexSample((Token)it.next());
             
             //setState:
             reparacion.setState(StateRepair.SUCESSFULL);

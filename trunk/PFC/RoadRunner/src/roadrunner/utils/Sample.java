@@ -1,5 +1,6 @@
 package roadrunner.utils;
 
+import SMTree.SMTreeNode;
 import roadrunner.iterator.EdibleIterator;
 import SMTree.utils.Enclosure;
 import SMTree.utils.Kinship;
@@ -10,6 +11,7 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import roadrunner.node.Item;
+import roadrunner.node.Optional;
 import roadrunner.node.Text;
 import roadrunner.node.Token;  
 import roadrunner.operator.DirectionOperator;
@@ -273,6 +275,14 @@ public class Sample implements Edible{
         {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
+        public void setRootIterator(SMTreeNode<Item> root) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void setTree(SMTree<Item> treeWrapper) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     
     }
 
@@ -343,5 +353,17 @@ public class Sample implements Edible{
         public boolean isNext(Item o) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
+        public void setRootIterator(SMTreeNode<Item> root) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void setTree(SMTree<Item> treeWrapper) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+
+    public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Optional optional) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
