@@ -108,9 +108,9 @@ public class AddOptional extends IOperator {
              */
             
             itS.goTo(t);
-            Token tokenInmediatelyBeforeT = itS.previous();
+            Token tokenInmediatelyBeforeT = (Token) itS.previous();
             itS.goTo(t);
-            Token tokenInmediatelyAfterT = itS.next();
+            Token tokenInmediatelyAfterT = (Token) itS.next();
             
             if(!lastTokenOptional.equals(tokenInmediatelyBeforeT) && 
                     !firstTokenOptional.equals(tokenInmediatelyAfterT))
@@ -184,9 +184,9 @@ public class AddOptional extends IOperator {
              */
             
             itS.goTo(t);
-            Token tokenInmediatelyBeforeT = itS.previous();
+            Token tokenInmediatelyBeforeT = (Token) itS.previous();
             itS.goTo(t);
-            Token tokenInmediatelyAfterT = itS.next();
+            Token tokenInmediatelyAfterT = (Token) itS.next();
             
             if(!lastTokenOptional.equals(tokenInmediatelyBeforeT) && 
                     !firstTokenOptional.equals(tokenInmediatelyAfterT))
@@ -201,8 +201,8 @@ public class AddOptional extends IOperator {
                     lastTokenOptional,  Enclosure.ENCLOSED, new Optional());
             
             rep.setReparator(wrapperReparator);
-            rep.setInitialItem(...);
-            rep.setFinalItem(....);
+            //rep.setInitialItem(...);
+            //rep.setFinalItem(....);
             rep.setState(StateRepair.SUCESSFULL);
             rep.setIndexSample(null); // TODO no se que se pone aquis
         }

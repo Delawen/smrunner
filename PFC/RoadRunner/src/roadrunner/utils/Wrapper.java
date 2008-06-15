@@ -6,7 +6,6 @@ import SMTree.utils.Kinship;
 import roadrunner.iterator.ForwardTokenIterator;
 import roadrunner.iterator.BackwardTokenIterator;
 import SMTree.iterator.SMTreeIterator;
-import roadrunner.utils.Mismatch;
 import roadrunner.node.Token;
 import SMTree.*;
 import java.util.Stack;
@@ -14,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import roadrunner.node.*; 
 import roadrunner.operator.DirectionOperator;
-import roadrunner.operator.Operator; 
 import tokenizador.*;
 
 /**
@@ -386,6 +384,10 @@ public class Wrapper implements Edible{
     public Wrapper cloneSubWrapper(Item from, Item to, Item newParent)
     {
         throw new UnsupportedOperationException("Not supported yet.");
-    }  
+    }
+
+    public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Optional optional) {
+        return this;
+    }
 }
 

@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import roadrunner.node.*;
 
 
-public class ForwardTokenIterator extends ForwardItemIterator implements EdibleIterator
+public class ForwardTokenIterator extends ForwardIterator<Item> implements EdibleIterator
 {
     LinkedList<Item> cache = null;
     
@@ -18,6 +18,11 @@ public class ForwardTokenIterator extends ForwardItemIterator implements EdibleI
     @Override
     public Object next()
     {
+        //Inicialización:
+        if(super.lastNode == null && super.getRootIterator()!=null)
+            super.lastNode = getRootIterator();
+
+        
         //Limpiamos la cache porque nos vamos a mover:
         cache = null;
         
@@ -34,7 +39,7 @@ public class ForwardTokenIterator extends ForwardItemIterator implements EdibleI
         else if(item instanceof Tuple)
         {
             super.lastNode = super.lastNode.getFirstChild();
-            return super.lastNode;
+            return super.lastNode.getObject();
         }
         else if(item instanceof Token)
         {
@@ -43,7 +48,7 @@ public class ForwardTokenIterator extends ForwardItemIterator implements EdibleI
             
             super.lastNode = super.lastNode.getNext();
             
-            return super.lastNode;
+            return super.lastNode.getObject();
         }
         
         return null;
