@@ -8,7 +8,7 @@ public abstract class SMTreeIterator<T>
 {
         
     protected SMTreeNode<T> lastNode;
-    private SMTree<T> tree;
+    protected SMTree<T> tree;
     private SMTreeNode<T> rootIterator;
         
     public SMTreeIterator()
