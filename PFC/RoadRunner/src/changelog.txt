@@ -6,7 +6,6 @@ pero si estoy comparando dos Wrapper tendria que modificar el wrapper sobre el q
 * Cuidado con los Contents de los items porque no es lo mismo Text="+" que Plus="+", salvo que pongamos &+; en el plus o tengamos espcial cuidao
 * Lo mismo seria mas potito crear el token EOF
 * ¿Quien lanzaba un operador primero en el wrapper y luego en el sample? ¿Operator? Si es asi hay que corregirlo
-* ¿HOOK NUNCA PUEDE TENER REPARACIONES INTERNAS?
 * isWellFormed en una unica direccion?
 * ¿como trata el search los #vARIABLE? Deberia ser capaz de decir que "hola" lo ha encontrado cuando vea un "#VAR", aunque es posible que sea arriesgado hacer esto.
 * [sugerencia] yo separaria los iteradores de recorrer los arboles de los que recorrer el wrapper.
@@ -25,17 +24,21 @@ CORREGIR
 TODO
 ====
 * Adaptar el tokenizador de juanma.
-* Decidir si es mejor recorrer primero el padre y luego los hijos, o dejar el padre para el final
-[NOTA: Dejame todo esto de abajo a mi y empieza a hacer el addplus o si quieres seguir el addoptional]
 * smtindex.clone  smtindex.equals
 * Smtree.clone Smtree.equals smtree.clonesubtree
 * Smtreenode.clone Smtreenode.equals
 * wrapper.clone wrapper.equals wrapper.clonesubwrapper
 * ForwardTokenIterator
 * BackwardTokenIterator
-* Cambiar nombre a AmplitudIterator por LevelIterator o algo asi
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
-* Separar iteradores arbol y wrapper
+
+
+
+17-06-2008
+==========
+[M 17:40] Where está en el constructor del operador. AddOptional revisado.
+[M 17:20] Operator lanza ahora cinco operaciones, para que sea en el wrapper y en el sample
+(el AddVariable solo lanza uno)
 
 15-06-2008
 ==========

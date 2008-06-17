@@ -11,7 +11,6 @@ import roadrunner.node.Item;
 import roadrunner.node.Text;
 import roadrunner.node.Token;
 import roadrunner.node.Variable;
-import roadrunner.utils.Edible;
 
 /**
  *  Class addVariable
@@ -23,9 +22,13 @@ import roadrunner.utils.Edible;
 // </editor-fold> 
 public class AddVariable extends IOperator 
 {
+    public AddVariable(WebPageOperator where)
+    {
+        super(where);
+    }
 
     @Override
-    public Repair apply(Mismatch m, DirectionOperator d, WebPageOperator where) 
+    public Repair apply(Mismatch m, DirectionOperator d) 
     {
         Repair reparacion = new Repair(m);
         Item n = m.getNode();
