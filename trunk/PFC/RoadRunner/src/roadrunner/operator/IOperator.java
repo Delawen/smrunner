@@ -9,17 +9,23 @@ import roadrunner.utils.Repair;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.CDF02508-804E-A612-F272-6F8022CF284C]
 // </editor-fold> 
-public abstract class IOperator {
+public abstract class IOperator 
+{
 
-    /**
-     *  Fields
-     *                    Constructors
-     */
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.87AA7B19-6297-70CB-9BAA-4097A1AB6047]
-    // </editor-fold> 
-    public IOperator () {
+    protected WebPageOperator where;
+    
+    public IOperator (WebPageOperator where) 
+    {
+        super();
+        this.where = where;
     }
+    
+    private IOperator()
+    {
+        super();
+        this.where = WebPageOperator.WRAPPER;
+    }
+    
 
     /**
      *  @return       Reparator
@@ -31,7 +37,7 @@ public abstract class IOperator {
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.F680F6DB-231A-2148-BEF4-8FC45E7A2EA8]
     // </editor-fold> 
-    public abstract Repair apply (Mismatch m, DirectionOperator d, WebPageOperator where);
+    public abstract Repair apply (Mismatch m, DirectionOperator d);
 
 
 }

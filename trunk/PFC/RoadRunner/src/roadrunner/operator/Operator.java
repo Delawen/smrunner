@@ -5,8 +5,6 @@
 
 package roadrunner.operator;
 
-import java.util.LinkedList;
-
 /**
  *
  * @author santi
@@ -23,9 +21,13 @@ public class Operator {
             case 0:
                 return new AddVariable();
             case 1:
-                return new AddList();
+                return new AddList(WebPageOperator.WRAPPER);
             case 2:
-                return new AddOptional();
+                return new AddList(WebPageOperator.SAMPLE);
+            case 3:
+                return new AddOptional(WebPageOperator.WRAPPER);
+            case 4:
+                return new AddOptional(WebPageOperator.SAMPLE);
             default:
                 ;
         }
