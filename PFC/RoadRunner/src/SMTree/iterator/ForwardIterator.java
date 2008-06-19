@@ -94,7 +94,7 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
     }
 
     @Override
-    public T previous() {
+    public Object previous() {
         SMTreeNode<T> resultNode = null;
         T result;
         

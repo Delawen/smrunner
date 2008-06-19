@@ -6,10 +6,19 @@ package roadrunner.node;
 // </editor-fold> 
 public class List extends CompositeItem 
 {
+    private boolean accessed = false;
     
     public List()
     {
         setContent("+");
+    }
+
+    public boolean isAccessed() {
+        return accessed;
+    }
+
+    public void setAccessed(boolean accessed) {
+        this.accessed = accessed;
     }
 }
 

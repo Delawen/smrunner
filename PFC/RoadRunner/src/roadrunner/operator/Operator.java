@@ -19,7 +19,7 @@ public class Operator {
         switch(indexOperator)
         {     
             case 0:
-                return new AddVariable();
+                return new AddVariable(null);
             case 1:
                 return new AddList(WebPageOperator.WRAPPER);
             case 2:

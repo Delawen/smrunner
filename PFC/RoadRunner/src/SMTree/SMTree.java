@@ -519,7 +519,7 @@ public class SMTree<T> implements Cloneable{
     }
 
     
-    //TODO
+    //TODO SMTree Clone()
     @Override
     public SMTree clone() throws CloneNotSupportedException
     {
@@ -529,7 +529,7 @@ public class SMTree<T> implements Cloneable{
     }
     
     
-    //TODO
+    //TODO SMTree Equals()
     @Override
     public boolean equals(Object o)
     {

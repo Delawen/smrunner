@@ -22,9 +22,10 @@ public class Sample implements Edible{
 
     public Sample(String page)
     {
+        //TODO importar el sample de juanma
         /*
         tokens = new LinkedList<Token>();
-        iTokenizedWPIterator tp = new iTokenizedWPIterator(page); //TODO
+        iTokenizedWPIterator tp = new iTokenizedWPIterator(page); 
         
         TokenJuanma tj;
         TokenNuestro t;
