@@ -90,8 +90,6 @@ public class AddOptional extends IOperator
                     // y ahora si que nos quedamos con el token ultimo de la opcionalidad
                     itW.goTo(lastTokenOptional);
                     
-                    //TODO: Si hay varios caminos, el previous no vale.
-                    //¿Hacer not enclosed?
                     lastTokenOptional = (Token) itW.previous();
                     firstTokenOptional = (Token) n;
                 }
@@ -109,7 +107,6 @@ public class AddOptional extends IOperator
             //Hemos encontrado una reparación posible:
             // Creamos el nuevo WrapperReparator
             
-            //TODO previous:
             itS.goTo(t);
             Token tokenInmediatelyBeforeT = (Token) itS.previous();
             itS.goTo(t);
@@ -190,7 +187,7 @@ public class AddOptional extends IOperator
                 return rep;
             }
 
-            Wrapper wrapperReparator = s.getAsWrapper(
+            Wrapper wrapperReparator = (Wrapper) s.getAsWrapper(
                     firstTokenOptional, Enclosure.NOT_ENCLOSED, 
                     lastTokenOptional,  Enclosure.NOT_ENCLOSED, new Optional());
             

@@ -81,7 +81,7 @@ public class Wrapper implements Edible{
     public Mismatch eat (Sample s) {
         return eat(s,DirectionOperator.DOWNWARDS);
     }
-
+    
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E5C3243F-4177-9A70-094F-C76645D7AD05]
     // </editor-fold> 
@@ -149,7 +149,7 @@ public class Wrapper implements Edible{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.9AAF649B-4F9D-8FA4-3FC3-287DCD953037]
     // </editor-fold> 
-    public Mismatch eat (Edible e, Token t, Item n, DirectionOperator d) 
+    public Mismatch eat (Edible e, Item t, Item n, DirectionOperator d) 
     {
         //Iteradores de los Edibles:
         EdibleIterator itWrapper = null;

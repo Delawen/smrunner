@@ -32,14 +32,13 @@ public class AddList extends IOperator
     public Repair apply(Mismatch m, DirectionOperator d) 
     {
         Edible s = m.getSample();
-        Wrapper w = m.getWrapper();
-        Token t = m.getToken();
+        Edible w = m.getWrapper();
+        Item t = m.getToken();
         Item n = m.getNode();
         EdibleIterator itW = null;
         EdibleIterator itS = null;
         
         Repair rep = new Repair(m);
-        rep.setState(StateRepair.BUILDING);
         
         Token firstTokenList=null, lastTokenList=null;
         Token firstTokenSquare=null, lastTokenSquare=null;
@@ -96,7 +95,7 @@ public class AddList extends IOperator
             }
             
             // Ya tenemos definido la zona de squareW, ahora le creamos un wrapper        
-            Wrapper squareW = w.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
+            Wrapper squareW = ((Wrapper)w).cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
                     
             Mismatch m1;
             boolean isList = false;
@@ -104,15 +103,17 @@ public class AddList extends IOperator
             {
                 //TODO: como le digo a squareW que se coma a Square?
                 m1 = squareW.eat((Sample) s);
-                if(m1 != null && m1.getNode() forme parte de uno de los elementos de la opcionalidad)
+                if(m1 != null && m1.getNode() != null) //TODO forme parte de uno de los elementos de la opcionalidad)
                 {
                     Operator op = new Operator();
                     IOperator nextOperator = op.getNextOperator();
                     Repair repAux=null;
                     while(nextOperator != null)
                     {
-                        //TODO: me extraña que la direccion sea UPWARD...
-                        repAux = nextOperator.apply(m1, DirectionOperator.UPWARDS);
+                        if(d == DirectionOperator.DOWNWARDS)
+                            repAux = nextOperator.apply(m1, DirectionOperator.UPWARDS);
+                        else
+                            repAux = nextOperator.apply(m1, DirectionOperator.DOWNWARDS);
 
                         if(repAux.getState() == StateRepair.SUCESSFULL)
                         {
@@ -128,7 +129,7 @@ public class AddList extends IOperator
                     }
                 }
             
-            }while(isList && m1.getNode() forme parte de uno de los elementos de la opcionalidad);
+            }while(isList && m1.getNode() != null);// forme parte de uno de los elementos de la opcionalidad);
 
             
         }

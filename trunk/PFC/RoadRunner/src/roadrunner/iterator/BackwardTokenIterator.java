@@ -17,8 +17,6 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     {
         super();
     }
-//TODO cambiarlo para que vaya para atrás
-//TODO hacer un test
     @Override
     public Object next()
     {
@@ -47,16 +45,39 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             if(super.lastNode.getLastChild() == null)
                 throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
             resultado.add((Item)super.lastNode.getLastChild().getObject());
-            SMTreeNode<Item> nodo = super.lastNode;
-            while(nodo.getPrevious() == null)
-                nodo = nodo.getParent();
-            resultado.add((Item)nodo.getPrevious().getObject());
+            
+            //Si es el hijo de donde estamos, entonces es la primera vez que entramos
+            if(super.lastNode.getFirstChild().getObject() instanceof List)
+                ((List)super.lastNode.getFirstChild().getObject()).setAccessed(false);
+            
+            if((item instanceof List && ((List)item).isAccessed()) || item instanceof Optional)
+            {
+                SMTreeNode<Item> nodo = super.lastNode;
+                while(nodo.getPrevious() == null)
+                {
+                    nodo = nodo.getParent();
+                    //Estamos subiendo porque no había un hermano, por tanto,
+                    //si subimos y encontramos que el padre es una lista 
+                    //es porque ya habíamos entrado en ella
+                    if(nodo.getObject() instanceof List)
+                        ((List)nodo.getObject()).setAccessed(true);
+                }
+                //Si es el hermano de donde estamos, entonces es la primera vez que entramos
+                if(nodo.getNext() != null && (nodo.getNext().getObject() instanceof List))
+                    ((List)nodo.getNext().getObject()).setAccessed(false);
+
+                resultado.add((Item)nodo.getPrevious().getObject());
+            }
             super.lastNode = super.lastNode.getLastChild();
             return resultado;
         }
         else if(item instanceof Tuple)
         {
             super.lastNode = super.lastNode.getLastChild();
+            //Si es el hijo de una tupla es porque es la primera vez que entramos
+            if(super.lastNode.getObject() instanceof List)
+                ((List)super.lastNode.getObject()).setAccessed(false);
+
             return super.lastNode.getObject();
         }
         else if(item instanceof Token)
@@ -66,8 +87,18 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 if(super.lastNode.getParent() == null)
                     return null;
                 super.lastNode = super.lastNode.getParent();
+                
+                //Estamos subiendo porque no había un hermano, por tanto...
+                //si subimos y encontramos que el padre es una lista 
+                //es porque ya habíamos entrado en ella
+                if(super.lastNode.getObject() instanceof List)
+                    ((List)super.lastNode.getObject()).setAccessed(true);
+
             }
-            
+            //Si es una lista es porque es la primera vez que entramos
+            if(super.lastNode.getObject() instanceof List)
+                ((List)super.lastNode.getObject()).setAccessed(false);
+
             super.lastNode = super.lastNode.getPrevious();
             
             return super.lastNode.getObject();
@@ -85,6 +116,11 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             return false; 
         
         return true;
+    }
+    
+    public boolean isPrevious()
+    {
+        throw new UnsupportedOperationException("Probably you need a ForwardTokenIterator ;)");
     }
 
     
@@ -172,6 +208,95 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         
         return false;
     }
+    
+    @Override
+    public Object previous()
+    {
+                
+        //Inicialización:
+        if(super.lastNode == null && super.getRootIterator()!=null)
+            return null;
+
+        
+        //Limpiamos la cache porque nos vamos a mover:
+        cache = null;
+        
+        //El next será el nodo actual:
+        next = super.lastNode;
+        
+        Item item = super.lastNode.getObject();
+        
+       if(item instanceof Optional || item instanceof List)
+        {
+            LinkedList<Item> resultado = new LinkedList<Item>();
+            if(super.lastNode.getFirstChild() == null)
+                throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
+            resultado.add((Item)super.lastNode.getFirstChild().getObject());
+            
+            //Si es el hijo de donde estamos, entonces es la primera vez que entramos
+            if(super.lastNode.getFirstChild().getObject() instanceof List)
+                ((List)super.lastNode.getFirstChild().getObject()).setAccessed(false);
+            
+            if((item instanceof List && ((List)item).isAccessed()) || item instanceof Optional)
+            {
+                SMTreeNode<Item> nodo = super.lastNode;
+
+                while(nodo.getNext() == null)
+                {
+                    nodo = nodo.getParent();
+                    //Estamos subiendo porque no había un hermano, por tanto,
+                    //si subimos y encontramos que el padre es una lista 
+                    //es porque ya habíamos entrado en ella
+                    if(nodo.getObject() instanceof List)
+                        ((List)nodo.getObject()).setAccessed(true);
+                }
+                //Si es el hermano de donde estamos, entonces es la primera vez que entramos
+                if(nodo.getNext() != null && (nodo.getNext().getObject() instanceof List))
+                    ((List)nodo.getNext().getObject()).setAccessed(false);
+
+                resultado.add((Item)nodo.getNext().getObject());
+            }
+            super.lastNode = super.lastNode.getFirstChild();
+            return resultado;
+        }
+        else if(item instanceof Tuple)
+        {
+            super.lastNode = super.lastNode.getFirstChild();
+            
+            //Si es el hijo de una tupla es porque es la primera vez que entramos
+            if(super.lastNode.getObject() instanceof List)
+                ((List)super.lastNode.getObject()).setAccessed(false);
+            return super.lastNode.getObject();
+        }
+        else if(item instanceof Token)
+        {
+            //Buscamos el siguiente
+            while(super.lastNode.getNext() == null)
+            {
+                //Si el padre es nulo es que estamos en la raiz
+                if(super.lastNode.getParent() == null)
+                    return null;
+                super.lastNode = super.lastNode.getParent();
+               
+                //Estamos subiendo porque no había un hermano, por tanto...
+                //si subimos y encontramos que el padre es una lista 
+                //es porque ya habíamos entrado en ella
+                if(super.lastNode.getObject() instanceof List)
+                    ((List)super.lastNode.getObject()).setAccessed(true);
+            }
+            
+            //Hemos encontrado el siguiente nodo
+            //Si es una lista es porque es la primera vez que entramos
+            if(super.lastNode.getObject() instanceof List)
+                ((List)super.lastNode.getObject()).setAccessed(false);
+            super.lastNode = super.lastNode.getNext();
+            
+            return super.lastNode.getObject();
+        }
+        
+        return null;
+    }
+
 
 }
 
