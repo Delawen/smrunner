@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hierarchy>
+	<defaultzone>
+		<type>WC_HTML</type>
+		<type>CUSTOM_WORD</type>
+	</defaultzone>
+	
+	<typeentry>
+		<type>CUSTOM_WORD</type>
+		<equals>text</equals>
+		<level>1</level>
+		<defaultmatch>
+			<regexp>
+				<![CDATA[[^<]*]]>
+			</regexp>
+			<text>
+				<![CDATA[[ALL]]]>
+			</text>
+		</defaultmatch>
+		<generic>
+			<type>WC_ANYTHING</type>
+		</generic>
+	</typeentry>
+
+	<typeentry>
+		<type>WC_HTML</type>
+		<equals>type</equals>
+		<level>1</level>
+		<defaultmatch>
+			<regexp>
+                                    <![CDATA[(<)([^>]*)(>)]]>		
+                        </regexp>
+			<text>
+				<![CDATA[[ALL]]]>
+			</text>
+		</defaultmatch>
+		<generic>
+			<type>WC_ANYTHING</type>
+		</generic>
+	</typeentry>
+
+	<typeentry>
+		<type>WC_ANYTHING</type>
+		<equals>type</equals>
+		<level>2</level>
+		<defaultmatch>
+			<regexp>
+				<![CDATA[.+]]>
+			</regexp>
+			<text>
+				<![CDATA[[ALL]]]>
+			</text>
+		</defaultmatch>
+		<generic>
+		</generic>
+	</typeentry>
+</hierarchy>
