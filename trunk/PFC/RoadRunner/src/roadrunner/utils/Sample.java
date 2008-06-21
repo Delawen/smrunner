@@ -1,6 +1,8 @@
 package roadrunner.utils;
 
 import SMTree.SMTreeNode;
+import XMLTokenizer.TokenTypePersistanceException;
+import java.net.URISyntaxException;
 import roadrunner.iterator.EdibleIterator;
 import SMTree.utils.Enclosure;
 import SMTree.utils.Kinship;
@@ -10,37 +12,67 @@ import java.util.ListIterator;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import roadrunner.node.Item;
-import roadrunner.node.Optional;
-import roadrunner.node.Text;
-import roadrunner.node.Token;  
+import roadrunner.node.*;  
 import roadrunner.operator.DirectionOperator;
+import Tokenizer.*;
+import WebModel.URIWebPage;
+import XMLTokenizer.TokenTypeHierarchy;
+import XMLTokenizer.TokenTypePersistence;
+import XMLTokenizer.Tokenizer;
+import WebModel.*;
+import java.io.File;
+import java.util.LinkedList;
+import java.io.File;
+import Tokenizer.IToken;
+import Tokenizer.ITokenizedWebPage;
+import WebModel.URIWebPage;
+import XMLTokenizer.TokenTypeHierarchy;
+import XMLTokenizer.TokenTypePersistence;
+import XMLTokenizer.Tokenizer;
 
 public class Sample implements Edible{
     
-    private List<Text> tokens;
-
+    private List<Token> tokens;
+    private TokenTypePersistence persistance;
+    private TokenTypeHierarchy hierarchy;
+    
+    private Sample()
+    {
+        try {
+            //creamos la jerarquia
+            persistance = new TokenTypePersistence("src/tokenizador/RoadRunnerDTD.xml");
+            hierarchy = persistance.load();
+            this.tokens = new LinkedList<Token>();
+        } catch (TokenTypePersistanceException ex) {
+            Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public Sample(String page)
     {
-        //TODO importar el sample de juanma
-        /*
-        tokens = new LinkedList<Token>();
-        iTokenizedWPIterator tp = new iTokenizedWPIterator(page); 
-        
-        TokenJuanma tj;
-        TokenNuestro t;
+        this();
+        try {
 
-        while(tp.hasNext())
-        {
-            tj = tp.next();
-            t = tj.convertirAnuestroToken();
-            tokens.add(t);
+            // Creamos la pagina web
+            URIWebPage webpage = new URIWebPage(new File(page).toURI().toString());
+
+            // Creamos el tokenizador
+            Tokenizer tokenizer = new Tokenizer(hierarchy);
+
+            // Tokenizo
+            ITokenizedWebPage twp = tokenizer.tokenize(webpage);
+
+            for (IToken token : twp) {
+                tokens.add((Token) limpiar((XMLTokenizer.Token)token));
+            }
+
+            tokens.add(new Text("&EOF;"));
+        } catch (TokenizerException ex) {
+            Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        t = new Token("&EOF;");
-        
-        tokens.add(t);
-         * */
+         
     }
     
     public Token search (Token t, Token from, int occurrence, DirectionOperator d) {
@@ -73,6 +105,15 @@ public class Sample implements Edible{
         return token;
     }
     
+    private Token limpiar(XMLTokenizer.Token t)
+    {
+        Text resultado = new Text(t.getText());
+        
+        //TODO limpiar los atributos
+        
+        return resultado;
+    }
+            
     public boolean isWellFormed (Text from, Enclosure inclusionFrom, Text to, Enclosure inclusionTo) {
         
         if(from==null || to==null)
@@ -211,7 +252,7 @@ public class Sample implements Edible{
     
     public class webPageForwardIterator implements webPageIterator
     {
-        private ListIterator<Text> it = tokens.listIterator();
+        private ListIterator<Token> it = tokens.listIterator();
         
         public boolean goTo(Token t)
         {
@@ -290,7 +331,7 @@ public class Sample implements Edible{
 
     public class webPageBackwardIterator implements webPageIterator
     {
-        private ListIterator<Text> it = tokens.listIterator();
+        private ListIterator<Token> it = tokens.listIterator();
         
         public boolean goTo(Token t)
         {

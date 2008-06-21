@@ -1,3 +1,5 @@
+package tokenizador;
+
 
 
 import java.io.BufferedWriter;
@@ -58,18 +60,18 @@ public class PruebaTokenizador {
 		/////////////////////////////////////////////////////////////////////////////////////////
 		
 		// Primero creamos la jerarquia
-		TokenTypePersistence persistance = new TokenTypePersistence("nuevo dtd.xml");
+		TokenTypePersistence persistance = new TokenTypePersistence("src/tokenizador/RoadRunnerDTD.xml");
 		TokenTypeHierarchy hierarchy = persistance.load();
 		
-		// Creamos la p‡gina web
+		// Creamos la pagina web
 		//URIWebPage page = new URIWebPage(new File("amazon1.txt").toURI().toString());
-		URIWebPage page = new URIWebPage(new File("eii.html").toURI().toString());
+		URIWebPage page = new URIWebPage(new File("/home/delawen/Desktop/fwdresobreeltokenizador/nuevo dtd.xml").toURI().toString());
 		
 		// Creamos el tokenizador
 		Tokenizer tokenizer = new Tokenizer(hierarchy);
 		
 		// OPCIONAL: le asignamos el notificador
-		tokenizer.setProgressNotificator(notificator);
+		//tokenizer.setProgressNotificator(notificator);
 		
 		// Tokenizo
 		System.err.println("INIT");
@@ -82,13 +84,10 @@ public class PruebaTokenizador {
 		 
 		FileOutputStream fos = new FileOutputStream("out.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(fos,"UTF-8");
-		BufferedWriter buff = new BufferedWriter(osw);
-		
 		for (IToken token : twp) {
-			buff.write(tokenToString(token)+"\n");
+			System.err.println(tokenToString(token)+"\n");
 		}
 		
-		buff.close();
 	}
 	
 	public static String tokenToString (IToken it) {

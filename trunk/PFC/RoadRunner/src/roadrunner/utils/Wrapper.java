@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import roadrunner.node.*; 
 import roadrunner.operator.DirectionOperator;
-import tokenizador.*;
+import Tokenizer.*;
 
 /**
  *  @author delawen
