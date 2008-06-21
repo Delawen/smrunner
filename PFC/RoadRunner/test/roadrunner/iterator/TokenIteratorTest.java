@@ -28,11 +28,11 @@ public class TokenIteratorTest {
 
     private static SMTree<Item> arbol;
     
-    @BeforeClass
-    public static void setUpClass() throws Exception 
+    @Before
+    public void setUp()  
     {
               
-        /*
+        /*    
          * 
          * 
          * 
@@ -96,8 +96,8 @@ public class TokenIteratorTest {
     public static void tearDownClass() throws Exception {
     }
 
-    @Before
-    public void setUp() 
+    @BeforeClass
+    public static void setUpClass() throws Exception 
     {
   
     }
@@ -112,7 +112,7 @@ public class TokenIteratorTest {
 
     @Test
     public void next_forward() {
-        System.out.println("next");
+        System.out.println("next forward");
         SMTreeIterator<Item> it = arbol.iterator(ForwardTokenIterator.class);
         
         //actual irá recorriendo los nodos "manualmente" para comprobar si el iterador
@@ -122,62 +122,73 @@ public class TokenIteratorTest {
         //hijos de la raiz
         actual = actual.getFirstChild();
         assertEquals(it.next(), actual.getObject());
+        System.out.println("-->" + actual.getObject());
         
         actual = actual.getNext();
         assertEquals(it.next(), actual.getObject());
+        System.out.println("-->" + actual.getObject());
         
         //Ahora encuentra la primera lista:
         Item i = (Item) it.next();
-        assert(i instanceof List);
+        System.out.println("-->" + i);
+        assertTrue(i instanceof List);
         
-        //Comprueba que hay dos caminos y que son correctos
+        //Comprueba que hay un solo camino
         LinkedList<Item> resultado = (LinkedList<Item>) it.next();
-        assert(resultado.size() == 2);
+        assertTrue(resultado.size() == 1);
         actual = actual.getNext();
         assertEquals(resultado.getFirst(), actual.getFirstChild().getObject());
-        assertEquals(resultado.getLast(), actual.getNext().getObject());
+        System.out.println("-->" + actual.getFirstChild().getObject());
+        
         
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getFirstChild().getObject());
         actual = actual.getFirstChild();
         assertEquals(it.next(), actual.getObject());
+        System.out.println("repetimos (goto)-->" + actual.getObject());
         
         actual = actual.getNext();
         assertEquals(it.next(), actual.getObject());
+        System.out.println("-->" + actual.getObject());
         
         i = (Item) it.next();
-        assert(i instanceof Optional);
+        assertTrue(i instanceof Optional);
+        System.out.println("-->" + i);
         
-        //Comprueba que hay dos caminos y que son correctos
+        //Comprueba que hay dos caminos y que son los correctos.
         resultado = (LinkedList<Item>) it.next();
-        assert(resultado.size() == 2);
+        assertTrue(resultado.size() == 2);
         actual = actual.getNext();
         assertEquals(resultado.getFirst(), actual.getFirstChild().getObject());
+        System.out.println("-->" + actual.getFirstChild().getObject());
         assertEquals(resultado.getLast(), actual.getParent().getNext().getObject());
+        System.out.println("-->" + actual.getParent().getNext().getObject());
+        
         
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getFirstChild().getObject());
         actual = actual.getFirstChild();
         assertEquals(it.next(), actual.getObject());
+        System.out.println("repetimos (goto)-->" + actual.getObject());
         
         //Seguimos por el opcional:
         actual = actual.getNext();
         i = (Item) it.next();
-        assert(i instanceof List);
+        assertTrue(i instanceof List);
+        System.out.println("-->" + i);
         
         resultado = (LinkedList<Item>) it.next();
-        assert(resultado.size() == 2);
+        assertTrue(resultado.size() == 1);
         assertEquals(resultado.getFirst(), actual.getFirstChild().getObject());
-        actual = arbol.getRoot();
-        assertEquals(resultado.getLast(), actual.getLastChild().getObject());
-        
+        System.out.println("-->" + actual.getFirstChild().getObject());
+          
     }
 
     
     @Test
     public void next_backwards() {
     
-        System.out.println("next");
+        System.out.println("next backwards");
         SMTreeIterator<Item> it = arbol.iterator(BackwardTokenIterator.class);
         
         //actual irá recorriendo los nodos "manualmente" para comprobar si el iterador
@@ -187,54 +198,49 @@ public class TokenIteratorTest {
         //hijos de la raiz
         actual = actual.getLastChild();
         assertEquals(it.next(), actual.getObject());
+        System.out.println("-->" + actual.getObject());
         
         actual = actual.getPrevious();
-        assertEquals(it.next(), actual.getObject());
+        Item i = (Item) it.next();
+        assertEquals(i, actual.getObject());
+        System.out.println("-->" + actual.getObject());
         
         //Ahora encuentra la primera lista:
-        Item i = (Item) it.next();
-        assert(i instanceof List);
+        assertTrue(i instanceof List);
         
-        //Comprueba que hay dos caminos y que son correctos
+        //Comprueba que hay un unico camino correcto
         LinkedList<Item> resultado = (LinkedList<Item>) it.next();
-        assert(resultado.size() == 2);
-        actual = actual.getPrevious();
+        assertTrue(resultado.size() == 1);
         assertEquals(resultado.getFirst(), actual.getLastChild().getObject());
-        assertEquals(resultado.getLast(), actual.getPrevious().getObject());
+        System.out.println("-->" + actual.getLastChild().getObject());
         
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getLastChild().getObject());
         actual = actual.getLastChild();
         assertEquals(it.next(), actual.getObject());
+        System.out.println("repetimos (goto)-->" + actual.getObject());
         
-        actual = actual.getPrevious();
-        assertEquals(it.next(), actual.getObject());
-        
-        i = (Item) it.next();
-        assert(i instanceof Optional);
-        
-        //Comprueba que hay dos caminos y que son correctos
+        //Comprueba que el opcional tiene dos caminos:
         resultado = (LinkedList<Item>) it.next();
-        assert(resultado.size() == 2);
-        actual = actual.getPrevious();
+        assertTrue(resultado.size() == 2);
         assertEquals(resultado.getFirst(), actual.getLastChild().getObject());
-        assertEquals(resultado.getLast(), actual.getParent().getPrevious().getObject());
+        System.out.println("-->" + actual.getLastChild().getObject());
+        assertEquals(resultado.getLast(), actual.getPrevious().getObject());
+        System.out.println("-->" + actual.getPrevious().getObject());
         
         //Nos vamos por el primer camino:
-        it.goTo((Item)actual.getFirstChild().getObject());
-        actual = actual.getFirstChild();
-        assertEquals(it.next(), actual.getObject());
-        
-        //Seguimos por el opcional:
-        actual = actual.getNext();
+        it.goTo((Item)actual.getLastChild().getObject());
+        actual = actual.getLastChild();
         i = (Item) it.next();
-        assert(i instanceof List);
+        assertTrue(i instanceof List);
+        assertEquals(i, actual.getObject());
+        System.out.println("repetimos (goto)-->" + actual.getObject());
         
+        //Comprobamos que tambien la segunda lista tiene un único camino:
         resultado = (LinkedList<Item>) it.next();
-        assert(resultado.size() == 2);
-        assertEquals(resultado.getFirst(), actual.getFirstChild().getObject());
-        actual = arbol.getRoot();
-        assertEquals(resultado.getLast(), actual.getLastChild().getObject());
+        assertTrue(resultado.size() == 1);
+        assertEquals(resultado.getFirst(), actual.getLastChild().getObject());
+        System.out.println("-->" + actual.getLastChild().getObject());
         
     }
 
@@ -263,7 +269,7 @@ public class TokenIteratorTest {
      */
     @Test
     public void isNext() {
-        System.out.println("isNext");
+        System.out.println("isNext Forward");
         SMTreeNode<Item> actual = arbol.getRoot().getFirstChild().getNext();
         SMTreeIterator<Item> it = arbol.iterator(ForwardTokenIterator.class);
         actual = actual.getNext();
@@ -274,7 +280,10 @@ public class TokenIteratorTest {
         it.goTo(actual.getObject());
         assertTrue(it.isNext((Item)actual.getFirstChild().getObject()));
         it.goTo(actual.getObject());
-        assertTrue(it.isNext((Item)actual.getNext().getObject()));
+        assertFalse(it.isNext((Item)actual.getNext().getObject())); //porque aun no hemos entrado
+        it.next();
+        it.next();
+        assertTrue(it.isNext((Item)actual.getNext().getObject())); //ya si hemos entrado
     }
 
 }
