@@ -85,7 +85,7 @@ public class Wrapper implements Edible{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E5C3243F-4177-9A70-094F-C76645D7AD05]
     // </editor-fold> 
-    public boolean isWellFormed (Text from,Enclosure inclusionFrom, Text to,Enclosure inclusionTo) {
+    public boolean isWellFormed (Token from,Enclosure inclusionFrom, Token to,Enclosure inclusionTo) {
         
         if(from==null || to==null)
            throw new NullPointerException("");
@@ -95,7 +95,7 @@ public class Wrapper implements Edible{
             return true;
         
         boolean isWellFormed = true;
-        Stack<Text> openTags = new Stack(); 
+        Stack<Tag> openTags = new Stack(); 
         SMTreeIterator<Item> it = treeWrapper.iterator(ForwardTokenIterator.class);
 
         //Si 'to' no esta incluido, no desechamos
@@ -111,18 +111,18 @@ public class Wrapper implements Edible{
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
             it.next();
         
-        if(from==to && !from.isTag())
+        if(from==to && !(from instanceof Tag))
             return true;
         else if (from==to)
             return false;
         
-        Text t;
+        Tag t;
         do
         {
-            t = (Text)it.next();
+            t = (Tag)it.next();
             if(t.isOpenTag())
                 openTags.push(t);
-            else if (t.isCloseTag() && openTags.firstElement().isOpenTagOf(t))
+            else if (t.isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
                     openTags.pop();
             else
                 isWellFormed = false;
@@ -268,7 +268,7 @@ public class Wrapper implements Edible{
             if(itWrapper.hasNext())
             {
                 token = (Token)itSample.next();
-                if(token instanceof Text && ((Text)token).isEOF())
+                if(token instanceof EOF)
                 {
                     Object items = itWrapper.next();
                     if(items instanceof Item)
@@ -284,7 +284,7 @@ public class Wrapper implements Edible{
             else if(itSample.hasNext())
             {
                 itemWrapper = (Token)itWrapper.next();
-                if(itemWrapper instanceof Text && ((Text)itemWrapper).isEOF())
+                if(itemWrapper instanceof EOF)
                 {
                     Object items = itSample.next();
                     if(items instanceof Token)

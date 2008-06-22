@@ -3,8 +3,6 @@ DUDAS
 * Cuidado con "#VAR".match("texto") y "texto".match("#VAR"). Ambos hacen match, 
 pero si estoy comparando dos Wrapper tendria que modificar el wrapper sobre el que comparo para que tenga "#VAR" 
 y no "text"
-* Cuidado con los Contents de los items porque no es lo mismo Text="+" que Plus="+", salvo que pongamos &+; en el plus o tengamos espcial cuidao
-* Lo mismo seria mas potito crear el token EOF
  ¿como trata el search los #vARIABLE? Deberia ser capaz de decir que "hola" lo ha encontrado cuando vea un "#VAR", aunque es posible que sea arriesgado hacer esto.
 
 CORREGIR
@@ -25,6 +23,11 @@ TODO
 * Smtreenode.clone Smtreenode.equals
 * wrapper.clone wrapper.equals wrapper.clonesubwrapper
 * Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
+
+22-06-2008
+==========
+[M 14:00] Tag, Text y EOF
+
 
 19-06-2008
 ==========
