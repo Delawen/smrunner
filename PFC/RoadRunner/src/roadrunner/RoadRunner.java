@@ -20,7 +20,7 @@ public class RoadRunner {
      */
     public RoadRunner () 
     {
-        this(new Wrapper(), new SampleSet());
+        this(null, new SampleSet());
     }
     
     public RoadRunner(Wrapper wrapper)
@@ -30,7 +30,7 @@ public class RoadRunner {
     
     public RoadRunner(SampleSet sampleSet)
     {
-        this(new Wrapper(), sampleSet);
+        this(null, sampleSet);
     }
     
     public RoadRunner(Wrapper wrapper, SampleSet sampleSet)
@@ -42,7 +42,7 @@ public class RoadRunner {
     
     public RoadRunner(String[] samples)
     {
-        this(new Wrapper());
+        this();
         ArrayList<Sample> list = new ArrayList<Sample>();
         
         for(String s : samples)
@@ -54,6 +54,8 @@ public class RoadRunner {
     }
 
     /**
+     * Process a sampleset building the wrapper
+     * 
      *  @return       Wrapper
      *  @param        sampleSet
      */
@@ -89,10 +91,16 @@ public class RoadRunner {
     {
         Mismatch m = null;
         
-        while(true)
-        {
+        //Si el wrapper es nulo es porque es el primer sample
+        if(this.wrapper == null)
+            this.wrapper = sample.getAsWrapper();
+        else
+            while(true) //Procesamos todo el sample
+            {
+                //TODO comer a partir de X
                 m = wrapper.eat(sample);
 
+                //Si al comer se ha provocado un Mismatch:
                 if(m != null)
                 {
                     Operator op = new Operator();
@@ -101,6 +109,7 @@ public class RoadRunner {
                     while(operacion != null && reparacion.getState() != StateRepair.SUCESSFULL)
                     {
                         reparacion = operacion.apply(m, DirectionOperator.DOWNWARDS);
+                        operacion = op.getNextOperator();
                     }
                     if(reparacion.getState() == StateRepair.SUCESSFULL)
                         reparacion.apply();
@@ -108,7 +117,7 @@ public class RoadRunner {
                         throw new RuntimeException("I couldn't repair a mismatch.");
                 }
                 else break;
-        }
+            }
         
     }
 

@@ -4,6 +4,8 @@ import SMTree.iterator.BackwardIterator;
 import SMTree.iterator.ForwardIterator;
 import SMTree.utils.Enclosure;
 import roadrunner.iterator.EdibleIterator;
+import roadrunner.iterator.webPageBackwardIterator;
+import roadrunner.iterator.webPageForwardIterator;
 import roadrunner.node.Item;
 import roadrunner.node.List;
 import roadrunner.node.Text;
@@ -47,12 +49,12 @@ public class AddList extends IOperator
         if(d == DirectionOperator.DOWNWARDS)
         {
             itW = w.iterator(ForwardIterator.class);
-            itS = s.iterator(Sample.webPageForwardIterator.class);
+            itS = s.iterator(webPageForwardIterator.class);
         }
         else if(d == DirectionOperator.UPWARDS)
         {
             itW = w.iterator(BackwardIterator.class);
-            itS = s.iterator(Sample.webPageBackwardIterator.class);
+            itS = s.iterator(webPageBackwardIterator.class);
         }
         
         if(super.where == WebPageOperator.WRAPPER)

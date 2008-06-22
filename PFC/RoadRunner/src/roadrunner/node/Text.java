@@ -62,4 +62,9 @@ public class Text extends Token
         
         throw new ClassCastException();
     }
+    
+    public String toString()
+    {
+        return this.content;
+    }
 }

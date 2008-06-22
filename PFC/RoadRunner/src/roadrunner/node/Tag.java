@@ -146,7 +146,7 @@ public class Tag extends Token
         {
             String key = it.next();
             
-            resultado += " " + key + "=\"" + this.atributos.get(key) + "\"";
+            resultado += " " + key + "=" + this.atributos.get(key);
         }
         
         resultado += ">";

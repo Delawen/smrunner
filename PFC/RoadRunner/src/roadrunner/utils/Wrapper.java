@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import roadrunner.node.*; 
 import roadrunner.operator.DirectionOperator;
 import Tokenizer.*;
+import roadrunner.iterator.webPageBackwardIterator;
+import roadrunner.iterator.webPageForwardIterator;
 
 /**
  *  @author delawen
@@ -161,12 +163,12 @@ public class Wrapper implements Edible{
         if(DirectionOperator.DOWNWARDS == d)
         {
             itWrapper = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
-            itSample = e.iterator(Sample.webPageForwardIterator.class);
+            itSample = e.iterator(webPageForwardIterator.class);
         }
         else if(DirectionOperator.UPWARDS == d)
         {
             itWrapper = (EdibleIterator) treeWrapper.iterator(BackwardTokenIterator.class);
-            itSample = e.iterator(Sample.webPageBackwardIterator.class);
+            itSample = e.iterator(webPageBackwardIterator.class);
         }
  
         //Nos colocamos para empezar a comer:
@@ -222,9 +224,9 @@ public class Wrapper implements Edible{
                         //Calculamos las bifurcaciones con un nuevo iterador:
                         EdibleIterator ited;
                         if(DirectionOperator.DOWNWARDS == d)
-                            ited = e.iterator(Sample.webPageForwardIterator.class);
+                            ited = e.iterator(webPageForwardIterator.class);
                         else
-                            ited = e.iterator(Sample.webPageBackwardIterator.class);
+                            ited = e.iterator(webPageBackwardIterator.class);
                         
                         ited.goTo((Item)ways);
                         Object caminos = ited.next();
@@ -238,8 +240,6 @@ public class Wrapper implements Edible{
                         else
                             throw new ClassCastException("El next del wrapper ha devuelto un tipo extraño.");
                     }
-                    else
-                        throw new ClassCastException("El next del sample ha devuelto un tipo extraño.");
                 }
                 
                 //Creamos el Mismatch si no lo ha encontrado:
@@ -256,8 +256,6 @@ public class Wrapper implements Edible{
                     m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
                 }
             }
-            else
-                throw new ClassCastException("La función next devolvió un tipo extraño.");
         }
        
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 

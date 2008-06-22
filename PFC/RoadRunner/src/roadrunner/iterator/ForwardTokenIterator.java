@@ -135,7 +135,10 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             return false;
         }
         else
+        {
+            super.lastNode = node;
             return true;
+        }
     }
     
     @Override

@@ -26,9 +26,7 @@ import java.io.File;
 import Tokenizer.IToken;
 import Tokenizer.ITokenizedWebPage;
 import WebModel.URIWebPage;
-import XMLTokenizer.TokenTypeHierarchy;
-import XMLTokenizer.TokenTypePersistence;
-import XMLTokenizer.Tokenizer;
+import roadrunner.iterator.webPageForwardIterator;
 
 public class Sample implements Edible{
     
@@ -74,15 +72,16 @@ public class Sample implements Edible{
         }
          
     }
+
     
     public Token search (Token t, Token from, int occurrence, DirectionOperator d) {
         
-        Sample.webPageIterator itSample = null;
+        EdibleIterator itSample = null;
         
         if(DirectionOperator.DOWNWARDS == d)
-            itSample = iterator(Sample.webPageForwardIterator.class);      
+            itSample = iterator(webPageForwardIterator.class);      
         else if(DirectionOperator.UPWARDS == d)
-            itSample = iterator(Sample.webPageForwardIterator.class);
+            itSample = iterator(webPageForwardIterator.class);
         
         if(!itSample.goTo(from))
             return null;
@@ -107,9 +106,11 @@ public class Sample implements Edible{
     
     private Token limpiar(XMLTokenizer.Token t)
     {
-        Text resultado = new Text(t.getText());
-        
-        //TODO limpiar los atributos
+        Token resultado;
+        if(t.getTokenType().getName().equals("TAG"))
+            resultado = new Tag(t.getText());
+        else
+            resultado = new Text(t.getText());
         
         return resultado;
     }
@@ -124,8 +125,8 @@ public class Sample implements Edible{
             return true;
         
         boolean isWellFormed = true;
-        Stack<Text> openTags = new Stack(); 
-        Sample.webPageIterator it = iterator(Sample.webPageForwardIterator.class);
+        Stack<Tag> openTags = new Stack(); 
+        EdibleIterator it = iterator(webPageForwardIterator.class);
 
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
@@ -140,21 +141,21 @@ public class Sample implements Edible{
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
             it.next();
         
-//        if(from==to && !from.isTag())
-//            return true;
-//        else if (from==to)
-//            return false;
+        if(from==to && !(from instanceof Tag))
+            return true;
+        else if (from==to)
+            return false;
         
-        Text t;
+        Tag t;
         do
         {
-            t = (Text)it.next();
-//            if(t.isOpenTag())
-//                openTags.push(t);
-//            else if (t.isCloseTag() && openTags.firstElement().isOpenTagOf(t))
-//                    openTags.pop();
-//            else
-//                isWellFormed = false;
+            t = (Tag)it.next();
+            if(t.isOpenTag())
+                openTags.push(t);
+            else if (t.isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
+                    openTags.pop();
+            else
+                isWellFormed = false;
             
         } while(it.hasNext() && t!=to && isWellFormed);
         
@@ -164,6 +165,13 @@ public class Sample implements Edible{
         return isWellFormed; 
     }
     
+    public Wrapper getAsWrapper() 
+    {
+        SMTree<Item> tree = new SMTree<Item>(new SMTreeNode(new Tuple()));
+        for(Item i : this.tokens)
+            tree.addObject(i, tree.getRoot(), Kinship.CHILD);
+        return new Wrapper(tree);
+    }
     public Wrapper getAsWrapper(Token from, Enclosure inclusionFrom, Token to, Enclosure inclusionTo, Item newParent)
     {
         Wrapper w = null;
@@ -223,17 +231,24 @@ public class Sample implements Edible{
         return new Wrapper(tree);
     }
     
-    public webPageIterator iterator(Class iteratorClass)
+    public interface webPageIterator extends EdibleIterator
+    {
+        public void init(List<Token> list);
+    }
+    
+    public EdibleIterator iterator(Class iteratorClass)
     {
         webPageIterator wpi=null;
-        try {
+        try
+        {
             wpi = (webPageIterator) iteratorClass.newInstance();
+            wpi.init(tokens);
         } catch (InstantiationException ex) {
             Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return wpi;
+        return (EdibleIterator) wpi;
     }
     
     public Token getToken(int index)
@@ -244,166 +259,8 @@ public class Sample implements Edible{
         return tokens.get(index);
     }
     
-    public interface webPageIterator extends EdibleIterator
-    {
-        public boolean goTo(Token t);
-    }
     
     
-    public class webPageForwardIterator implements webPageIterator
-    {
-        private ListIterator<Token> it = tokens.listIterator();
-        
-        public boolean goTo(Token t)
-        {
-            boolean result=false;
-            
-            if(!tokens.contains(t))
-                return false;
-            
-            it = tokens.listIterator();
-            while(it.hasNext() && !result)
-            {
-                if(t==it.next())
-                {
-                    it.previous();
-                    result = true;
-                }
-            }
-            return result;
-        }
-
-        public boolean hasNext() {
-            return it.hasNext();
-        }
-
-        public Token next() {
-            return it.next();
-        }
-
-        public boolean hasPrevious() {
-            return it.hasPrevious();
-        }
-
-        public Token previous() {
-            return it.previous();
-        }
-
-        public int nextIndex() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public int previousIndex() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void remove() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void set(Token arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void add(Token arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public boolean goTo(Item objeto) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public boolean isNext(Item o) 
-        {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void setRootIterator(SMTreeNode<Item> root) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void setTree(SMTree<Item> treeWrapper) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    
-    }
-
-
-    public class webPageBackwardIterator implements webPageIterator
-    {
-        private ListIterator<Token> it = tokens.listIterator();
-        
-        public boolean goTo(Token t)
-        {
-            boolean result=false;
-            
-            if(!tokens.contains(t))
-                return false;
-            
-            it = tokens.listIterator();
-            while(it.hasNext() && !result)
-            {
-                if(t==it.next())
-                {
-                    it.next();
-                    result = true;
-                }
-            }
-            return result;
-        }
-
-        public boolean hasNext() {
-            return it.hasPrevious();
-        }
-
-        public Token next() {
-            return it.previous();
-        }
-
-        public boolean hasPrevious() {
-           return it.hasNext();
-        }
-
-        public Token previous() {
-           return it.next();
-        }
-
-        public int nextIndex() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public int previousIndex() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void remove() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void set(Token arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void add(Token arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public boolean goTo(Item objeto) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public boolean isNext(Item o) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void setRootIterator(SMTreeNode<Item> root) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public void setTree(SMTree<Item> treeWrapper) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
 
     public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Optional optional) {
         throw new UnsupportedOperationException("Not supported yet.");

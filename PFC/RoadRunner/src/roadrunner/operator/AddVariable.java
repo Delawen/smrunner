@@ -7,6 +7,8 @@ import roadrunner.utils.Wrapper;
 import roadrunner.utils.Repair;
 import roadrunner.*;
 import roadrunner.iterator.EdibleIterator;
+import roadrunner.iterator.webPageBackwardIterator;
+import roadrunner.iterator.webPageForwardIterator;
 import roadrunner.node.Item;
 import roadrunner.node.Text;
 import roadrunner.node.Token;
@@ -49,9 +51,9 @@ public class AddVariable extends IOperator
             Sample s = (Sample) m.getSample();
             EdibleIterator it;
             if(d == DirectionOperator.DOWNWARDS)
-                it = s.iterator(Sample.webPageForwardIterator.class);
+                it = s.iterator(webPageForwardIterator.class);
             else
-                it = s.iterator(Sample.webPageBackwardIterator.class);
+                it = s.iterator(webPageBackwardIterator.class);
             
             it.goTo(t);
             
