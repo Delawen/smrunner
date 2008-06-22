@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hierarchy>
 	<defaultzone>
-		<type>WC_HTML</type>
-		<type>CUSTOM_WORD</type>
+		<type>TAG</type>
+		<type>TEXT</type>
 	</defaultzone>
 	
 	<typeentry>
-		<type>CUSTOM_WORD</type>
+		<type>TEXT</type>
 		<equals>text</equals>
 		<level>1</level>
 		<defaultmatch>
@@ -23,7 +23,7 @@
 	</typeentry>
 
 	<typeentry>
-		<type>WC_HTML</type>
+		<type>TAG</type>
 		<equals>type</equals>
 		<level>1</level>
 		<defaultmatch>

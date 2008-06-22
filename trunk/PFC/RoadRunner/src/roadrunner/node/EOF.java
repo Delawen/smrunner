@@ -39,4 +39,9 @@ public class EOF extends Token
         
         throw new ClassCastException();
     }
+    
+    public String toString()
+    {
+        return "&EOF;";
+    }
 }

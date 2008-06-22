@@ -123,7 +123,6 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         throw new UnsupportedOperationException("Probably you need a ForwardTokenIterator ;)");
     }
 
-    
     @Override
     public boolean hasNext()
     {
@@ -135,9 +134,12 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             return false;
         }
         else
+        {
+            super.lastNode = node;
             return true;
+        }
     }
-    
+        
     @Override
     public boolean isNext(Item i)
     {
