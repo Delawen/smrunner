@@ -114,7 +114,7 @@ public class Sample implements Edible{
         return resultado;
     }
             
-    public boolean isWellFormed (Text from, Enclosure inclusionFrom, Text to, Enclosure inclusionTo) {
+    public boolean isWellFormed (Token from, Enclosure inclusionFrom, Token to, Enclosure inclusionTo) {
         
         if(from==null || to==null)
            throw new NullPointerException("");
@@ -140,21 +140,21 @@ public class Sample implements Edible{
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
             it.next();
         
-        if(from==to && !from.isTag())
-            return true;
-        else if (from==to)
-            return false;
+//        if(from==to && !from.isTag())
+//            return true;
+//        else if (from==to)
+//            return false;
         
         Text t;
         do
         {
             t = (Text)it.next();
-            if(t.isOpenTag())
-                openTags.push(t);
-            else if (t.isCloseTag() && openTags.firstElement().isOpenTagOf(t))
-                    openTags.pop();
-            else
-                isWellFormed = false;
+//            if(t.isOpenTag())
+//                openTags.push(t);
+//            else if (t.isCloseTag() && openTags.firstElement().isOpenTagOf(t))
+//                    openTags.pop();
+//            else
+//                isWellFormed = false;
             
         } while(it.hasNext() && t!=to && isWellFormed);
         
