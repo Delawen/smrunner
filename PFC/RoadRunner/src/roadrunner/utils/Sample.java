@@ -51,6 +51,7 @@ public class Sample implements Edible{
         this();
         try {
 
+            tokens.add(new DOF());
             // Creamos la pagina web
             URIWebPage webpage = new URIWebPage(new File(page).toURI().toString());
 
@@ -64,7 +65,7 @@ public class Sample implements Edible{
                 tokens.add((Token) limpiar((XMLTokenizer.Token)token));
             }
 
-            tokens.add(new Text("&EOF;"));
+            tokens.add(new DOF());
         } catch (TokenizerException ex) {
             Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
         } catch (URISyntaxException ex) {
@@ -259,10 +260,11 @@ public class Sample implements Edible{
         return tokens.get(index);
     }
     
-    
-    
-
     public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Optional optional) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet."); //TODO
+    }
+
+    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, List list) {
+        throw new UnsupportedOperationException("Not supported yet."); //TODO
     }
 }

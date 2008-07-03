@@ -56,6 +56,12 @@ public class Wrapper implements Edible{
         super();
         this.treeWrapper = tree;
     }
+
+    //TODO
+    public Object eatSquare(Edible w, Item whereEat, DirectionOperator UPWARDS) 
+    {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
     
     
     public SMTree<Item> getTree()
@@ -266,7 +272,7 @@ public class Wrapper implements Edible{
             if(itWrapper.hasNext())
             {
                 token = (Token)itSample.next();
-                if(token instanceof EOF)
+                if(token instanceof DOF)
                 {
                     Object items = itWrapper.next();
                     if(items instanceof Item)
@@ -282,7 +288,7 @@ public class Wrapper implements Edible{
             else if(itSample.hasNext())
             {
                 itemWrapper = (Token)itWrapper.next();
-                if(itemWrapper instanceof EOF)
+                if(itemWrapper instanceof DOF)
                 {
                     Object items = itSample.next();
                     if(items instanceof Token)
@@ -368,24 +374,13 @@ public class Wrapper implements Edible{
         
         return wi;
     }
-    
-    public Wrapper cloneSubWrapper(Item from)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    public Wrapper cloneSubWrapper(Item from, Item newParent)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    public Wrapper cloneSubWrapper(Item from, Item to, Item newParent)
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Item i) {
-        return this;
+        return this; //TODO
+    }
+
+    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, List list) {
+        throw new UnsupportedOperationException("Not supported yet."); //TODO
     }
 }
 
