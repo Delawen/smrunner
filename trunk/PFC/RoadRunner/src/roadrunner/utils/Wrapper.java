@@ -384,7 +384,7 @@ public class Wrapper implements Edible{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Optional optional) {
+    public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Item i) {
         return this;
     }
 }

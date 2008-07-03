@@ -98,45 +98,147 @@ public class AddList extends IOperator
             
             // Ya tenemos definido la zona de squareW, ahora le creamos un wrapper        
             Wrapper squareW = ((Wrapper)w).cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
-                    
-            Mismatch m1;
-            boolean isList = false;
-            do
-            {
-                //TODO: como le digo a squareW que se coma a Square?
-                m1 = squareW.eat((Sample) s);
-                if(m1 != null && m1.getNode() != null) //TODO forme parte de uno de los elementos de la opcionalidad)
-                {
-                    Operator op = new Operator();
-                    IOperator nextOperator = op.getNextOperator();
-                    Repair repAux=null;
-                    while(nextOperator != null)
-                    {
-                        if(d == DirectionOperator.DOWNWARDS)
-                            repAux = nextOperator.apply(m1, DirectionOperator.UPWARDS);
-                        else
-                            repAux = nextOperator.apply(m1, DirectionOperator.DOWNWARDS);
-
-                        if(repAux.getState() == StateRepair.SUCESSFULL)
-                        {
-                            repAux.apply();
-                            break;
-                        }
-                        repAux = null;
-                    }
-
-                    if(repAux == null){
-                        rep.setState(StateRepair.FAILED);
-                        return rep;              
-                    }
-                }
+                             
+            // Comemos hacia arriba
+            Item whereEat;   
+            itW.goTo(firstTokenList);
+            whereEat = (Item) itW.previous();
+            Object whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.UPWARDS);
             
-            }while(isList && m1.getNode() != null);// forme parte de uno de los elementos de la opcionalidad);
-
+            
+            // para asegurarnos de que es un plus al menos tengo que comerme
+            // un elemento de la lista, sino falla la reparacion:
+            if(whatEaten instanceof Mismatch)
+            {
+                rep.setState(StateRepair.FAILED);
+                return rep;
+            }
+            
+            while( whatEaten instanceof Item)
+            {
+                firstTokenList = (Token) whatEaten;
+                itW.goTo((Item) whatEaten);
+                whereEat = (Item) itW.previous();
+                whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.UPWARDS);
+            }
+            
+            if (whatEaten instanceof Mismatch == false)
+                throw new IllegalStateException("eatSquare() devolvio null");
+                
+           // Ahora comemos hacia abajo
+           itW.goTo(lastTokenList);
+           whereEat = (Item) itW.next();
+           Object whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.DOWNWARDS);
+            
+            while( whatEaten instanceof Item)
+            {
+                lastTokenList = (Token) whatEaten;
+                itW.goTo((Item) whatEaten);
+                whereEat = (Item) itW.next();
+                whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.DOWNWARDS);
+            }
+            
+            if (whatEaten instanceof Mismatch == false)
+                throw new IllegalStateException("eatSquare() devolvio null");
+           
+            rep.setReparator(squareW);
+            rep.setInitialItem(firstTokenList);
+            rep.setFinalItem(lastTokenList);
+            rep.setState(StateRepair.SUCESSFULL);
+            rep.setToRepair((Wrapper) w);
+            rep.setIndexSample((Token) t);
             
         }
         else if(where == WebPageOperator.SAMPLE)
-        {     
+        {
+            //buscamos squareS        
+            firstTokenSquare = (Token) t;
+            itW.goTo(n);
+            lastTokenList = (Token) itW.previous();
+            
+            itS.goTo(t);
+            lastDelim = (Token) itS.previous();
+            
+            int ocurrence = 0;
+            boolean searching = true;        
+            while(searching)
+            {
+                lastTokenSquare =  s.search(lastDelim, firstTokenSquare, ocurrence, d);
+                
+                if(lastTokenSquare == null)
+                {
+                    searching = false;
+                }
+                else if(!w.isWellFormed( (Text) firstTokenSquare, Enclosure.ENCLOSED, (Text) lastTokenSquare, Enclosure.ENCLOSED))
+                     ocurrence++;
+                else
+                {
+                    //Si hemos llegado aquí es porque hemos encontrado una ocurrencia 
+                    //que delimita un código bien formado:
+                    searching = false;
+
+                    lastTokenList = lastTokenSquare;
+                }
+            }
+            
+            
+            if(lastTokenSquare == null)
+            {
+                rep.setState(StateRepair.FAILED);
+                return rep;
+            }
+            
+            // Ya tenemos definido la zona de squareS, ahora le creamos un wrapper        
+            Wrapper squareS = ((Sample)s).cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
+                             
+            // Comemos hacia arriba en el wrapper
+            Item whereEat;   
+            itW.goTo(n);
+            whereEat = lastTokenList;
+            Object whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.UPWARDS);
+            
+            
+            // para asegurarnos de que es un plus al menos tengo que comerme
+            // un elemento de la lista, sino falla la reparacion:
+            if(whatEaten instanceof Mismatch)
+            {
+                rep.setState(StateRepair.FAILED);
+                return rep;
+            }
+            
+            while( whatEaten instanceof Item)
+            {
+                firstTokenList = (Token) whatEaten;
+                itW.goTo((Item) whatEaten);
+                whereEat = (Item) itW.previous();
+                whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.UPWARDS);
+            }
+            
+            if (whatEaten instanceof Mismatch == false)
+                throw new IllegalStateException("eatSquare() devolvio null");
+                
+           // Ahora comemos hacia abajo en el sample
+           itS.goTo(lastTokenSquare);
+           whereEat = (Item) itS.next();
+           Object whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.DOWNWARDS);
+            
+            while( whatEaten instanceof Item)
+            {
+                itS.goTo((Item) whatEaten);
+                whereEat = (Item) itS.next();
+                whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.DOWNWARDS);
+            }
+            
+            if (whatEaten instanceof Mismatch == false)
+                throw new IllegalStateException("eatSquare() devolvio null");
+           
+            rep.setReparator(squareS);
+            rep.setInitialItem(firstTokenList);
+            rep.setFinalItem(lastTokenList);
+            rep.setState(StateRepair.SUCESSFULL);
+            rep.setToRepair((Wrapper) w);
+            itS.goTo((Item) whereEat);
+            rep.setIndexSample((Token) itS.next());
            
         }
     

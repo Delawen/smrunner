@@ -7,9 +7,7 @@ package roadrunner.utils;
 
 import SMTree.utils.Enclosure;
 import roadrunner.iterator.EdibleIterator;
-import roadrunner.node.List;
-import roadrunner.node.Optional;
-import roadrunner.node.Text;
+import roadrunner.node.Item;
 import roadrunner.node.Token;
 import roadrunner.operator.DirectionOperator;
 
@@ -20,7 +18,7 @@ import roadrunner.operator.DirectionOperator;
 public interface Edible 
 {
 
-    public Edible getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Optional optional);
+    public Edible getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Item i);
     public boolean isWellFormed(Token text, Enclosure ENCLOSED, Token text0, Enclosure NOT_ENCLOSED);
     public EdibleIterator iterator(Class type);
     public Token search(Token token, Token t, int ocurrence, DirectionOperator d);
