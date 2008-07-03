@@ -39,7 +39,28 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         
         Item item = super.lastNode.getObject();
         
-        if(item instanceof Optional || item instanceof List)
+        if(item instanceof Optional)
+        {
+            LinkedList<Item> resultado = new LinkedList<Item>();
+            
+            //Buscamos el siguiente (next)
+            SMTreeNode<Item> nodo = super.lastNode;
+            while(nodo.getPrevious() == null)
+            {
+                nodo = nodo.getParent();
+                if(nodo.getObject() instanceof List)
+                    ((List)nodo.getObject()).setAccessed(true);
+            }
+            
+            //Buscamos el primer hijo (principio del opcional)
+            if(super.lastNode.getLastChild() == null)
+                throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
+            resultado.add((Item)super.lastNode.getLastChild().getObject());
+
+            super.lastNode = nodo;
+            return resultado;
+        }
+        else if(item instanceof List)
         {
             LinkedList<Item> resultado = new LinkedList<Item>();
             if(super.lastNode.getLastChild() == null)

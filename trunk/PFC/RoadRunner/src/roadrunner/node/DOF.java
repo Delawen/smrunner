@@ -1,16 +1,20 @@
 package roadrunner.node;
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-// #[regen=yes,id=DCE.43392123-E85C-8D5D-0464-7640817C4CF6]
-// </editor-fold> 
-public class EOF extends Token 
+/**
+ * Delimiter Of File
+ * 
+ * 
+ * Start and End Token of every single sample.
+ * @author delawen
+ */
+public class DOF extends Token 
 {
-    public EOF()
+    public DOF()
     {
         super();
     }
     /**
-     * Comprueba si dos Text hacen matching.
+     * Checks if two tokens match.
      * 
      * @param i
      * @return boolean
@@ -18,7 +22,7 @@ public class EOF extends Token
     @Override
     public boolean match (Item i) 
     {
-        return (i instanceof EOF);
+        return (i instanceof DOF);
     }
     
     @Override
@@ -34,14 +38,14 @@ public class EOF extends Token
     @Override
     public Object clone(Object o) 
     {
-        if(o instanceof EOF)
-            return new EOF();
+        if(o instanceof DOF)
+            return new DOF();
         
         throw new ClassCastException();
     }
     
     public String toString()
     {
-        return "&EOF;";
+        return "&DOF;";
     }
 }

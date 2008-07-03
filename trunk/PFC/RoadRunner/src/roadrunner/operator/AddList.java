@@ -97,7 +97,7 @@ public class AddList extends IOperator
             }
             
             // Ya tenemos definido la zona de squareW, ahora le creamos un wrapper        
-            Wrapper squareW = ((Wrapper)w).cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
+            Wrapper squareW = w.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
                              
             // Comemos hacia arriba
             Item whereEat;   
@@ -128,7 +128,7 @@ public class AddList extends IOperator
            // Ahora comemos hacia abajo
            itW.goTo(lastTokenList);
            whereEat = (Item) itW.next();
-           Object whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.DOWNWARDS);
+           whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.DOWNWARDS);
             
             while( whatEaten instanceof Item)
             {
@@ -189,7 +189,7 @@ public class AddList extends IOperator
             }
             
             // Ya tenemos definido la zona de squareS, ahora le creamos un wrapper        
-            Wrapper squareS = ((Sample)s).cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
+            Wrapper squareS = s.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
                              
             // Comemos hacia arriba en el wrapper
             Item whereEat;   
@@ -220,7 +220,7 @@ public class AddList extends IOperator
            // Ahora comemos hacia abajo en el sample
            itS.goTo(lastTokenSquare);
            whereEat = (Item) itS.next();
-           Object whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.DOWNWARDS);
+           whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.DOWNWARDS);
             
             while( whatEaten instanceof Item)
             {
