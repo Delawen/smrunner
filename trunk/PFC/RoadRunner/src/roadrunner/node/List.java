@@ -20,5 +20,11 @@ public class List extends CompositeItem
     public void setAccessed(boolean accessed) {
         this.accessed = accessed;
     }
+    
+    @Override
+    public Object clone()
+    {
+        return new List();
+    }
 }
 
