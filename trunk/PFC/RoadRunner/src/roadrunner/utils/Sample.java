@@ -223,7 +223,6 @@ public class Sample implements Edible{
             tree.addObject(t, tree.getRoot() , Kinship.CHILD);
         }  while(it.hasNext() && t!=to);
         
-        // TODO esto quiza sobre:
         if(!it.hasNext() && t!=to)
             return null;
         
