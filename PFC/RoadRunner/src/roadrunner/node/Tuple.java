@@ -9,5 +9,11 @@ public class Tuple extends CompositeItem
     {
         setContent("[...]");
     }
+    
+    @Override
+    public Object clone()
+    {
+        return new Tuple();
+    }
 }
 

@@ -9,5 +9,11 @@ public class Optional extends CompositeItem
     {
         setContent("?");
     }
+    
+    @Override
+    public Object clone()
+    {
+        return new Optional();
+    }
 }
 
