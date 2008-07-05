@@ -168,6 +168,7 @@ public class AddOptional extends IOperator
                 return rep;
             }
             
+            //TODO : hacer que la reparacion sea ( ) y no []
             Wrapper wrapperReparator = s.cloneSubWrapper(firstTokenOptional, lastTokenOptional, new Optional());
             
             rep.setReparator(wrapperReparator);
