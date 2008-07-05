@@ -16,6 +16,7 @@ import roadrunner.operator.DirectionOperator;
 import Tokenizer.*;
 import roadrunner.iterator.webPageBackwardIterator;
 import roadrunner.iterator.webPageForwardIterator;
+import roadrunner.operator.Operator;
 
 /**
  *  @author delawen
@@ -57,10 +58,140 @@ public class Wrapper implements Edible{
         this.treeWrapper = tree;
     }
 
-    //TODO
-    public Object eatSquare(Edible w, Item whereEat, DirectionOperator UPWARDS) 
+    /**
+     * Eats a square candidate. 
+     * Returns null if it cannot be eaten or the item after the element.
+     * @param e Edible to be eaten
+     * @param t Where to start eating
+     * @param d Direction
+     * @return item after the element on the edible e
+     */
+    public Item eatSquare(Edible e, Item t, DirectionOperator d) 
     {
-        throw new UnsupportedOperationException("Not yet implemented");
+        //Iteradores de los Edibles:
+        EdibleIterator itSquare = null;
+        EdibleIterator itEdible = null;
+        Mismatch m = null;
+        
+        
+        /* Segun el recorrido creamos un tipo de iterador */
+        if(DirectionOperator.DOWNWARDS == d)
+        {
+            itSquare = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
+            itEdible = e.iterator(webPageForwardIterator.class);
+        }
+        else if(DirectionOperator.UPWARDS == d)
+        {
+            itSquare = (EdibleIterator) treeWrapper.iterator(BackwardTokenIterator.class);
+            itEdible = e.iterator(webPageBackwardIterator.class);
+        }
+ 
+        //Nos colocamos para empezar a comer:
+        itEdible.goTo(t);
+        
+        Item itemWrapper = null;
+        
+        //Para resolver los mismatches:
+        Operator op;
+
+        /*mientras no me coma entero el elemento*/
+        while(itSquare.hasNext())
+        {
+            //Buscamos el siguiente del sample:
+            Object edibleToken = itEdible.next();
+            
+            //Si nos ha devuelto un único camino
+            if(edibleToken instanceof Token)
+                // y no puede ser el siguiente del wrapper
+                if(!itSquare.isNext((Token) edibleToken))
+                {
+                    //creamos el Mismatch:
+                    Object next = itSquare.next();
+                    if(next instanceof java.util.List) //Varios caminos, escogemos el primero:
+                        itemWrapper = ((java.util.List<Token>)next).get(0);
+                    else if(next instanceof Token)//Un único camino:
+                        itemWrapper = (Token)next;
+                    else
+                        throw new ClassCastException("El next del wrapper devolvió un tipo extraño.");
+
+                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
+                    
+                    op = new Operator();
+                    Repair r = op.repair(m);
+                    if(r.getState() == StateRepair.SUCESSFULL)
+                        r.apply();
+                    else
+                        return null;
+                }
+            else if(edibleToken instanceof java.util.List)//Vamos probando todos los caminos
+            {
+                //La pila irá guardando los caminos no recorridos:
+                Stack<Item> stack = new Stack<Item>();
+                for(Item i : (java.util.List<Item>)edibleToken)
+                    stack.add(i);
+                
+                //Mientras la pila esté llena y no haga match, vamos probando uno a uno los caminos:
+                boolean encontrado = false;
+                while(!stack.empty() && !encontrado)
+                {
+                    Item ways = stack.pop();
+                    
+                    //Si es un token, comprobamos si hace matching:
+                    if(ways instanceof Token)
+                    {
+                        if(itSquare.isNext((Token) ways))
+                            encontrado = true;
+                    }
+                    else if(ways instanceof Item) //Los caminos se bifurcan
+                    {
+                        //Calculamos las bifurcaciones con un nuevo iterador:
+                        EdibleIterator ited;
+                        if(DirectionOperator.DOWNWARDS == d)
+                            ited = e.iterator(webPageForwardIterator.class);
+                        else
+                            ited = e.iterator(webPageBackwardIterator.class);
+                        
+                        ited.goTo((Item)ways);
+                        Object caminos = ited.next();
+                        
+                        //Añadimos las bifurcaciones
+                        if(caminos instanceof Item)
+                            stack.add((Item)caminos);
+                        else if(caminos instanceof java.util.List)
+                            for(Item camino : (java.util.List<Item>)caminos)
+                                stack.add(camino);
+                        else
+                            throw new ClassCastException("El next del wrapper ha devuelto un tipo extraño.");
+                    }
+                }
+                
+                //Creamos el Mismatch si no lo ha encontrado:
+                if(!encontrado)
+                {
+                    Object next = itSquare.next();
+                    if(next instanceof java.util.List) //Varios caminos, escogemos el primero:
+                        itemWrapper = ((java.util.List<Token>)next).get(0);
+                    else if(next instanceof Token)//Un único camino:
+                        itemWrapper = (Token)next;
+                    else
+                        throw new ClassCastException("El next del wrapper devolvió un tipo extraño.");
+
+                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);                    
+                    
+                    op = new Operator();
+                    Repair r = op.repair(m);
+                    if(r.getState() == StateRepair.SUCESSFULL)
+                        r.apply();
+                    else
+                        return null;
+                }
+            }
+        }
+       
+        /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
+         * entonces lanzamos otro mismatch
+         */
+        return (Item) itEdible.next();
     }
     
     
