@@ -10,6 +10,7 @@ import roadrunner.node.Item;
 import roadrunner.node.List;
 import roadrunner.node.Text;
 import roadrunner.node.Token;
+import roadrunner.node.Tuple;
 import roadrunner.utils.Edible;
 import roadrunner.utils.Mismatch; 
 import roadrunner.utils.Repair; 
@@ -67,15 +68,15 @@ public class AddList extends IOperator
             itS.goTo(t);
             lastDelim = (Token) itS.previous();
             
-            int ocurrence = 0;
-            boolean searching = true;        
-            while(searching)
+            int ocurrence = 0;      
+            while(true)
             {
                 lastTokenSquare =  w.search(lastDelim, firstTokenSquare, ocurrence, d);
                 
                 if(lastTokenSquare == null)
                 {
-                    searching = false;
+                    rep.setState(StateRepair.FAILED);
+                    return rep;
                 }
                 else if(!w.isWellFormed( (Text) firstTokenSquare, Enclosure.ENCLOSED, (Text) lastTokenSquare, Enclosure.ENCLOSED))
                      ocurrence++;
@@ -83,64 +84,51 @@ public class AddList extends IOperator
                 {
                     //Si hemos llegado aquí es porque hemos encontrado una ocurrencia 
                     //que delimita un código bien formado:
-                    searching = false;
-
                     lastTokenList = lastTokenSquare;
+                    break;
                 }
             }
             
-            
-            if(lastTokenSquare == null)
-            {
-                rep.setState(StateRepair.FAILED);
-                return rep;
-            }
-            
             // Ya tenemos definido la zona de squareW, ahora le creamos un wrapper        
-            Wrapper squareW = w.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
+            Wrapper squareW = w.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new Tuple());     
                              
             // Comemos hacia arriba
-            Item whereEat;   
+            Item whereEat; 
             itW.goTo(firstTokenList);
             whereEat = (Item) itW.previous();
-            Object whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.UPWARDS);
+            Item whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.UPWARDS);
             
             
             // para asegurarnos de que es un plus al menos tengo que comerme
             // un elemento de la lista, sino falla la reparacion:
-            if(whatEaten instanceof Mismatch)
+            if(whatEaten == null)
             {
                 rep.setState(StateRepair.FAILED);
                 return rep;
             }
             
-            while( whatEaten instanceof Item)
+            while( whatEaten != null)
             {
                 firstTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.previous();
                 whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.UPWARDS);
             }
-            
-            if (whatEaten instanceof Mismatch == false)
-                throw new IllegalStateException("eatSquare() devolvio null");
                 
            // Ahora comemos hacia abajo
            itW.goTo(lastTokenList);
            whereEat = (Item) itW.next();
            whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.DOWNWARDS);
             
-            while( whatEaten instanceof Item)
+            while( whatEaten != null)
             {
                 lastTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.next();
                 whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.DOWNWARDS);
             }
-            
-            if (whatEaten instanceof Mismatch == false)
-                throw new IllegalStateException("eatSquare() devolvio null");
            
+            squareW.getTree().setRootObject(new List());
             rep.setReparator(squareW);
             rep.setInitialItem(firstTokenList);
             rep.setFinalItem(lastTokenList);
@@ -159,37 +147,28 @@ public class AddList extends IOperator
             itS.goTo(t);
             lastDelim = (Token) itS.previous();
             
-            int ocurrence = 0;
-            boolean searching = true;        
-            while(searching)
+            int ocurrence = 0;     
+            while(true)
             {
                 lastTokenSquare =  s.search(lastDelim, firstTokenSquare, ocurrence, d);
                 
                 if(lastTokenSquare == null)
                 {
-                    searching = false;
+                    rep.setState(StateRepair.FAILED);
+                    return rep;
                 }
-                else if(!w.isWellFormed( (Text) firstTokenSquare, Enclosure.ENCLOSED, (Text) lastTokenSquare, Enclosure.ENCLOSED))
+                else if(!s.isWellFormed( (Text) firstTokenSquare, Enclosure.ENCLOSED, (Text) lastTokenSquare, Enclosure.ENCLOSED))
                      ocurrence++;
                 else
                 {
                     //Si hemos llegado aquí es porque hemos encontrado una ocurrencia 
-                    //que delimita un código bien formado:
-                    searching = false;
-
-                    lastTokenList = lastTokenSquare;
+                    //que delimita un código bien formado
+                    break;
                 }
             }
             
-            
-            if(lastTokenSquare == null)
-            {
-                rep.setState(StateRepair.FAILED);
-                return rep;
-            }
-            
             // Ya tenemos definido la zona de squareS, ahora le creamos un wrapper        
-            Wrapper squareS = s.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new List());     
+            Wrapper squareS = s.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new Tuple());     
                              
             // Comemos hacia arriba en el wrapper
             Item whereEat;   
@@ -200,38 +179,33 @@ public class AddList extends IOperator
             
             // para asegurarnos de que es un plus al menos tengo que comerme
             // un elemento de la lista, sino falla la reparacion:
-            if(whatEaten instanceof Mismatch)
+            if(whatEaten == null)
             {
                 rep.setState(StateRepair.FAILED);
                 return rep;
             }
             
-            while( whatEaten instanceof Item)
+            while(whatEaten != null)
             {
                 firstTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.previous();
                 whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.UPWARDS);
             }
-            
-            if (whatEaten instanceof Mismatch == false)
-                throw new IllegalStateException("eatSquare() devolvio null");
                 
            // Ahora comemos hacia abajo en el sample
            itS.goTo(lastTokenSquare);
            whereEat = (Item) itS.next();
            whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.DOWNWARDS);
             
-            while( whatEaten instanceof Item)
+            while( whatEaten != null)
             {
                 itS.goTo((Item) whatEaten);
                 whereEat = (Item) itS.next();
                 whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.DOWNWARDS);
             }
-            
-            if (whatEaten instanceof Mismatch == false)
-                throw new IllegalStateException("eatSquare() devolvio null");
            
+            squareS.getTree().setRootObject(new List());
             rep.setReparator(squareS);
             rep.setInitialItem(firstTokenList);
             rep.setFinalItem(lastTokenList);
