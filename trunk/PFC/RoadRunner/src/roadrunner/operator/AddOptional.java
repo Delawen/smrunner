@@ -66,9 +66,7 @@ public class AddOptional extends IOperator
         if(super.where == WebPageOperator.WRAPPER)
         {
             int ocurrence = 0;
-            boolean searching = true;
-            
-            while(searching)
+            while(true)
             {
                 // Buscamos el token que aparecera justo detra de la supuesta opcionalidad
                 lastTokenOptional =  w.search(t, (Token) n, ocurrence, d);
@@ -77,7 +75,8 @@ public class AddOptional extends IOperator
                 // porque no se puede crear reparacion con addoptional en el wrapper
                 if(lastTokenOptional == null)
                 {
-                    searching = false;
+                    rep.setState(StateRepair.FAILED);
+                    return rep;
                 }
                 // Si hemos encontrado uno, tenemos que ver si es una porcion
                 // de codigo bien formada
@@ -87,23 +86,15 @@ public class AddOptional extends IOperator
                 else
                 {
                     //Si hemos llegado aquí es porque hemos encontrado una ocurrencia 
-                    //que delimita un código bien formado:
-                    searching = false;
+                    //que delimita un código bien formado
+
                     // y ahora si que nos quedamos con el token ultimo de la opcionalidad
                     itW.goTo(lastTokenOptional);
                     
                     lastTokenOptional = (Token) itW.previous();
                     firstTokenOptional = (Token) n;
+                    break;
                 }
-            }
-            
-            
-            // Si no hemos localizado el comienzo y el final del SquareOptional,
-            //significa que la operación ha fallado:
-            if(lastTokenOptional == null || firstTokenOptional == null)
-            {
-                rep.setState(StateRepair.FAILED);
-                return rep;
             }
             
             //Hemos encontrado una reparación posible:
@@ -140,9 +131,7 @@ public class AddOptional extends IOperator
         else if(where == WebPageOperator.SAMPLE)
         {     
             int ocurrence = 0;
-            boolean searching = true;
-            
-            while(searching)
+            while(true)
             {
                 // Buscamos el token que aparecera justo detra de la supuesta opcionalidad
                 lastTokenOptional =  s.search((Token) n, t, ocurrence, d);
@@ -151,7 +140,8 @@ public class AddOptional extends IOperator
                 // porque no se puede crear reparacion con addoptional en el wrapper
                 if(lastTokenOptional == null)
                 {
-                    searching = false;
+                    rep.setState(StateRepair.FAILED);
+                    return rep;
                 }
                 // Si lo hemos encontrado tenemos que ver si es una porcion
                 // de codigo bien formada, sino seguimos buscando la siguiente ocurrencia
@@ -159,21 +149,12 @@ public class AddOptional extends IOperator
                      ocurrence++;
                 else
                 {
-                    searching = false;
                     // y ahora si que nos quedamos con el token ultimo de la opcionalidad
                     itS.goTo(lastTokenOptional);
                     lastTokenOptional = (Token) itS.previous();
                     firstTokenOptional = (Token) t;
+                    break;
                 }
-            }
-            
-            
-            // Si no hemos localizado el comienzo y el final del SquareOptional
-            //es que el operador ha fallado:
-            if(lastTokenOptional == null || firstTokenOptional == null)
-            {
-                rep.setState(StateRepair.FAILED);
-                return rep;
             }
             
             itS.goTo(t);
