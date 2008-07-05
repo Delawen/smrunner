@@ -350,10 +350,10 @@ public class SMTree<T> implements Cloneable{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.D6BCC3C4-38C4-91FA-BCA0-6B5FE88BA618]
     // </editor-fold> 
-    public boolean substitute (SMTreeNode<T> from, Enclosure inclusionFrom, 
+    public boolean substitute 
+            (SMTreeNode<T> from, Enclosure inclusionFrom, 
             SMTreeNode<T> to, Enclosure inclusionTo, SMTree<T> tree) 
     {
-        //TODO: ¿permitimos arbol vacio? puede ser interesante...
         if(from == null || inclusionFrom == null || inclusionTo == null
                 || to == null)
             throw new NullPointerException("");
@@ -368,31 +368,44 @@ public class SMTree<T> implements Cloneable{
         if(inclusionTo == Enclosure.NOT_ENCLOSED)
              to = to.getPrevious();
         
-        /**
-         * Regiones vacias:
-         * 1. (from,to) siendo from==to
-         * 2. [from,to) siendo from==to
-         * 3. (from,to] siendo from==to
-         * 4. from == null
-         * 5. to == null
-         */
-        if( (from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
-                || from==null || to==null)
-        {
-            roadrunner.RoadRunner.debug("Región vacia al sustituir",ExitLevel.WARNING);
-            return false;
-        }
-        
-        
         // from y to deben pertenecer al mismo nivel del arbol
+        int nivelFrom = level(from);
+        int nivelTo = level(to);
+        
         if(from.getParent() != to.getParent())
         {
-            roadrunner.RoadRunner.debug("La región a sustituir no forma parte del mismo nivel.",ExitLevel.SLEEPandEXIT);
-            return false;
+            if(nivelFrom < nivelTo)
+            {
+                while(from.getParent() != to.getParent() 
+                        && nivelFrom != nivelTo 
+                        && from.getParent().getFirstChild() == from)
+                {
+                    from = from.getParent();
+                    nivelFrom--;
+                }
+                
+            }
+            else if(nivelFrom > nivelTo)
+            {
+                while(from.getParent() != to.getParent() 
+                        && nivelFrom != nivelTo 
+                        && to.getParent().getFirstChild() == to)
+                {
+                    to = to.getParent();
+                    nivelTo--;
+                }
+                
+            }
+
+            if(from.getParent() != to.getParent())
+            {
+                roadrunner.RoadRunner.debug("La región a sustituir no forma parte del mismo nivel.",ExitLevel.SLEEPandEXIT);
+                return false;
+            }
         }
-        
-        
+
         /* Borramos [desde,hasta), el hasta no incluido*/
+        //Si from y to son el mismo, se queda igual
         SMTreeNode<T> nextFrom;
         while(from != to)
         {
@@ -437,6 +450,14 @@ public class SMTree<T> implements Cloneable{
         removeFastSMTreeNode(to);
         
         return addSubSMTree(tree, where, whereKinship);
+    }
+    
+    private int level(SMTreeNode n)
+    {
+        int level = 0;
+        while((n = n.getParent()) != null)
+            level++;
+        return level;
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -575,75 +596,7 @@ public class SMTree<T> implements Cloneable{
     {
         return "buh!";
     }
-/*    
-    public class toStringIterator<T> extends SMTreeIterator<T> {
 
-        //Se van guardando los hijos de los nodos que recorremos del nivel actual:
-        private int indice;
-        private String toString;
-
-        public toStringIterator(SMTree<T> arbol) {
-            super(arbol);
-            this.toString = "";
-        }
-
-        @Override
-        public void inicializarVector() {
-            this.array = new ArrayList<SMTreeNode<T>>();
-            this.indice = 0;
-        }
-
-        boolean introducirElementos(SMTreeNode<T> nodoInicial) {
-            this.indice = 0;
-            this.array.add(nodoInicial);
-            return true;
-        }
-
-        private void recorrerHijos() {
-            ArrayList<SMTreeNode<T>> provisional = new ArrayList<SMTreeNode<T>>();
-            if (!this.array.isEmpty()) {
-                this.toString += "\n";
-                for (int i = 0; i < this.array.size(); i++) {
-
-                    SMTreeNode<T> aux = this.array.get(i).getFirstChild();
-                    while (aux != null) {
-                        provisional.add(aux);
-                        aux = aux.getNext();
-                    }
-                }
-                this.array = provisional;
-                this.indice = 0;
-            }
-        }
-
-        @Override
-        public T next() {
-            //Si hemos llegado al final del array, es que pasamos al siguiente nivel:
-            if (indice == this.array.size()) {
-                recorrerHijos();
-            }
-            SMTreeNode<T> res = this.array.get(indice);
-            indice++;
-            return res.getObject();
-        }
-
-        public boolean hasNext() {
-            if (this.array.size() == this.indice) {
-                recorrerHijos();
-            }
-            return !this.array.isEmpty();
-        }
-
-        @Override
-        public String toString() {
-            toString = "";
-            while (this.hasNext()) {
-                toString += "<" + this.next().toString() + "> ";
-            }
-            return toString;
-        }
-    }
- * */
     
     public SMTree cloneSubTree(T from)
     {

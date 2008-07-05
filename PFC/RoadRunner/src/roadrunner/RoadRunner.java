@@ -1,8 +1,8 @@
 package roadrunner;
 
 import java.util.ArrayList;
+import roadrunner.node.Item;
 import roadrunner.operator.DirectionOperator;
-import roadrunner.operator.IOperator;
 import roadrunner.operator.Operator;
 import roadrunner.utils.*;
 
@@ -95,10 +95,12 @@ public class RoadRunner {
         if(this.wrapper == null)
             this.wrapper = sample.getAsWrapper();
         else
+        {
+            Item t = sample.getToken(0);
+            Item n = this.wrapper.getTree().getRootObject();
             while(true) //Procesamos todo el sample
             {
-                //TODO comer a partir de X
-                m = wrapper.eat(sample);
+                m = wrapper.eat(sample, t, n, DirectionOperator.DOWNWARDS);
 
                 //Si al comer se ha provocado un Mismatch:
                 if(m != null)
@@ -109,10 +111,12 @@ public class RoadRunner {
                         reparacion.apply();
                     else
                         throw new RuntimeException("I couldn't repair a mismatch.");
+                    t = reparacion.getIndexSample();
+                    n = reparacion.getInitialItem();
                 }
-                else break;
+                else break; //Hemos terminado
             }
-        
+        }
     }
 
     
