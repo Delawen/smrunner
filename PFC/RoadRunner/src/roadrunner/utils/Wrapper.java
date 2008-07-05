@@ -73,7 +73,6 @@ public class Wrapper implements Edible{
         EdibleIterator itEdible = null;
         Mismatch m = null;
         
-        
         /* Segun el recorrido creamos un tipo de iterador */
         if(DirectionOperator.DOWNWARDS == d)
         {
@@ -94,11 +93,14 @@ public class Wrapper implements Edible{
         //Para resolver los mismatches:
         Operator op;
 
+        Object edibleToken = null;
+        
+
         /*mientras no me coma entero el elemento*/
         while(itSquare.hasNext())
         {
             //Buscamos el siguiente del sample:
-            Object edibleToken = itEdible.next();
+            edibleToken = itEdible.next();
             
             //Si nos ha devuelto un único camino
             if(edibleToken instanceof Token)
@@ -191,7 +193,7 @@ public class Wrapper implements Edible{
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
          * entonces lanzamos otro mismatch
          */
-        return (Item) itEdible.next();
+        return (Item) edibleToken;
     }
     
     
@@ -506,12 +508,11 @@ public class Wrapper implements Edible{
         return wi;
     }
 
-    public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Item i) {
-        return this; //TODO
-    }
-
-    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, List list) {
-        throw new UnsupportedOperationException("Not supported yet."); //TODO
+    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent) 
+    {
+        SMTree<Item> treeCloned = treeWrapper.cloneSubTree(firstTokenSquare, lastTokenSquare, parent);
+        
+        return new Wrapper(treeCloned);
     }
 }
 
