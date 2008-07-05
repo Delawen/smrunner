@@ -5,6 +5,10 @@
 
 package roadrunner.operator;
 
+import roadrunner.utils.Mismatch;
+import roadrunner.utils.Repair;
+import roadrunner.utils.StateRepair;
+
 /**
  *
  * @author santi
@@ -33,5 +37,21 @@ public class Operator {
         }
         
         return null;
+    }
+    
+    public Repair repair(Mismatch m)
+    {
+    
+        IOperator operacion = this.getNextOperator();
+        Repair reparacion = new Repair(m);
+        while(operacion != null && reparacion.getState() != StateRepair.SUCESSFULL)
+        {
+            reparacion = operacion.apply(m, DirectionOperator.DOWNWARDS);
+            operacion = this.getNextOperator();
+        }
+        if(reparacion.getState() == StateRepair.SUCESSFULL)
+            return reparacion;
+        else
+            throw new RuntimeException("I couldn't repair a mismatch.");
     }
 }
