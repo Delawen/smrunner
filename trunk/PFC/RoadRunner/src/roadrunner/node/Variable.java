@@ -35,8 +35,9 @@ public class Variable extends Token
     }
 
     @Override
-    public Object clone(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Object clone() 
+    {
+        return new Variable();
     }
 
 }

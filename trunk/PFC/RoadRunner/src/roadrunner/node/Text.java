@@ -55,14 +55,12 @@ public class Text extends Token
     
 
     @Override
-    public Object clone(Object o) 
+    public Object clone() 
     {
-        if(o instanceof Text)
-            return new Text(((Text)o).getContent());
-        
-        throw new ClassCastException();
+        return new Text(((Text)this).getContent());
     }
     
+    @Override
     public String toString()
     {
         return this.content;

@@ -104,13 +104,7 @@ public class RoadRunner {
                 if(m != null)
                 {
                     Operator op = new Operator();
-                    IOperator operacion = op.getNextOperator();
-                    Repair reparacion = new Repair(m);
-                    while(operacion != null && reparacion.getState() != StateRepair.SUCESSFULL)
-                    {
-                        reparacion = operacion.apply(m, DirectionOperator.DOWNWARDS);
-                        operacion = op.getNextOperator();
-                    }
+                    Repair reparacion = op.repair(m);
                     if(reparacion.getState() == StateRepair.SUCESSFULL)
                         reparacion.apply();
                     else

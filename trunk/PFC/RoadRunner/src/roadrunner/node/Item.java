@@ -54,7 +54,7 @@ public abstract class Item implements Cloneable{
      */
     @Override
     public abstract boolean equals(Object i);
-    public abstract Object clone(Object o);
+    public abstract Object clone();
 
 }
 

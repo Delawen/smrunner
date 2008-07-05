@@ -26,6 +26,7 @@ import java.io.File;
 import Tokenizer.IToken;
 import Tokenizer.ITokenizedWebPage;
 import WebModel.URIWebPage;
+import java.util.Iterator;
 import roadrunner.iterator.webPageForwardIterator;
 
 public class Sample implements Edible{
@@ -260,11 +261,23 @@ public class Sample implements Edible{
         return tokens.get(index);
     }
     
-    public Wrapper getAsWrapper(Token firstTokenOptional, Enclosure ENCLOSED, Token lastTokenOptional, Enclosure ENCLOSED0, Optional optional) {
-        throw new UnsupportedOperationException("Not supported yet."); //TODO
-    }
-
-    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, List list) {
-        throw new UnsupportedOperationException("Not supported yet."); //TODO
+    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent) 
+    {
+        Item root = (Item)parent.clone();
+        SMTree<Item> treeCloned = new SMTree<Item>(root);
+        SMTreeNode<Item> rootNode = treeCloned.getNode(root);
+        
+        Iterator<Token> it = tokens.iterator();
+        while(it.hasNext() && !it.next().equals(firstTokenSquare))
+            it.next();
+        
+        while(it.hasNext())
+        {
+            Item i = it.next();
+            if(i.equals(lastTokenSquare))
+                break;
+            treeCloned.addObject(i, rootNode, Kinship.CHILD);
+        }
+        return new Wrapper(treeCloned);
     }
 }

@@ -115,20 +115,14 @@ public class Tag extends Token
     
    
     @Override
-    public Object clone(Object o) 
+    public Object clone() 
     {
         Tag clon;
-        if(o instanceof Tag)
-        {
-            Tag t = (Tag)o;
-            if(t.isOpenTag())
-                clon = new Tag("<" + ((Tag)o).getContent() + ">");
-            else
-                clon = new Tag("</" + ((Tag)o).getContent() + ">");
-            return clon;
-        }
-        
-        throw new ClassCastException("Se intentó clonar un objeto desconocido a Tag");
+        if(this.isOpenTag())
+            clon = new Tag("<" + getContent() + ">");
+        else
+            clon = new Tag("</" + getContent() + ">");
+        return clon;
     }
     
     @Override
