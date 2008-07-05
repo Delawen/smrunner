@@ -49,9 +49,6 @@ public class Operator {
             reparacion = operacion.apply(m, DirectionOperator.DOWNWARDS);
             operacion = this.getNextOperator();
         }
-        if(reparacion.getState() == StateRepair.SUCESSFULL)
-            return reparacion;
-        else
-            throw new RuntimeException("I couldn't repair a mismatch.");
+        return reparacion;
     }
 }
