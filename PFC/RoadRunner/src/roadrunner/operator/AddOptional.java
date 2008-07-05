@@ -97,9 +97,7 @@ public class AddOptional extends IOperator
                 }
             }
             
-            //Hemos encontrado una reparación posible:
-            // Creamos el nuevo WrapperReparator
-            
+            // comprobamos que no estamos ante una lista          
             itS.goTo(t);
             Token tokenInmediatelyBeforeT = (Token) itS.previous();
             itS.goTo(t);
@@ -169,16 +167,15 @@ public class AddOptional extends IOperator
                 rep.setState(StateRepair.FAILED);
                 return rep;
             }
-
-            Wrapper wrapperReparator = (Wrapper) s.getAsWrapper(
-                    firstTokenOptional, Enclosure.NOT_ENCLOSED, 
-                    lastTokenOptional,  Enclosure.NOT_ENCLOSED, new Optional());
+            
+            Wrapper wrapperReparator = s.cloneSubWrapper(firstTokenOptional, lastTokenOptional, new Optional());
             
             rep.setReparator(wrapperReparator);
             rep.setInitialItem(n);
             rep.setFinalItem(n);
             rep.setState(StateRepair.SUCESSFULL);
-            rep.setIndexSample(lastTokenOptional); 
+            itS.goTo(lastTokenOptional);
+            rep.setIndexSample((Token) itS.next()); 
         }
     
         return rep;     
