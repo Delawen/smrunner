@@ -36,14 +36,12 @@ public class DOF extends Token
     
 
     @Override
-    public Object clone(Object o) 
+    public Object clone() 
     {
-        if(o instanceof DOF)
-            return new DOF();
-        
-        throw new ClassCastException();
+        return new DOF();
     }
     
+    @Override
     public String toString()
     {
         return "&DOF;";

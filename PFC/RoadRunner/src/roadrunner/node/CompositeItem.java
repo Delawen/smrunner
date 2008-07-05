@@ -4,7 +4,7 @@ package roadrunner.node;
 // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 // #[regen=yes,id=DCE.347F322C-6009-0182-4FAC-E69415380E6C]
 // </editor-fold> 
-public class CompositeItem extends Item 
+public abstract class CompositeItem extends Item 
 {
     /**
      * Comprueba si los items hacen matching.
@@ -30,11 +30,6 @@ public class CompositeItem extends Item
         if(!(i instanceof CompositeItem))
             return false;
         return ((Item)i).getContent().equals(this.getContent());
-    }
-
-    @Override
-    public Object clone(Object o) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
 
