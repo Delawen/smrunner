@@ -8,6 +8,9 @@ import SMTree.utils.Kinship;
 import SMTree.iterator.ForwardIterator;
 import SMTree.iterator.SMTreeIterator;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import roadrunner.RoadRunner.ExitLevel;
@@ -614,20 +617,90 @@ public class SMTree<T> implements Cloneable{
     throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public SMTree cloneSubTree(T from,T newParent)
+    public SMTree cloneSubTree(T from,T newParent) throws CloneNotSupportedException
     {
         if(from==null || newParent==null)
             throw new NullPointerException("");
         
-    throw new UnsupportedOperationException("Not supported yet.");
+        return cloneSubTree(mapa.get(from), new SMTreeNode(newParent));
     }
     
-    public SMTree cloneSubTree(SMTreeNode from,SMTreeNode newParent)
+    public SMTree cloneSubTree(SMTreeNode from,SMTreeNode newParent) throws CloneNotSupportedException
     {
         if(from==null || newParent==null)
             throw new NullPointerException("");
         
-    throw new UnsupportedOperationException("Not supported yet.");
+        //Index para el arbol clonado
+        SMIndexStructure indexClone = new SMIndexStructure();
+      
+        // Mapa auxiliar para clonar sin necesidad de recursion
+        Map<SMTreeNode, SMTreeNode> mapClone= new HashMap<SMTreeNode, SMTreeNode>();
+        
+        //TODO : vendria bien un iterador del arbol que devolviera Nodos y no Objetos 
+        ForwardIterator<T> it = new ForwardIterator<T>();
+        it.setRootIterator(from);
+        T auxObj;
+        SMTreeNode auxNode, auxNodeClone;
+        while(it.hasNext())
+        {
+            auxObj = (T) it.next();
+            auxNode = mapa.get(auxObj); // TODO esto es un poco redundante, mejor hacer el iterador...
+            auxNodeClone = auxNode.clone();
+            mapClone.put(auxNode,auxNodeClone );
+            indexClone.add(auxNodeClone);
+        }
+        
+        Iterator itMap = mapClone.entrySet().iterator();
+        SMTreeNode neighbor;
+        while (itMap.hasNext()) 
+        {
+            Map.Entry entryNode = (Map.Entry)itMap.next();
+            
+            //auxNode es el nodo original
+            auxNode = (SMTreeNode) entryNode.getKey();
+            //auxNodeClone es el nodo parcialmente clonado
+            auxNodeClone = (SMTreeNode) entryNode.getValue();
+            /** hacemos que las referencias a los vecinos(parientes) apunten a los nuevos clonados**/
+            if(auxNode.getParent()!=null)
+            {
+                neighbor = mapClone.get(auxNode.getParent());
+                auxNodeClone.setParent(neighbor);             
+            }
+            if(auxNode.getFirstChild()!=null)
+            {
+                neighbor = mapClone.get(auxNode.getFirstChild());
+                auxNodeClone.setFirstChild(neighbor);             
+            }
+            if(auxNode.getLastChild()!=null)
+            {
+                neighbor = mapClone.get(auxNode.getLastChild());
+                auxNodeClone.setLastChild(neighbor);             
+            }
+            if(auxNode.getNext()!=null)
+            {
+                neighbor = mapClone.get(auxNode.getNext());
+                auxNodeClone.setNext(neighbor);             
+            }
+            if(auxNode.getPrevious()!=null)
+            {
+                neighbor = mapClone.get(auxNode.getPrevious());
+                auxNodeClone.setPrevious(neighbor);             
+            }
+        }
+        
+        // Asociamos nueva raiz con el resto del arbol clonado       
+        SMTreeNode rootTreeClone = new SMTreeNode(newParent.getObject());          
+        rootTreeClone.setFirstChild(mapClone.get(from));
+        rootTreeClone.setLastChild(mapClone.get(from));
+        
+        indexClone.add(rootTreeClone);
+        
+        // y creamos finalmente el arbol clonado:
+        SMTree treeClone = new SMTree();      
+        treeClone.setRoot(rootTreeClone);
+        treeClone.setMapa(indexClone);
+        
+        return treeClone;
     }
     
     public SMTree cloneSubTree(T from,T to,T newParent)
@@ -635,7 +708,7 @@ public class SMTree<T> implements Cloneable{
         if(from==null || to==null || newParent==null)
             throw new NullPointerException("");
         
-    throw new UnsupportedOperationException("Not supported yet.");
+        return cloneSubTree(mapa.get(from),mapa.get(to), new SMTreeNode(newParent));
     }
     
     public SMTree cloneSubTree(SMTreeNode from, SMTreeNode to, SMTreeNode newParent)
