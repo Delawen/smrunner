@@ -168,14 +168,31 @@ public class SMTreeNode<T> implements Cloneable{
             return false;
         
         SMTreeNode node = (SMTreeNode)o;
-        if(!node.getObject().equals(this.getObject())
-                || node.firstChild != this.firstChild
-                || node.lastChild != this.lastChild
-                || node.next != this.next
-                || node.previous != this.previous
-                || node.parent != this.parent)
-            return false;
-        return true;
+        boolean result;
+        
+        result = this.getObject().equals(node.getObject());
+        result &= (this.getParent()==null && node.getParent()==null) ||
+                (this.getParent()!=null &&
+                node.getParent()!=null &&
+                this.getParent().getObject().equals(node.getParent().getObject()));
+        result &= (this.getFirstChild()==null && node.getFirstChild()==null) || 
+                (this.getFirstChild()!=null &&
+                node.getFirstChild()!=null &&
+                this.getFirstChild().getObject().equals(node.getFirstChild().getObject()));
+        result &= (this.getLastChild()==null && node.getLastChild()==null) || 
+                (this.getLastChild()!=null &&
+                node.getLastChild()!=null &&
+                this.getLastChild().getObject().equals(node.getLastChild().getObject()));
+        result &= (this.getNext()==null && node.getNext()==null) || 
+                (this.getNext()!=null &&
+                node.getNext()!=null &&
+                this.getNext().getObject().equals(node.getNext().getObject()));
+        result &= (this.getPrevious()==null && node.getPrevious()==null) || 
+                (this.getPrevious()!=null &&
+                node.getPrevious()!=null &&
+                this.getPrevious().getObject().equals(node.getPrevious().getObject()));
+        
+        return result;
     }
     
     @Override
