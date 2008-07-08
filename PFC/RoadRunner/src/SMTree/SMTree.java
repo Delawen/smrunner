@@ -601,36 +601,20 @@ public class SMTree<T> implements Cloneable{
     }
 
     
-    public SMTree cloneSubTree(T from)
+    public SMTree cloneSubTree(T from) throws CloneNotSupportedException
     {
        if(from==null)
             throw new NullPointerException("");
           
-    throw new UnsupportedOperationException("Not supported yet.");
+        return cloneSubTree(mapa.get(from));
     }
     
-    public SMTree cloneSubTree(SMTreeNode from)
+    public SMTree cloneSubTree(SMTreeNode from) throws CloneNotSupportedException
     {
        if(from==null)
             throw new NullPointerException("");
           
-    throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    public SMTree cloneSubTree(T from,T newParent) throws CloneNotSupportedException
-    {
-        if(from==null || newParent==null)
-            throw new NullPointerException("");
-        
-        return cloneSubTree(mapa.get(from), new SMTreeNode(newParent));
-    }
-    
-    public SMTree cloneSubTree(SMTreeNode from,SMTreeNode newParent) throws CloneNotSupportedException
-    {
-        if(from==null || newParent==null)
-            throw new NullPointerException("");
-        
-        //Index para el arbol clonado
+       //Index para el arbol clonado
         SMIndexStructure indexClone = new SMIndexStructure();
       
         // Mapa auxiliar para clonar sin necesidad de recursion
@@ -641,15 +625,19 @@ public class SMTree<T> implements Cloneable{
         it.setRootIterator(from);
         T auxObj;
         SMTreeNode auxNode, auxNodeClone;
+        
+        // Rellenamos el Map que relacionará key:original value:clonado
         while(it.hasNext())
         {
             auxObj = (T) it.next();
-            auxNode = mapa.get(auxObj); // TODO esto es un poco redundante, mejor hacer el iterador...
+            auxNode = mapa.get(auxObj); // TODO esto es un poco redundante, mejor hacer el iterador que devuelve nodos..
             auxNodeClone = auxNode.clone();
-            mapClone.put(auxNode,auxNodeClone );
+            mapClone.put(auxNode,auxNodeClone);
             indexClone.add(auxNodeClone);
         }
         
+        
+        //vamos a ir iterando sobre el Map para actualizar el parentesco de todos los nodos clonados
         Iterator itMap = mapClone.entrySet().iterator();
         SMTreeNode neighbor;
         while (itMap.hasNext()) 
@@ -688,22 +676,53 @@ public class SMTree<T> implements Cloneable{
             }
         }
         
-        // Asociamos nueva raiz con el resto del arbol clonado       
-        SMTreeNode rootTreeClone = new SMTreeNode(newParent.getObject());          
-        rootTreeClone.setFirstChild(mapClone.get(from));
-        rootTreeClone.setLastChild(mapClone.get(from));
-        
-        indexClone.add(rootTreeClone);
+        // el nuevo nodo raiz no debe tener padre
+        SMTreeNode rootClone = mapClone.get(from);
+        rootClone.setParent(null);
+        // ni tampoco hermanos ya que se trata de una raiz
+        rootClone.setNext(null);
+        rootClone.setPrevious(null);
         
         // y creamos finalmente el arbol clonado:
         SMTree treeClone = new SMTree();      
-        treeClone.setRoot(rootTreeClone);
+        treeClone.setRoot(rootClone);
         treeClone.setMapa(indexClone);
         
         return treeClone;
     }
     
-    public SMTree cloneSubTree(T from,T to,T newParent)
+    public SMTree cloneSubTree(T from,T newParent) throws CloneNotSupportedException
+    {
+        if(from==null || newParent==null)
+            throw new NullPointerException("");
+        
+        return cloneSubTree(mapa.get(from), new SMTreeNode(newParent));
+    }
+    
+    public SMTree cloneSubTree(SMTreeNode from,SMTreeNode newParent) throws CloneNotSupportedException
+    {
+        if(from==null || newParent==null)
+            throw new NullPointerException("");
+        
+        SMTree treeClone = cloneSubTree(from);
+        SMTreeNode rootClone = newParent.clone();
+        SMTreeNode oldRoot = treeClone.getRoot();
+        
+        //borramos las referencias inservibles
+        rootClone.setNext(null);
+        rootClone.setPrevious(null);
+        rootClone.setParent(null);
+        //actualizamos las nuevas
+        treeClone.root = rootClone;
+        treeClone.root.setFirstChild(oldRoot);
+        treeClone.root.setLastChild(oldRoot);
+        oldRoot.setParent(rootClone);
+        treeClone.mapa.add(rootClone);
+        
+        return treeClone;    
+    }
+    
+    public SMTree cloneSubTree(T from,T to,T newParent) throws CloneNotSupportedException
     {
         if(from==null || to==null || newParent==null)
             throw new NullPointerException("");
@@ -711,9 +730,77 @@ public class SMTree<T> implements Cloneable{
         return cloneSubTree(mapa.get(from),mapa.get(to), new SMTreeNode(newParent));
     }
     
-    public SMTree cloneSubTree(SMTreeNode from, SMTreeNode to, SMTreeNode newParent)
+    public SMTree cloneSubTree(SMTreeNode from, SMTreeNode to, SMTreeNode newParent) throws CloneNotSupportedException
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(from==null || to==null || newParent==null)
+            throw new NullPointerException("");
+        
+        if(!mapa.containsNode(from) || !mapa.containsNode(to) || mapa.containsNode(newParent))
+                throw new IllegalStateException("El arbol ya contiene un nodo " +
+                        "newParent o bien alguno de los nodos from o to no existen en el arbol");
+
+        if(from.getParent()!=to.getParent())
+            throw new IllegalStateException("No se pueden clonar un subarbol " +
+                    "desde un nodo a otro que pertenecen a distintos niveles.");
+        if(from == to)
+            return cloneSubTree(from, newParent);
+        
+        SMIndexStructure indexClone = new SMIndexStructure();
+        
+        // Nos aseguramos que From este a la izquierda de To
+        boolean fromIsLeftTo = false;
+        SMTreeNode auxNode = from;
+        while(!fromIsLeftTo && auxNode.getNext()!=null)
+            fromIsLeftTo = auxNode.getNext() == to;
+        
+        if(!fromIsLeftTo)
+            throw new IllegalStateException("From no esta a la izquierda de To");
+        
+        SMTreeNode rootClone = newParent.clone();
+        SMTreeNode auxNodeClone;
+        
+        //.. y lo añadimos al index       
+        indexClone.add(rootClone);
+       
+        // From es el primer hijo del arbol clonado
+        auxNodeClone = cloneSubTree(from).getRoot();    
+        rootClone.setFirstChild(auxNodeClone);
+        auxNodeClone.setParent(rootClone);
+        SMTree auxTreeClone;
+        SMTreeNode auxPreviousNodeClone;
+        
+        // Iteramos sobre los nodos hermanos intermedios.
+        auxNode = from.getNext();
+        auxPreviousNodeClone = auxNodeClone;
+        while(auxNode != to)
+        {
+            //clonamos subarbol de aux
+            auxTreeClone = cloneSubTree(auxNode);
+            //Añadimos sus nodos al index del arbol clon
+            indexClone.add(auxTreeClone.getMapa());
+            // y unimos el subarbol clonado con el arbol clon
+            auxNodeClone = auxTreeClone.getRoot();    
+            auxNodeClone.setParent(rootClone);
+            
+            //actualizamos las referencias con el hermano izquierdo
+            auxNodeClone.setPrevious(auxPreviousNodeClone);
+            auxPreviousNodeClone.setNext(auxNodeClone);
+            
+            //y vamos a por el siguiente hermano
+            auxPreviousNodeClone = auxNodeClone;
+            auxNode = auxNode.getNext();
+        }
+        
+        //To es el ultimo hijo del arbol clonado
+        auxNodeClone = cloneSubTree(from).getRoot();    
+        rootClone.setLastChild(auxNodeClone);
+        auxNodeClone.setParent(rootClone);
+        auxNodeClone.setPrevious(auxPreviousNodeClone);
+        auxPreviousNodeClone.setNext(auxNodeClone);
+        
+        SMTree treeClone = new SMTree();
+        treeClone.setRoot(rootClone);
+        treeClone.setMapa(indexClone);
     }
 
 }
