@@ -547,9 +547,7 @@ public class SMTree<T> implements Cloneable{
     @Override
     public SMTree clone() throws CloneNotSupportedException
     {
-        SMTree clon = (SMTree)super.clone();
-        
-        return clon;
+        return cloneSubTree(root);
     }
     
     
