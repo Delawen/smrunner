@@ -801,6 +801,8 @@ public class SMTree<T> implements Cloneable{
         SMTree treeClone = new SMTree();
         treeClone.setRoot(rootClone);
         treeClone.setMapa(indexClone);
+        
+        return treeClone;
     }
 
 }

@@ -510,7 +510,12 @@ public class Wrapper implements Edible{
 
     public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent) 
     {
-        SMTree<Item> treeCloned = treeWrapper.cloneSubTree(firstTokenSquare, lastTokenSquare, parent);
+        SMTree<Item> treeCloned = null;
+        try {
+            treeCloned = treeWrapper.cloneSubTree(firstTokenSquare, lastTokenSquare, parent);
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return new Wrapper(treeCloned);
     }
