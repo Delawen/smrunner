@@ -94,5 +94,9 @@ public class SMIndexStructure<T> implements Cloneable
     {
         return index.containsKey(o);
     }
+
+    void add(SMIndexStructure mapa) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }
 
