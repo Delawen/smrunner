@@ -159,10 +159,10 @@ public class TokenIteratorTest {
         resultado = (LinkedList<Item>) it.next();
         assertTrue(resultado.size() == 2);
         actual = actual.getNext();
-        assertEquals(resultado.getFirst(), actual.getFirstChild().getObject());
-        System.out.println("-->" + actual.getFirstChild().getObject());
-        assertEquals(resultado.getLast(), actual.getParent().getNext().getObject());
+        assertEquals(resultado.getFirst(), actual.getParent().getNext().getObject());
         System.out.println("-->" + actual.getParent().getNext().getObject());
+        assertEquals(resultado.getLast(), actual.getFirstChild().getObject());
+        System.out.println("-->" + actual.getFirstChild().getObject());
         
         
         //Nos vamos por el primer camino:
@@ -223,9 +223,9 @@ public class TokenIteratorTest {
         //Comprueba que el opcional tiene dos caminos:
         resultado = (LinkedList<Item>) it.next();
         assertTrue(resultado.size() == 2);
-        assertEquals(resultado.getFirst(), actual.getLastChild().getObject());
+        assertEquals(resultado.getLast(), actual.getLastChild().getObject());
         System.out.println("-->" + actual.getLastChild().getObject());
-        assertEquals(resultado.getLast(), actual.getPrevious().getObject());
+        assertEquals(resultado.getFirst(), actual.getPrevious().getObject());
         System.out.println("-->" + actual.getPrevious().getObject());
         
         //Nos vamos por el primer camino:
