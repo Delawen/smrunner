@@ -397,7 +397,7 @@ public class SMTreeTest {
             for(int i = 0; i < max; i++)
             {
                 Kinship k;
-                if(instance.getRoot()==raiz1 || instance2.getRoot()==raiz2 || random.nextBoolean())
+                if(instance2.getRoot()==raiz1 || instance.getRoot()==raiz2 || random.nextBoolean())
                     k= Kinship.CHILD;
                 else if(random.nextBoolean())
                     k = Kinship.LEFTSIBLING;
@@ -409,7 +409,7 @@ public class SMTreeTest {
                 aux2 = new SMTreeNode<T>(t);
                 instance.addSMTreeNode(aux1, raiz1, k);
                 instance2.addSMTreeNode(aux2, raiz2, k);
-                if(random.nextBoolean() || instance.getRoot()==raiz1 || instance2.getRoot()==raiz2)
+                if(random.nextBoolean() || instance2.getRoot()==raiz1 || instance.getRoot()==raiz2)
                 {
                     raiz1 = aux1;
                     raiz2 = aux2;
