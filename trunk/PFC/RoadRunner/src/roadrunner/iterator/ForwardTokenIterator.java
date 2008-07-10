@@ -195,7 +195,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 if(item.match(i))
                 {
                     //Hemos hecho matching, avanzamos y borramos la caché.
-                    super.lastNode = super.getTree().getNode(i);
+                    super.lastNode = super.getTree().getNode(item);
                     cache = null;
                     return true;
                 }

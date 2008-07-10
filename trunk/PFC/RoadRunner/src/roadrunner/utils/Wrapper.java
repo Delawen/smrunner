@@ -325,6 +325,7 @@ public class Wrapper implements Edible{
             
             //Si nos ha devuelto un único camino
             if(edibleToken instanceof Token)
+            {
                 // y no puede ser el siguiente del wrapper
                 if(!itWrapper.isNext((Token) edibleToken))
                 {
@@ -339,6 +340,7 @@ public class Wrapper implements Edible{
 
                     m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
                 }
+            }
             else if(edibleToken instanceof java.util.List)//Vamos probando todos los caminos
             {
                 //La pila irá guardando los caminos no recorridos:
@@ -395,6 +397,9 @@ public class Wrapper implements Edible{
                     m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
                 }
             }
+            else 
+                throw new RuntimeException("El next() muestra comportamientos extraños. Sample: " + edibleToken + "Wrapper: " + itWrapper.next());
+
         }
        
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
