@@ -52,7 +52,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                     ((List)nodo.getObject()).setAccessed(true);
             }
             if(nodo.getPrevious() != null)
-                resultado.add((Item)nodo.getNext().getObject());
+                resultado.add((Item)nodo.getPrevious().getObject());
             
             //Buscamos el primer hijo (principio del opcional)
             if(super.lastNode.getLastChild() == null)
