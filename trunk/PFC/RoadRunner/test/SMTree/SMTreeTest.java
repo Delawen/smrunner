@@ -381,8 +381,10 @@ public class SMTreeTest {
         
         int rand = random.nextInt(100) + 50;
         
-        SMTreeNode<T> raiz1 = new SMTreeNode<T>(new T());
-        SMTreeNode<T> raiz2 = new SMTreeNode<T>(new T());
+        T t;
+        t= new T();
+        SMTreeNode<T> raiz1 = new SMTreeNode<T>(t);
+        SMTreeNode<T> raiz2 = new SMTreeNode<T>(t);
         SMTree<T> instance2 = new SMTree<T>(raiz2);
         SMTree<T> instance = new SMTree<T>(raiz1);
             
@@ -393,7 +395,6 @@ public class SMTreeTest {
 
             SMTreeNode<T> aux1;
             SMTreeNode<T> aux2;
-            T t;
             for(int i = 0; i < max; i++)
             {
                 Kinship k;
@@ -407,8 +408,10 @@ public class SMTreeTest {
                 t = new T();
                 aux1 = new SMTreeNode<T>(t);
                 aux2 = new SMTreeNode<T>(t);
+                assertEquals(aux1, aux2);
                 instance.addSMTreeNode(aux1, raiz1, k);
                 instance2.addSMTreeNode(aux2, raiz2, k);
+                assertEquals(instance, instance2);
                 if(random.nextBoolean() || instance2.getRoot()==raiz2 || instance.getRoot()==raiz1)
                 {
                     raiz1 = aux1;
