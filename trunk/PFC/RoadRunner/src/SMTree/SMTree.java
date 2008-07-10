@@ -228,13 +228,21 @@ public class SMTree<T> implements Cloneable{
            SMTreeIterator<T> it = this.iterator(ForwardIterator.class);
 
             //it.goTo(n);
-           //it.setRootIterator(n);
+            //it.setRootIterator(n);
+            //it.next();
 
             boolean success = true;
 
             while(it.hasNext() && success)
             {
-                success = mapa.add(getNode((T)it.next()));
+                //TODO quitar estas comprobaciones,son para encontrar el bug..
+                T t = (T)it.next();
+                if(t==null)
+                    throw new IllegalStateException("t!!!!");
+                SMTreeNode aux = getNode(t);
+                if(aux==null)
+                    throw new IllegalStateException("aux!!!");
+                success = mapa.add(aux);
             }
 
             return success;
@@ -466,6 +474,8 @@ public class SMTree<T> implements Cloneable{
     {
         SMTreeNode<T> f = this.mapa.get(from);
         SMTreeNode<T> t = this.mapa.get(to);
+        if(f == null || t == null)
+            throw new IllegalStateException("");
         SMTree<T> b = new SMTree<T>(new SMTreeNode<T>(by));
         return substitute(f,inclusionFrom, t,inclusionTo,b);
     }
@@ -476,6 +486,8 @@ public class SMTree<T> implements Cloneable{
     {
         SMTreeNode<T> f = this.mapa.get(from);
         SMTreeNode<T> t = this.mapa.get(to);
+        if(f == null || t == null)
+            throw new IllegalStateException("");
         return substitute(f,inclusionFrom, t,inclusionTo,byTree);
     }
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
