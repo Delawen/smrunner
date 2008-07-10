@@ -39,7 +39,7 @@ public class SMIndexStructure<T> implements Cloneable
     public boolean add (SMTreeNode<T> n)
     {
         if(index == null || n == null)
-            throw new NullPointerException("");
+            throw new NullPointerException("Se intentó añadir un nodo nulo al árbol.");
           
         // Si el nodo (valor) no esta contenido:
         if(!index.containsValue(n))
