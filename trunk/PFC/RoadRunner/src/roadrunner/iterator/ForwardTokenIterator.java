@@ -46,12 +46,14 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             
             //Buscamos el siguiente (next)
             SMTreeNode<Item> nodo = super.lastNode;
-            while(nodo.getNext() == null)
+            while(nodo.getNext() == null && nodo.getParent() != null)
             {
                 nodo = nodo.getParent();
                 if(nodo.getObject() instanceof List)
                     ((List)nodo.getObject()).setAccessed(true);
             }
+            if(nodo.getNext() != null)
+                resultado.add((Item)nodo.getNext().getObject());
             
             //Buscamos el primer hijo (principio del opcional)
             if(super.lastNode.getFirstChild() == null)
