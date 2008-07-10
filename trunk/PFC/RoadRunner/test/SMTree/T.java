@@ -45,9 +45,10 @@ package SMTree;
             return id;
         }
         
-        public boolean equals(T o)
+    @Override
+        public boolean equals(Object o)
         {
-            return (o.getId() == this.id);
+            return (((T)o).getId() == this.id);
         }
    private static class Contador
     {
