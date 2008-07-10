@@ -45,12 +45,14 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             
             //Buscamos el siguiente (next)
             SMTreeNode<Item> nodo = super.lastNode;
-            while(nodo.getPrevious() == null)
+            while(nodo.getPrevious() == null && nodo.getParent() != null)
             {
                 nodo = nodo.getParent();
                 if(nodo.getObject() instanceof List)
                     ((List)nodo.getObject()).setAccessed(true);
             }
+            if(nodo.getPrevious() != null)
+                resultado.add((Item)nodo.getNext().getObject());
             
             //Buscamos el primer hijo (principio del opcional)
             if(super.lastNode.getLastChild() == null)
