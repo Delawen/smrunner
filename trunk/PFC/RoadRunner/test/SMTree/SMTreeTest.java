@@ -409,7 +409,7 @@ public class SMTreeTest {
                 aux2 = new SMTreeNode<T>(t);
                 instance.addSMTreeNode(aux1, raiz1, k);
                 instance2.addSMTreeNode(aux2, raiz2, k);
-                if(random.nextBoolean())
+                if(random.nextBoolean() || instance.getRoot()==raiz1 || instance2.getRoot()==raiz2)
                 {
                     raiz1 = aux1;
                     raiz2 = aux2;
