@@ -228,6 +228,7 @@ public class SMTree<T> implements Cloneable{
            SMTreeIterator<T> it = this.iterator(ForwardIterator.class);
 
             //it.goTo(n);
+           //it.setRootIterator(n);
 
             boolean success = true;
 

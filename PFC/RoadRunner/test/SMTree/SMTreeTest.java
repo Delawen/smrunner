@@ -379,18 +379,18 @@ public class SMTreeTest {
         System.out.println("equals()");
         Random random = new Random();
         
-        int rand = random.nextInt(100) + 50;
-        
+        int rand = random.nextInt(5) + 5;
+        int nodosTotales=0;
         T t;
         t= new T();
         SMTreeNode<T> raiz1 = new SMTreeNode<T>(t);
         SMTreeNode<T> raiz2 = new SMTreeNode<T>(t);
         SMTree<T> instance2 = new SMTree<T>(raiz2);
         SMTree<T> instance = new SMTree<T>(raiz1);
-            
+        
+        System.out.println("Iteraciones totales: "+rand);
         for(int j = 1; j < rand; j++)
         {
-            System.out.println(j);
             int max = random.nextInt(100) + 10;
 
             SMTreeNode<T> aux1;
@@ -408,17 +408,17 @@ public class SMTreeTest {
                 t = new T();
                 aux1 = new SMTreeNode<T>(t);
                 aux2 = new SMTreeNode<T>(t);
-                assertEquals(aux1, aux2);
                 instance.addSMTreeNode(aux1, raiz1, k);
                 instance2.addSMTreeNode(aux2, raiz2, k);
-                assertEquals(instance, instance2);
                 if(random.nextBoolean() || instance2.getRoot()==raiz2 || instance.getRoot()==raiz1)
                 {
                     raiz1 = aux1;
                     raiz2 = aux2;
                 }
             }
+            nodosTotales += max;
             assertEquals(instance, instance2);
+            System.out.println("Nodos totales de cada uno de los arboles("+j+") comparados: "+nodosTotales);
         }
 
 
