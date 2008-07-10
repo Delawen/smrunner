@@ -181,7 +181,7 @@ public class SMTreeTest {
         for(int i = 0; i < 4; i++)
             instance.addSMTreeNode(new SMTreeNode<T>(new T()), raiz, Kinship.CHILD);
         
-        if(!instance.removeFastSMTreeNode(n))
+        if(!instance.removeSMTreeNode(n))
             fail("removeSMTreeNode devolvió false.");
         
         SMTreeNode<T> aux = raiz.getFirstChild();
@@ -397,7 +397,7 @@ public class SMTreeTest {
             for(int i = 0; i < max; i++)
             {
                 Kinship k;
-                if(random.nextBoolean())
+                if(instance.getRoot()==raiz1 || instance2.getRoot()==raiz2 || random.nextBoolean())
                     k= Kinship.CHILD;
                 else if(random.nextBoolean())
                     k = Kinship.LEFTSIBLING;
@@ -429,7 +429,10 @@ public class SMTreeTest {
         {
             aux = new SMTreeNode<T>(new T());
             instance.addSMTreeNode(aux, raiz1, Kinship.CHILD);
-            instance2.addSMTreeNode(aux, raiz2, Kinship.RIGHTSIBLING);
+            if(instance2.getRoot()!=raiz2)
+                instance2.addSMTreeNode(aux, raiz2, Kinship.RIGHTSIBLING);
+            else 
+                instance2.addSMTreeNode(aux, raiz2, Kinship.CHILD);
         }
 
         assertFalse(instance.equals(instance2));
@@ -553,10 +556,10 @@ public class SMTreeTest {
      
      System.out.println(">>Eliminaciones");
      System.out.println(">>>>Eliminacion de Arboles");
-     arbol.removeFastSMTreeNode(arbol.getMapa().get(t));
+     arbol.removeSMTreeNode(arbol.getMapa().get(t));
      assertNull(arbol.getMapa().get(t));
      nodo2 = clon.getRoot().getFirstChild().getNext();
-     clon.removeFastSMTreeNode(nodo2);
+     clon.removeSMTreeNode(nodo2);
      assertNull(arbol.getMapa().get(nodo2.getObject()));
      
      System.out.println(">>>>Eliminación de Objetos");

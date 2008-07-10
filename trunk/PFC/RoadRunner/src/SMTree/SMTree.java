@@ -118,20 +118,14 @@ public class SMTree<T> implements Cloneable{
             throw new NullPointerException("");
         
         if(where == root && (k == Kinship.LEFTSIBLING || k == Kinship.RIGHTSIBLING ))
-        {
-            roadrunner.RoadRunner.debug("Intentando añadirle un hermano a la raiz", ExitLevel.SLEEPandEXIT);
-            return false;
-        }
+            throw new IllegalStateException("Intentando añadirle un hermano a la raiz");
         
         if(n.getObject() == null)
-            roadrunner.RoadRunner.debug("Se esta añadiendo un nodo con contenido vacio al arbol",ExitLevel.SLEEPandCONTINUE);
+            throw new IllegalStateException("Se esta añadiendo un nodo con contenido vacio al arbol");
         
         //intentamos añadir el nodo al mapa
         if(!mapa.add(n))
-        {
-            roadrunner.RoadRunner.debug("El nodo que se intenta añadir ya existe en el arbol",ExitLevel.SLEEPandCONTINUE);
-            return false;
-        }
+            throw new IllegalStateException("El nodo que se intenta añadir ya existe en el arbol");
         
         switch(k)
         {
@@ -253,7 +247,7 @@ public class SMTree<T> implements Cloneable{
      * Este metodo se irá al último nodo hoja (la hoja más a la derecha)
      * e irá eliminando todos los nodos que colgaban de n
      */
-    public boolean removeFastSMTreeNode(SMTreeNode<T> n)
+    public boolean removeSMTreeNode(SMTreeNode<T> n)
     {
         
         if(n == null)
@@ -413,7 +407,7 @@ public class SMTree<T> implements Cloneable{
         while(from != to)
         {
             nextFrom = from.getNext();
-            removeFastSMTreeNode(from);
+            removeSMTreeNode(from);
             from = nextFrom;
         }
         
@@ -450,7 +444,7 @@ public class SMTree<T> implements Cloneable{
         }
         
         //Borramos 'to'
-        removeFastSMTreeNode(to);
+        removeSMTreeNode(to);
         
         return addSubSMTree(tree, where, whereKinship);
     }
@@ -488,7 +482,7 @@ public class SMTree<T> implements Cloneable{
     // </editor-fold> 
     public boolean removeObject (T o) 
     {
-        return removeFastSMTreeNode(this.mapa.get(o));
+        return removeSMTreeNode(this.mapa.get(o));
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
