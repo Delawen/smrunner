@@ -1,9 +1,9 @@
 package roadrunner.operator;
 
-import SMTree.iterator.BackwardIterator;
-import SMTree.iterator.ForwardIterator;
 import SMTree.utils.Enclosure;
+import roadrunner.iterator.BackwardTokenIterator;
 import roadrunner.iterator.EdibleIterator;
+import roadrunner.iterator.ForwardTokenIterator;
 import roadrunner.iterator.webPageBackwardIterator;
 import roadrunner.iterator.webPageForwardIterator;
 import roadrunner.node.Item;
@@ -14,7 +14,6 @@ import roadrunner.node.Tuple;
 import roadrunner.utils.Edible;
 import roadrunner.utils.Mismatch; 
 import roadrunner.utils.Repair; 
-import roadrunner.utils.Sample;
 import roadrunner.utils.StateRepair;
 import roadrunner.utils.Wrapper;
 
@@ -49,12 +48,12 @@ public class AddList extends IOperator
         
         if(d == DirectionOperator.DOWNWARDS)
         {
-            itW = w.iterator(ForwardIterator.class);
+            itW = w.iterator(ForwardTokenIterator.class);
             itS = s.iterator(webPageForwardIterator.class);
         }
         else if(d == DirectionOperator.UPWARDS)
         {
-            itW = w.iterator(BackwardIterator.class);
+            itW = w.iterator(BackwardTokenIterator.class);
             itS = s.iterator(webPageBackwardIterator.class);
         }
         
@@ -78,7 +77,7 @@ public class AddList extends IOperator
                     rep.setState(StateRepair.FAILED);
                     return rep;
                 }
-                else if(!w.isWellFormed( (Text) firstTokenSquare, Enclosure.ENCLOSED, (Text) lastTokenSquare, Enclosure.ENCLOSED))
+                else if(!w.isWellFormed(firstTokenSquare, Enclosure.ENCLOSED, lastTokenSquare, Enclosure.ENCLOSED))
                      ocurrence++;
                 else
                 {

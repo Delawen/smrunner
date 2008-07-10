@@ -70,14 +70,20 @@ public class webPageForwardIterator implements webPageIterator
 
     public boolean isNext(Item o) 
     {
+        Item i = it.next();
+        if(i.equals(o))
+            return true;
+        it.previous();
+        return false;
+    }
+
+    public void setRootIterator(SMTreeNode<Item> root) 
+    {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void setRootIterator(SMTreeNode<Item> root) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void setTree(SMTree<Item> treeWrapper) {
+    public void setTree(SMTree<Item> treeWrapper) 
+    {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

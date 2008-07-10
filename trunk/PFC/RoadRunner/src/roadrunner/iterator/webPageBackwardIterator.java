@@ -67,8 +67,13 @@ public class webPageBackwardIterator implements webPageIterator
        return it.next();
     }
 
-    public boolean isNext(Item o) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean isNext(Item o) 
+    {
+        Item i = this.next();
+        if(i.equals(o))
+            return true;
+        this.previous();
+        return false;
     }
 
     public void setRootIterator(SMTreeNode<Item> root) {

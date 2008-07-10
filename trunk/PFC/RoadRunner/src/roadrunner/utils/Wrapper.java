@@ -257,13 +257,13 @@ public class Wrapper implements Edible{
         else if (from==to)
             return false;
         
-        Tag t;
+        Token t;
         do
         {
-            t = (Tag)it.next();
-            if(t.isOpenTag())
-                openTags.push(t);
-            else if (t.isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
+            t = (Token) it.next();
+            if(t instanceof Tag && ((Tag)t).isOpenTag())
+                openTags.push((Tag)t);
+            else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
                     openTags.pop();
             else
                 isWellFormed = false;
@@ -442,7 +442,10 @@ public class Wrapper implements Edible{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.F925FF52-82A2-AFA9-A17C-8A6B6DE5DDAF]
     // </editor-fold> 
-    public Token search (Token t, Token from,int occurrence, DirectionOperator d) {
+    public Token search (Token t, Token from,int ocurrence, DirectionOperator d) 
+    {
+        if(ocurrence < 1)
+            return null;
         
         SMTreeIterator<Item> itWrapper = null;
         
@@ -462,7 +465,12 @@ public class Wrapper implements Edible{
             token = (Token) itWrapper.next();
             
             if(t.equals(token))
-                find = true;         
+            {
+                if(ocurrence == 1)
+                    find = true;         
+                else
+                    ocurrence --;
+            }
         }
         
         if(!find)
