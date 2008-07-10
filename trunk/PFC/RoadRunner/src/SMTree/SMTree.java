@@ -790,7 +790,7 @@ public class SMTree<T> implements Cloneable{
         }
         
         //To es el ultimo hijo del arbol clonado
-        auxNodeClone = cloneSubTree(from).getRoot();    
+        auxNodeClone = cloneSubTree(to).getRoot();    
         rootClone.setLastChild(auxNodeClone);
         auxNodeClone.setParent(rootClone);
         auxNodeClone.setPrevious(auxPreviousNodeClone);
