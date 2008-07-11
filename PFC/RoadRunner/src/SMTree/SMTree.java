@@ -93,12 +93,12 @@ public class SMTree<T> implements Cloneable{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.5291916E-6233-D758-53C9-932DAB3F937D]
     // </editor-fold> 
-    public boolean addSubSMTree (SMTree subtree, SMTreeNode where, Kinship k) {
+    public boolean addSMTreeNode (SMTreeNode n, SMTreeNode where, Kinship k) {
         
-        if(subtree == null || where == null || k == null)
+        if(n == null || where == null || k == null)
             throw new NullPointerException("");
         
-        return addSMTreeNode(subtree.getRoot(), where, k);
+        return addSubSMTree(new SMTree(n), where, k);
     }
 
     
@@ -109,22 +109,26 @@ public class SMTree<T> implements Cloneable{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.EC682BB2-DE7A-1448-A23F-DC7E2A17D347]
     // </editor-fold> 
-    public boolean addSMTreeNode (SMTreeNode n, SMTreeNode where, Kinship k) {
+    public boolean addSubSMTree(SMTree subTree, SMTreeNode where, Kinship k) {
         
-        if(n == null || where == null || k == null)
+        if(subTree == null || where == null || k == null)
             throw new NullPointerException("");
         
         if(where == root && (k == Kinship.LEFTSIBLING || k == Kinship.RIGHTSIBLING ))
             throw new IllegalStateException("Intentando añadirle un hermano a la raiz");
         
-        if(n.getObject() == null)
+        if(subTree.getRoot().getObject() == null)
             throw new IllegalStateException("Se esta añadiendo un nodo con contenido vacio al arbol");
-        
+
         //intentamos añadir el nodo al mapa
-        if(!mapa.add(n))
-            throw new IllegalStateException("El nodo que se intenta añadir ya existe en el arbol");
+        SMTreeIterator it = subTree.iterator(ForwardIterator.class);
+        while(it.hasNext())
+            if(!mapa.add(it.nextNode()))
+                throw new IllegalStateException("Error al añadir un nodo al árbol.");
         if(!mapa.containsNode(where))
             throw new IllegalStateException("El nodo 'where' no existe en el arbol");
+        
+        SMTreeNode n = subTree.getRoot();
         
         switch(k)
         {
@@ -227,27 +231,28 @@ public class SMTree<T> implements Cloneable{
             return true;
 
         // Y añadimos todos los nodos los descendientes de 'n'
-        SMTreeIterator<T> it = this.iterator(ForwardIterator.class);
+        it = this.iterator(ForwardIterator.class);
 
         //recorremos el subarbol de 'n'
         it.setRootIterator(n);
         //desechamos 'n' porque lo insertamos al principio en el mapa
+        
         if(it.hasNext())
-            it.next();
+            it.nextObject();
         
         while(it.hasNext())
         {
             //TODO quitar estas comprobaciones,son para encontrar el bug..
-            T t = (T)it.next();
+            SMTreeNode<T> t = it.nextNode();
             if(t==null)
                 throw new IllegalStateException("t!!!!");
-            SMTreeNode aux = getNode(t);
+           if(!mapa.add(t))
+               throw new IllegalStateException("No se ha podido añadir un nodo descendiente de 'n' al mapa");
+            SMTreeNode aux = getNode(t.getObject());
             if(aux==null)
                 throw new IllegalStateException("aux!!!");
-           if(!mapa.add(aux))
-               throw new IllegalStateException("No se ha podido añadir un nodo descendiente de 'n' al mapa");
         }
-
+        
         return true;
         }
     
@@ -584,7 +589,7 @@ public class SMTree<T> implements Cloneable{
         SMTreeIterator<T> itObject = ((SMTree<T>) o).iterator(ForwardIterator.class);
         
         while(itThis.hasNext() && itObject.hasNext())
-            if(! itThis.next().equals(itObject.next()))
+            if(! itThis.nextObject().equals(itObject.nextObject()))
                 return false;
         
         if(itThis.hasNext() || itObject.hasNext())
@@ -649,7 +654,7 @@ public class SMTree<T> implements Cloneable{
         // Rellenamos el Map que relacionará key:original value:clonado
         while(it.hasNext())
         {
-            auxObj = (T) it.next();
+            auxObj = (T) it.nextObject();
             auxNode = mapa.get(auxObj); // TODO esto es un poco redundante, mejor hacer el iterador que devuelve nodos..
             auxNodeClone = auxNode.clone();
             mapClone.put(auxNode,auxNodeClone);

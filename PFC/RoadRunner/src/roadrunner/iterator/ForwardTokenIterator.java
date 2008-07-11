@@ -18,9 +18,8 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     }
 
     @Override
-    public Object next()
+    public Object nextObject()
     {
-        
         //Para cuando hacemos un goTo con varios caminos:
         if(next != null)
         {
@@ -44,7 +43,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         {
             LinkedList<Item> resultado = new LinkedList<Item>();
             
-            //Buscamos el siguiente (next)
+            //Buscamos el siguiente (nextObject)
             SMTreeNode<Item> nodo = super.lastNode;
             while(nodo.getNext() == null && nodo.getParent() != null)
             {
@@ -153,7 +152,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         SMTreeNode<Item> node = super.lastNode;
         SMTreeNode<Item> nodeNext = next;
         
-        if(this.next() == null)
+        if(this.nextObject() == null)
         {
             super.lastNode = node;
             next = nodeNext;
@@ -176,7 +175,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         //Si tenemos cache, la usamos. Si no, sacamos de siguiente()
         if(cache == null)
         {
-            Object siguiente = this.next();
+            Object siguiente = this.nextObject();
             cache = new LinkedList<Item>();
             if(siguiente instanceof Item)
                 cache.add((Item)siguiente);
@@ -216,8 +215,8 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 SMTreeNode nodo_backup = super.lastNode;
                 LinkedList cache_backup = this.cache;
                 goTo(item);
-                this.next();
-                Object siguiente = this.next();
+                this.nextObject();
+                Object siguiente = this.nextObject();
                 this.cache = cache_backup;
                 super.lastNode = nodo_backup;
                 
@@ -258,7 +257,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         //Limpiamos la cache porque nos vamos a mover:
         cache = null;
         
-        //El next será el nodo en el que estamos ahora:
+        //El nextObject será el nodo en el que estamos ahora:
         next = super.lastNode;
         
         Item item = super.lastNode.getObject();
@@ -336,6 +335,11 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     public boolean isPrevious()
     {
         throw new UnsupportedOperationException("Probably you need a BackwardTokenIterator ;)");
+    }
+
+    public Object next() 
+    {
+        return this.nextObject();
     }
 
 }

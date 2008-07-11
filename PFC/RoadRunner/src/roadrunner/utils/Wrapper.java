@@ -250,7 +250,7 @@ public class Wrapper implements Edible{
             
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
-            it.next();
+            it.nextObject();
         
         if(from==to && !(from instanceof Tag))
             return true;
@@ -260,7 +260,7 @@ public class Wrapper implements Edible{
         Token t;
         do
         {
-            t = (Token) it.next();
+            t = (Token) it.nextObject();
             if(t instanceof Tag && ((Tag)t).isOpenTag())
                 openTags.push((Tag)t);
             else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
@@ -467,7 +467,7 @@ public class Wrapper implements Edible{
 
         while(itWrapper.hasNext() && !find)
         {
-            token = (Token) itWrapper.next();
+            token = (Token) itWrapper.nextObject();
             
             if(t.equals(token))
             {

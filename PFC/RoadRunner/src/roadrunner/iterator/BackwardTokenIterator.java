@@ -17,6 +17,20 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     {
         super();
     }
+    
+    
+    @Override
+    public Object nextObject()
+    {
+        return next();
+    }    
+    
+    @Override
+    public SMTreeNode nextNode()
+    {
+        throw new UnsupportedOperationException("¿Para qué lo querías?");
+    }
+    
     @Override
     public Object next()
     {
@@ -43,7 +57,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         {
             LinkedList<Item> resultado = new LinkedList<Item>();
             
-            //Buscamos el siguiente (next)
+            //Buscamos el siguiente (nextObject)
             SMTreeNode<Item> nodo = super.lastNode;
             while(nodo.getPrevious() == null && nodo.getParent() != null)
             {
@@ -152,7 +166,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         SMTreeNode<Item> node = super.lastNode;
         SMTreeNode<Item> nodeNext = next;
         
-        if(this.next() == null)
+        if(this.nextObject() == null)
         {
             super.lastNode = node;
             next = nodeNext;
@@ -175,7 +189,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         //Si tenemos cache, la usamos. Si no, sacamos de siguiente()
         if(cache == null)
         {
-            Object siguiente = this.next();
+            Object siguiente = this.nextObject();
             cache = new LinkedList<Item>();
             if(siguiente instanceof Item)
                 cache.add((Item)siguiente);
@@ -214,8 +228,8 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 SMTreeNode nodo_backup = super.lastNode;
                 LinkedList cache_backup = this.cache;
                 goTo(item);
-                this.next();
-                Object siguiente = this.next();
+                this.nextObject();
+                Object siguiente = this.nextObject();
                 this.cache = cache_backup;
                 super.lastNode = nodo_backup;
                 
@@ -256,7 +270,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         //Limpiamos la cache porque nos vamos a mover:
         cache = null;
         
-        //El next será el nodo actual:
+        //El nextObject será el nodo actual:
         next = super.lastNode;
         
         Item item = super.lastNode.getObject();
