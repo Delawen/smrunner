@@ -418,7 +418,7 @@ public class SMTree<T> implements Cloneable{
         SMTreeNode auxNode = from;
         while(!fromIsLeftTo && auxNode.getNext()!=null)
         {
-            fromIsLeftTo = auxNode.getNext() == to;
+            fromIsLeftTo = auxNode == to;
             auxNode = auxNode.getNext();
         }
         
