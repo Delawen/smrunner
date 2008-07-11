@@ -151,15 +151,18 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     public boolean hasNext()
     {
         SMTreeNode<Item> node = super.lastNode;
+        SMTreeNode<Item> nodeNext = next;
         
         if(this.next() == null)
         {
             super.lastNode = node;
+            next = nodeNext;
             return false;
         }
         else
         {
             super.lastNode = node;
+            next = nodeNext;
             return true;
         }
     }
@@ -169,6 +172,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     {
         int k = 0;
         
+        SMTreeNode temporal = super.lastNode;
         //Si tenemos cache, la usamos. Si no, sacamos de siguiente()
         if(cache == null)
         {
@@ -179,6 +183,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             else
                 cache = (java.util.LinkedList<Item>)siguiente;
         }
+        
         
         if(next != null)
         {
@@ -231,7 +236,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             }
             
         }
-        
+        super.lastNode = temporal;
         return false;
     }
     
