@@ -226,6 +226,12 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                         cache.add(k, elem);
                         
             }
+            //Si es una tupla
+            else if(item instanceof Tuple)
+            {
+                Item siguiente = (Item) this.tree.getNode(item).getFirstChild().getObject();
+                cache.add(k, siguiente);
+            }
             //Si sacamos una lista, la metemos en la cache
             else if(item instanceof java.util.List)
             {

@@ -221,13 +221,20 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 this.cache = cache_backup;
                 super.lastNode = nodo_backup;
                 
-                if(siguiente instanceof Token)
+                if(siguiente instanceof Item)
                     cache.add(k, (Token)siguiente);
                 else if(siguiente instanceof java.util.List)
                     for (Item elem : (java.util.List<Item>)siguiente)
                         cache.add(k, elem);
                         
             }
+            //Si es una tupla
+            else if(item instanceof Tuple)
+            {
+                Item siguiente = (Item) this.tree.getNode(item).getFirstChild().getObject();
+                cache.add(k, siguiente);
+            }
+            
             //Si sacamos una lista, la metemos en la cache
             else if(item instanceof java.util.List)
             {
