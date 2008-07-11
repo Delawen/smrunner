@@ -150,15 +150,18 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     public boolean hasNext()
     {
         SMTreeNode<Item> node = super.lastNode;
+        SMTreeNode<Item> nodeNext = next;
         
         if(this.next() == null)
         {
             super.lastNode = node;
+            next = nodeNext;
             return false;
         }
         else
         {
             super.lastNode = node;
+            next = nodeNext;
             return true;
         }
     }
@@ -168,6 +171,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     {
         int k = 0;
         
+        SMTreeNode temporal = super.lastNode;
         //Si tenemos cache, la usamos. Si no, sacamos de siguiente()
         if(cache == null)
         {
@@ -230,7 +234,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             }
             
         }
-        
+        super.lastNode = temporal;
         return false;
     }
     
