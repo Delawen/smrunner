@@ -52,7 +52,7 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
         if(lastNode != null && !hasNext)
         {
             hasNext |= lastNode.getFirstChild() != null;
-            hasNext |= lastNode.getNext() != null;
+            hasNext |= lastNode.getNext() != null && lastNode!=getRootIterator();
             
             if(!hasNext && lastNode != getRootIterator())
             {
