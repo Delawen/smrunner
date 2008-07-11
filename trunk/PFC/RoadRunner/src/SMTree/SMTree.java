@@ -99,9 +99,7 @@ public class SMTree<T> implements Cloneable{
         if(subtree == null || where == null || k == null)
             throw new NullPointerException("");
         
-        addSMTreeNode(subtree.getRoot(), where, k);
-        
-        return true;
+        return addSMTreeNode(subtree.getRoot(), where, k);
     }
 
     
@@ -126,6 +124,8 @@ public class SMTree<T> implements Cloneable{
         //intentamos añadir el nodo al mapa
         if(!mapa.add(n))
             throw new IllegalStateException("El nodo que se intenta añadir ya existe en el arbol");
+        if(!mapa.containsNode(where))
+            throw new IllegalStateException("El nodo 'where' no existe en el arbol");
         
         switch(k)
         {
@@ -222,30 +222,34 @@ public class SMTree<T> implements Cloneable{
                 break;
         }
         
-        // Y añadimos todos los nodos los descendientes de 'n'         
         
-           //TODO: recorrer solo el subarbol
-           SMTreeIterator<T> it = this.iterator(ForwardIterator.class);
+        // Si 'n' no tiene descendientes
+        if(n.getFirstChild()==null)
+            return true;
 
-            //it.goTo(n);
-            //it.setRootIterator(n);
-            //it.next();
+        // Y añadimos todos los nodos los descendientes de 'n'
+        SMTreeIterator<T> it = this.iterator(ForwardIterator.class);
 
-            boolean success = true;
+        //recorremos el subarbol de 'n'
+        it.setRootIterator(n);
+        //desechamos 'n' porque lo insertamos al principio en el mapa
+        if(it.hasNext())
+            it.next();
+        
+        while(it.hasNext())
+        {
+            //TODO quitar estas comprobaciones,son para encontrar el bug..
+            T t = (T)it.next();
+            if(t==null)
+                throw new IllegalStateException("t!!!!");
+            SMTreeNode aux = getNode(t);
+            if(aux==null)
+                throw new IllegalStateException("aux!!!");
+           if(!mapa.add(aux))
+               throw new IllegalStateException("No se ha podido añadir un nodo descendiente de 'n' al mapa");
+        }
 
-            while(it.hasNext() && success)
-            {
-                //TODO quitar estas comprobaciones,son para encontrar el bug..
-                T t = (T)it.next();
-                if(t==null)
-                    throw new IllegalStateException("t!!!!");
-                SMTreeNode aux = getNode(t);
-                if(aux==null)
-                    throw new IllegalStateException("aux!!!");
-                success = mapa.add(aux);
-            }
-
-            return success;
+        return true;
         }
     
     

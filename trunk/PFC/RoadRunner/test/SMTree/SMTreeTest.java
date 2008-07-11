@@ -71,7 +71,7 @@ public class SMTreeTest {
         
         SMTreeNode<T> padre = new SMTreeNode<T>(new T());
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
-        instance.addSubSMTree(new SMTree<T>(where), padre, Kinship.CHILD);
+        instance.addSubSMTree(new SMTree<T>(where), raiz, Kinship.CHILD);
         
         SMTree<T> subtree = new SMTree<T>(new SMTreeNode<T>(new T()));
  
@@ -89,7 +89,7 @@ public class SMTreeTest {
         
         SMTreeNode<T> padre = new SMTreeNode<T>(new T());
         SMTreeNode<T> where = new SMTreeNode<T>(new T());
-        instance.addSubSMTree(new SMTree<T>(where), padre, Kinship.CHILD);
+        instance.addSubSMTree(new SMTree<T>(where), raiz, Kinship.CHILD);
         
         SMTree<T> subtree = new SMTree<T>(new SMTreeNode<T>(new T()));
  
