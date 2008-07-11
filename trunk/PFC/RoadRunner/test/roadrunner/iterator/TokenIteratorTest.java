@@ -90,7 +90,7 @@ public class TokenIteratorTest {
         arbol.addSMTreeNode(nodo2, nodo3, Kinship.CHILD);
         
         
-    }
+    } 
 
     @AfterClass
     public static void tearDownClass() throws Exception {
@@ -107,7 +107,7 @@ public class TokenIteratorTest {
     }
 
     /**
-     * Test of next method, of class ForwardTokenIterator.
+     * Test of nextObject method, of class ForwardTokenIterator.
      */
 
     @Test
@@ -121,20 +121,20 @@ public class TokenIteratorTest {
         
         //hijos de la raiz
         actual = actual.getFirstChild();
-        assertEquals(it.next(), actual.getObject());
+        assertEquals(it.nextObject(), actual.getObject());
         System.out.println("-->" + actual.getObject());
         
         actual = actual.getNext();
-        assertEquals(it.next(), actual.getObject());
+        assertEquals(it.nextObject(), actual.getObject());
         System.out.println("-->" + actual.getObject());
         
         //Ahora encuentra la primera lista:
-        Item i = (Item) it.next();
+        Item i = (Item) it.nextObject();
         System.out.println("-->" + i);
         assertTrue(i instanceof List);
         
         //Comprueba que hay un solo camino
-        LinkedList<Item> resultado = (LinkedList<Item>) it.next();
+        LinkedList<Item> resultado = (LinkedList<Item>) it.nextObject();
         assertTrue(resultado.size() == 1);
         actual = actual.getNext();
         assertEquals(resultado.getFirst(), actual.getFirstChild().getObject());
@@ -144,19 +144,19 @@ public class TokenIteratorTest {
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getFirstChild().getObject());
         actual = actual.getFirstChild();
-        assertEquals(it.next(), actual.getObject());
+        assertEquals(it.nextObject(), actual.getObject());
         System.out.println("repetimos (goto)-->" + actual.getObject());
         
         actual = actual.getNext();
-        assertEquals(it.next(), actual.getObject());
+        assertEquals(it.nextObject(), actual.getObject());
         System.out.println("-->" + actual.getObject());
         
-        i = (Item) it.next();
+        i = (Item) it.nextObject();
         assertTrue(i instanceof Optional);
         System.out.println("-->" + i);
         
         //Comprueba que hay dos caminos y que son los correctos.
-        resultado = (LinkedList<Item>) it.next();
+        resultado = (LinkedList<Item>) it.nextObject();
         assertTrue(resultado.size() == 2);
         actual = actual.getNext();
         assertEquals(resultado.getFirst(), actual.getParent().getNext().getObject());
@@ -168,16 +168,16 @@ public class TokenIteratorTest {
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getFirstChild().getObject());
         actual = actual.getFirstChild();
-        assertEquals(it.next(), actual.getObject());
+        assertEquals(it.nextObject(), actual.getObject());
         System.out.println("repetimos (goto)-->" + actual.getObject());
         
         //Seguimos por el opcional:
         actual = actual.getNext();
-        i = (Item) it.next();
+        i = (Item) it.nextObject();
         assertTrue(i instanceof List);
         System.out.println("-->" + i);
         
-        resultado = (LinkedList<Item>) it.next();
+        resultado = (LinkedList<Item>) it.nextObject();
         assertTrue(resultado.size() == 1);
         assertEquals(resultado.getFirst(), actual.getFirstChild().getObject());
         System.out.println("-->" + actual.getFirstChild().getObject());
@@ -197,11 +197,11 @@ public class TokenIteratorTest {
         
         //hijos de la raiz
         actual = actual.getLastChild();
-        assertEquals(it.next(), actual.getObject());
+        assertEquals(it.nextObject(), actual.getObject());
         System.out.println("-->" + actual.getObject());
         
         actual = actual.getPrevious();
-        Item i = (Item) it.next();
+        Item i = (Item) it.nextObject();
         assertEquals(i, actual.getObject());
         System.out.println("-->" + actual.getObject());
         
@@ -209,7 +209,7 @@ public class TokenIteratorTest {
         assertTrue(i instanceof List);
         
         //Comprueba que hay un unico camino correcto
-        LinkedList<Item> resultado = (LinkedList<Item>) it.next();
+        LinkedList<Item> resultado = (LinkedList<Item>) it.nextObject();
         assertTrue(resultado.size() == 1);
         assertEquals(resultado.getFirst(), actual.getLastChild().getObject());
         System.out.println("-->" + actual.getLastChild().getObject());
@@ -217,11 +217,11 @@ public class TokenIteratorTest {
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getLastChild().getObject());
         actual = actual.getLastChild();
-        assertEquals(it.next(), actual.getObject());
+        assertEquals(it.nextObject(), actual.getObject());
         System.out.println("repetimos (goto)-->" + actual.getObject());
         
         //Comprueba que el opcional tiene dos caminos:
-        resultado = (LinkedList<Item>) it.next();
+        resultado = (LinkedList<Item>) it.nextObject();
         assertTrue(resultado.size() == 2);
         assertEquals(resultado.getLast(), actual.getLastChild().getObject());
         System.out.println("-->" + actual.getLastChild().getObject());
@@ -231,13 +231,13 @@ public class TokenIteratorTest {
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getLastChild().getObject());
         actual = actual.getLastChild();
-        i = (Item) it.next();
+        i = (Item) it.nextObject();
         assertTrue(i instanceof List);
         assertEquals(i, actual.getObject());
         System.out.println("repetimos (goto)-->" + actual.getObject());
         
         //Comprobamos que tambien la segunda lista tiene un único camino:
-        resultado = (LinkedList<Item>) it.next();
+        resultado = (LinkedList<Item>) it.nextObject();
         assertTrue(resultado.size() == 1);
         assertEquals(resultado.getFirst(), actual.getLastChild().getObject());
         System.out.println("-->" + actual.getLastChild().getObject());
@@ -255,11 +255,11 @@ public class TokenIteratorTest {
         
         SMTreeIterator<Item> it = arbol.iterator(ForwardTokenIterator.class);
         
-        it.next();
+        it.nextObject();
         assertTrue(it.hasNext());
         
         it.goTo((Item)arbol.getRoot().getLastChild().getObject());
-        it.next();
+        it.nextObject();
         assertFalse(it.hasNext());
         
     }
@@ -281,8 +281,8 @@ public class TokenIteratorTest {
         assertTrue(it.isNext((Item)actual.getFirstChild().getObject()));
         it.goTo(actual.getObject());
         assertFalse(it.isNext((Item)actual.getNext().getObject())); //porque aun no hemos entrado
-        it.next();
-        it.next();
+        it.nextObject();
+        it.nextObject();
         assertTrue(it.isNext((Item)actual.getNext().getObject())); //ya si hemos entrado
     }
 
