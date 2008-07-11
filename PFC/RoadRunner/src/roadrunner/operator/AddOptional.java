@@ -170,12 +170,14 @@ public class AddOptional extends IOperator
                 return rep;
             }
             
-            //TODO : hacer que la reparacion sea ( ) y no []
             Wrapper wrapperReparator = s.cloneSubWrapper(firstTokenOptional, lastTokenOptional, new Optional());
             
             rep.setReparator(wrapperReparator);
-            rep.setInitialItem(n);
+            itW.goTo(n);      
+            rep.setInitialItem((Item) itW.previous());
+            rep.setInitialEnclosure(Enclosure.NOT_ENCLOSED);
             rep.setFinalItem(n);
+            rep.setFinalEnclosure(Enclosure.NOT_ENCLOSED);
             rep.setState(StateRepair.SUCESSFULL);
             itS.goTo(lastTokenOptional);
             rep.setIndexSample((Token) itS.next()); 
