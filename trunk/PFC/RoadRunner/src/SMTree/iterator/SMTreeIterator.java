@@ -54,7 +54,7 @@ public abstract class SMTreeIterator<T>
     public boolean isNext (T o)
     {
         SMTreeNode temp = lastNode;    
-        Object next = next();
+        Object next = nextObject();
         boolean result = false;
         if(next instanceof java.util.List)
             for(T n : (java.util.List<T>)next)
@@ -69,7 +69,8 @@ public abstract class SMTreeIterator<T>
         return result;
     }
 
-    public abstract Object next ();
+    public abstract Object nextObject ();
+    public abstract SMTreeNode nextNode ();
     public  abstract boolean hasNext ();
     public abstract boolean hasPrevious();
     public abstract Object previous();

@@ -17,7 +17,13 @@ public class BackwardIterator<T> extends SMTreeIterator<T>
     }
 
     @Override
-    public Object next() {
+    public Object nextObject()     
+    {
+        return nextNode().getObject();
+    }
+        
+    public SMTreeNode<T> nextNode()
+    {
         SMTreeNode<T> resultNode=null;
         
         if(lastNode == null && getRootIterator()!=null)
@@ -43,7 +49,7 @@ public class BackwardIterator<T> extends SMTreeIterator<T>
             throw new IllegalStateException("¿No se supone que habia next()?");
         
         lastNode = resultNode;
-        return resultNode.getObject(); 
+        return resultNode; 
     }
     
     @Override

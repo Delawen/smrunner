@@ -15,9 +15,21 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
     {
         return super.isNext(o);
     }
-
+    
     @Override
-    public Object next() {
+    public Object nextObject()
+    {    
+        return nextNode().getObject();
+    }
+
+    public Object next() 
+    {
+        return this.nextObject();
+    }
+        
+    public SMTreeNode<T> nextNode()
+    {
+       
         SMTreeNode<T> resultNode=null;
         
         if(lastNode == null && getRootIterator()!=null)
@@ -43,7 +55,7 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
             throw new IllegalStateException("¿No se supone que habia next()?");
         
         lastNode = resultNode;
-        return resultNode.getObject(); 
+        return resultNode; 
     }
     
     @Override
