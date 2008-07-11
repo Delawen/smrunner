@@ -112,10 +112,43 @@ public class RoadRunner {
                     else
                         throw new RuntimeException("I couldn't repair a mismatch.");
                     t = reparacion.getIndexSample();
-                    n = reparacion.getInitialItem();
+                    n = reparacion.getReparator().getTree().getRootObject();
                 }
                 else break; //Hemos terminado
             }
+        }
+    }
+
+    
+    
+    
+    public enum ExitLevel {WARNING,NOTHING,CONTINUE, EXIT, SLEEPandCONTINUE, SLEEPandEXIT}; 
+    
+    public static void debug(String message,  ExitLevel e)
+    {
+        switch(e)
+        {
+            case EXIT:
+                System.err.println("Error & exit: "+message);
+                System.exit(-1);
+                break;
+            case NOTHING:
+                break;
+            case WARNING:
+                System.err.println("Warning: "+message);
+                break;
+            case CONTINUE:
+                System.err.println("Error & continue: "+message);
+                break;
+            case SLEEPandCONTINUE:
+                System.err.println("Error & sleep and continue: "+ message);
+                try{ Thread.sleep(5);} catch (Exception ex) {}
+                break;
+            case SLEEPandEXIT:
+                System.err.println("Error & sleep and exit: "+ message);
+                try{ Thread.sleep(5);} catch (Exception ex) {}
+                System.exit(-1);
+                break;
         }
     }
 
