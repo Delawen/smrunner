@@ -507,8 +507,8 @@ public class SMTreeTest {
             
             while(it1.hasNext() && it2.hasNext())
             {
-                T t1 = (T) it1.next();
-                T t2 = (T) it2.next();
+                T t1 = (T) it1.nextObject();
+                T t2 = (T) it2.nextObject();
                 if(t1 == t2 || treeClone1.getNode(t1) == instance.getNode(t2))
                     fail("El clon y el arbol original tienen referencias en comun!");
             }
@@ -518,8 +518,8 @@ public class SMTreeTest {
             
             while(it1.hasNext() && it2.hasNext())
             {
-                T t1 = (T) it1.next();
-                T t2 = (T) it2.next();
+                T t1 = (T) it1.nextObject();
+                T t2 = (T) it2.nextObject();
                 if(t1 == t2 || treeClone1.getNode(t1) == instance.getNode(t2))
                     fail("El clon y el arbol original tienen referencias en comun!");
             }

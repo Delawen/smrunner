@@ -97,7 +97,7 @@ public class IteratorTest
         SMTreeIterator<String> it = arbol.iterator(LevelIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
-            String next = (String)it.next();
+            String next = (String)it.nextObject();
             String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
             assertEquals(next, otro);
         }
@@ -146,7 +146,7 @@ public class IteratorTest
         SMTreeIterator<String> it = arbol.iterator(BackwardIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
-            String next = (String)it.next();
+            String next = (String)it.nextObject();
             String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
             assertEquals(next, otro);
         }
@@ -180,7 +180,7 @@ public class IteratorTest
         SMTreeIterator<String> it = arbol.iterator(ForwardIterator.class);
         while(it.hasNext() && itorden.hasNext())
         {
-            String next = (String)it.next();
+            String next = (String)it.nextObject();
             String otro = (String) ((SMTreeNode<String>)itorden.next()).getObject();
             assertEquals(next, otro);
         }
