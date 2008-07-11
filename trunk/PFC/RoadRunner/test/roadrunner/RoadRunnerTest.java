@@ -62,7 +62,7 @@ public class RoadRunnerTest {
     @Test
     public void test2()
     {
-        System.out.println("Test complejo para RoadRunner: varios sample");
+        System.out.println("Test complejo para RoadRunner: dos sample y un addVariable");
         String[] prueba = new String[2];
         String s = "test/roadrunner/sample1.html";
         prueba[0] = s;
@@ -75,5 +75,63 @@ public class RoadRunnerTest {
             System.out.println(it.next());
 
     }
+    
+    @Test
+    public void test3()
+    {
+        System.out.println("Test complejo para RoadRunner: dos sample y un addList simple");
+        String[] prueba = new String[2];
+        String s = "test/roadrunner/sample1.html";
+        prueba[0] = s;
+        s = "test/roadrunner/sample3.html";
+        prueba[1] = s;
+        RoadRunner rr = new RoadRunner(prueba);
+        Wrapper w = rr.process();
+        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
+        while(it.hasNext())
+            System.out.println(it.next());
+
+    }
+    
+    @Test
+    public void test4()
+    {
+        System.out.println("Test complejo para RoadRunner: dos sample y un addOptional simple");
+        String[] prueba = new String[2];
+        String s = "test/roadrunner/sample1.html";
+        prueba[0] = s;
+        s = "test/roadrunner/sample4.html";
+        prueba[1] = s;
+        RoadRunner rr = new RoadRunner(prueba);
+        Wrapper w = rr.process();
+        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
+        while(it.hasNext())
+            System.out.println(it.next());
+
+    }
+    
+    @Test
+    public void test5()
+    {
+        System.out.println("¡¡Todo junto!!");
+        String[] prueba = new String[5];
+        String s = "test/roadrunner/sample1.html";
+        prueba[0] = s;
+        s = "test/roadrunner/sample2.html";
+        prueba[1] = s;
+        s = "test/roadrunner/sample3.html";
+        prueba[2] = s;
+        s = "test/roadrunner/sample4.html";
+        prueba[3] = s;
+        s = "test/roadrunner/sample5.html";
+        prueba[4] = s;
+        RoadRunner rr = new RoadRunner(prueba);
+        Wrapper w = rr.process();
+        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
+        while(it.hasNext())
+            System.out.println(it.next());
+
+    }
+    
 
 }
