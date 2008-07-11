@@ -46,11 +46,9 @@ public class SMIndexStructure<T> implements Cloneable
             index.put(n.getObject(), n);
         // Si el nodo (valor) ya existe en el Map, pero con Nodo.Object distinto
         else if( index.get(n.getObject()) != n)
-        {
-            RoadRunner.debug("SMIndexStructure.Add: El nodo que quiero insertar [n:"+n+",o:"+n.getObject()+"] en el Map ya existe y" +
-                    " [n:"+n+",o:"+index.get(n.getObject())+"]tiene un valor distinto del que quiero insertar",RoadRunner.ExitLevel.CONTINUE);
-            return false;
-        }
+            throw new IllegalStateException("SMIndexStructure.Add: El nodo que quiero insertar [n:"+n+",o:"+n.getObject()+"] en el Map ya existe y" +
+                    " [n:"+n+",o:"+index.get(n.getObject())+"]tiene un valor distinto del que quiero insertar");
+
         //El nodo existe ya en el Mapa, con el mismo Nodo.Object, por tanto no hacemos nada
         return true;
         

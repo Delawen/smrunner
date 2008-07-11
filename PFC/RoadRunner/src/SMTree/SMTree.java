@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import roadrunner.RoadRunner.ExitLevel;
 
 // </editor-fold> 
 public class SMTree<T> implements Cloneable{
@@ -378,6 +377,9 @@ public class SMTree<T> implements Cloneable{
         if(inclusionTo == Enclosure.NOT_ENCLOSED)
              to = to.getPrevious();
         
+         if(from == null || to == null)
+            throw new NullPointerException("from o to acabaron siendo null tras aplicar NOT_ENCLOSED");
+        
         // from y to deben pertenecer al mismo nivel del arbol
         int nivelFrom = level(from);
         int nivelTo = level(to);
@@ -408,10 +410,7 @@ public class SMTree<T> implements Cloneable{
             }
 
             if(from.getParent() != to.getParent())
-            {
-                roadrunner.RoadRunner.debug("La región a sustituir no forma parte del mismo nivel.",ExitLevel.SLEEPandEXIT);
-                return false;
-            }
+                throw new IllegalStateException("La región a sustituir no forma parte del mismo nivel.");
         }
 
         /* Borramos [desde,hasta), el hasta no incluido*/
@@ -512,7 +511,7 @@ public class SMTree<T> implements Cloneable{
         
         if(mapa.containsObject(o))
         {
-            roadrunner.RoadRunner.debug("Intentando añadir un objeto al arbol que ya existe", ExitLevel.CONTINUE);
+            //"Intentando añadir un objeto al arbol que ya existe"
             return false;
         }
         

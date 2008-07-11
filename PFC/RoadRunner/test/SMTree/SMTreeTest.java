@@ -4,6 +4,8 @@
  */
 
 package SMTree;
+import SMTree.iterator.ForwardIterator;
+import SMTree.iterator.SMTreeIterator;
 import SMTree.utils.Enclosure;
 import SMTree.utils.Kinship;
 import java.util.Random;
@@ -440,6 +442,88 @@ public class SMTreeTest {
 
         assertFalse(instance.equals(instance2));
 
+    }
+    
+    @Test
+    public void testClone()
+    {
+        System.out.println("testClone()");
+        
+        Random random = new Random();
+        
+        int rand = random.nextInt(5) + 5;
+        T t;
+        t= new T();
+        SMTreeNode<T> raiz1 = new SMTreeNode<T>(t);
+        SMTreeNode<T> raiz2 = new SMTreeNode<T>(t);
+        SMTree<T> instance2 = new SMTree<T>(raiz2);
+        SMTree<T> instance = new SMTree<T>(raiz1);
+        int nodosTotales = 0;
+        
+        System.out.println("Iteraciones totales: "+rand);
+        for(int j = 1; j < rand; j++)
+        {
+            int max = random.nextInt(100) + 10;
+
+            SMTreeNode<T> aux1;
+            SMTreeNode<T> aux2;
+            for(int i = 0; i < max; i++)
+            {
+                Kinship k;
+                if(instance2.getRoot()==raiz2 || instance.getRoot()==raiz1 || random.nextBoolean())
+                    k= Kinship.CHILD;
+                else if(random.nextBoolean())
+                    k = Kinship.LEFTSIBLING;
+                else
+                    k = Kinship.RIGHTSIBLING;
+                
+                t = new T();
+                aux1 = new SMTreeNode<T>(t);
+                aux2 = new SMTreeNode<T>(t);
+                instance.addSMTreeNode(aux1, raiz1, k);
+                instance2.addSMTreeNode(aux2, raiz2, k);
+                if(random.nextBoolean() || instance2.getRoot()==raiz2 || instance.getRoot()==raiz1)
+                {
+                    raiz1 = aux1;
+                    raiz2 = aux2;
+                }
+            }
+            nodosTotales += max;
+            
+            SMTree treeClone1 = null;
+            SMTree treeClone2 = null;
+            try {
+                treeClone1 = instance.clone();
+                treeClone2 = instance2.clone();
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(SMTreeTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            assertEquals(treeClone1, treeClone2);
+            System.out.println("Clonacion: Nodos totales de cada uno de los arboles("+j+") comparados: "+nodosTotales);
+            
+            // comprobemos que las referencias son todas distintas:      
+            SMTreeIterator it1 = treeClone1.iterator(ForwardIterator.class);
+            SMTreeIterator it2 = instance.iterator(ForwardIterator.class);
+            
+            while(it1.hasNext() && it2.hasNext())
+            {
+                T t1 = (T) it1.next();
+                T t2 = (T) it2.next();
+                if(t1 == t2 || treeClone1.getNode(t1) == instance.getNode(t2))
+                    fail("El clon y el arbol original tienen referencias en comun!");
+            }
+            
+            it1 = treeClone2.iterator(ForwardIterator.class);
+            it2 = instance2.iterator(ForwardIterator.class);
+            
+            while(it1.hasNext() && it2.hasNext())
+            {
+                T t1 = (T) it1.next();
+                T t2 = (T) it2.next();
+                if(t1 == t2 || treeClone1.getNode(t1) == instance.getNode(t2))
+                    fail("El clon y el arbol original tienen referencias en comun!");
+            }
+        }  
     }
     
     @Test
