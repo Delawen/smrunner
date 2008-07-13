@@ -79,12 +79,18 @@ public class Wrapper implements Edible{
         if(DirectionOperator.DOWNWARDS == d)
         {
             itSquare = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
-            itEdible = e.iterator(webPageForwardIterator.class);
+            if(e instanceof Sample)
+                itEdible = e.iterator(webPageForwardIterator.class);
+            else
+                itEdible = e.iterator(ForwardTokenIterator.class);
         }
         else if(DirectionOperator.UPWARDS == d)
         {
             itSquare = (EdibleIterator) treeWrapper.iterator(BackwardTokenIterator.class);
-            itEdible = e.iterator(webPageBackwardIterator.class);
+            if(e instanceof Sample)
+                itEdible = e.iterator(webPageBackwardIterator.class);
+            else
+                itEdible = e.iterator(BackwardTokenIterator.class);
         }
  
         //Nos colocamos para empezar a comer:
@@ -274,9 +280,9 @@ public class Wrapper implements Edible{
                 t = (Token) it.nextObject();
                 if(t instanceof Tag && ((Tag)t).isOpenTag())
                     openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
                         openTags.pop();
-                else
+                else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;
 
             } while(it.hasNext() && t!=to && isWellFormed);
@@ -287,11 +293,11 @@ public class Wrapper implements Edible{
             do
             {
                 t = (Token) it.nextObject();
-                if(t instanceof Tag && ((Tag)t).isCloseTag())
+                if(t instanceof Tag && ((Tag)t).isOpenTag())
                     openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isOpenTag() && openTags.firstElement().isCloseTag() && openTags.firstElement().getContent().equals(t))
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
                         openTags.pop();
-                else
+                else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;
 
             } while(it.hasNext() && t!=to && isWellFormed);      

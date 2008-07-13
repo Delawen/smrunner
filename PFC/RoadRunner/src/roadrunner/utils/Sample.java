@@ -157,30 +157,30 @@ public class Sample implements Edible{
         
         if(d == DirectionOperator.DOWNWARDS)
         {
-            Tag t;
+            Token t;
             do
             {
-                t = (Tag)it.next();
-                if(t.isOpenTag())
-                    openTags.push(t);
-                else if (t.isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
+                t = (Token) it.next();
+                if(t instanceof Tag && ((Tag)t).isOpenTag())
+                    openTags.push((Tag)t);
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
                         openTags.pop();
-                else
+                else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;
 
             } while(it.hasNext() && t!=to && isWellFormed);   
         }
         else if( d == DirectionOperator.UPWARDS)       
         {
-            Tag t;
+            Token t;
             do
             {
-                t = (Tag)it.next();
-                if(t.isCloseTag())
-                    openTags.push(t);
-                else if (t.isOpenTag() && openTags.firstElement().isCloseTag() && openTags.firstElement().getContent().equals(t))
+                t = (Token) it.next();
+                if(t instanceof Tag && ((Tag)t).isOpenTag())
+                    openTags.push((Tag)t);
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
                         openTags.pop();
-                else
+                else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;
 
             } while(it.hasNext() && t!=to && isWellFormed);
