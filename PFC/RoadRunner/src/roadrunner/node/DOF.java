@@ -28,10 +28,7 @@ public class DOF extends Token
     @Override
     public boolean equals(Object i)
     {
-        if(i instanceof Item)
-            return match((Item)i);
-        else
-            return false;
+        return this == i;
     }
     
 
