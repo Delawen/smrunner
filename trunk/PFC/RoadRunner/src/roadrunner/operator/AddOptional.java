@@ -90,8 +90,8 @@ public class AddOptional extends IOperator
             itS.goTo(t);
             Token tokenInmediatelyAfterT = (Token) itS.next();
             
-            if(!lastTokenOptional.equals(tokenInmediatelyBeforeT) && 
-                    !firstTokenOptional.equals(tokenInmediatelyAfterT))
+            if(!lastTokenOptional.match(tokenInmediatelyBeforeT) || 
+                    !firstTokenOptional.match(tokenInmediatelyAfterT)) //TODO asegurarse de que hace esta condicion de abajo
             {
                 // falla: estabamos ante una lista.
                 rep.setState(StateRepair.FAILED);
@@ -137,8 +137,8 @@ public class AddOptional extends IOperator
             itS.goTo(t);
             Token tokenInmediatelyAfterT = (Token) itS.next();
             
-            if(!lastTokenOptional.equals(tokenInmediatelyBeforeT) && 
-                    !firstTokenOptional.equals(tokenInmediatelyAfterT))
+            if(!lastTokenOptional.match(tokenInmediatelyBeforeT) || 
+                    !firstTokenOptional.match(tokenInmediatelyAfterT)) //TODO asegurarse de que hace esta condicion de abajo
             {
                 // falla: estabamos ante una lista.
                 rep.setState(StateRepair.FAILED);
