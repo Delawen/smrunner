@@ -449,7 +449,7 @@ public class Wrapper implements Edible{
     // </editor-fold> 
     public Token search (Token t, Token from,int ocurrence, DirectionOperator d) 
     {
-        if(ocurrence < 1)
+        if(ocurrence < 0)
             return null;
         
         SMTreeIterator<Item> itWrapper = null;
@@ -465,13 +465,13 @@ public class Wrapper implements Edible{
         Token token=null;
         boolean find=false;
 
-        while(itWrapper.hasNext() && !find)
+        while(itWrapper.hasNext() && !find && ocurrence >= 0)
         {
             token = (Token) itWrapper.nextObject();
             
             if(t.equals(token))
             {
-                if(ocurrence == 1)
+                if(ocurrence == 0)
                     find = true;         
                 else
                     ocurrence --;

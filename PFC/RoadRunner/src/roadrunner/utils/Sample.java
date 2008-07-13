@@ -78,7 +78,7 @@ public class Sample implements Edible{
     
     public Token search (Token t, Token from, int ocurrence, DirectionOperator d) 
     {
-        if(ocurrence < 1)
+        if(ocurrence < 0)
             return null;
         
         EdibleIterator itSample = null;
@@ -94,14 +94,14 @@ public class Sample implements Edible{
         Token token=null;
         boolean find=false;
 
-        while(itSample.hasNext() && !find)
+        while(itSample.hasNext() && !find && ocurrence >= 0)
         {
             //Al ser un sample, sabemos que sólo hay un camino:
             token = (Token)((java.util.List<Item>)itSample.next()).get(0);
             
             if(t.equals(token))
             {
-                if(ocurrence == 1)
+                if(ocurrence == 0)
                     find = true;         
                 else
                     ocurrence--;
