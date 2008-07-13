@@ -67,26 +67,19 @@ public class AddList extends IOperator
             itS.goTo(t);
             lastDelim = (Token) itS.previous();
             
-            int ocurrence = 0;      
-            while(true)
+   
+            lastTokenSquare =  w.searchWellFormed(lastDelim, firstTokenSquare, d);
+
+            if(lastTokenSquare == null)
             {
-                lastTokenSquare =  w.search(lastDelim, firstTokenSquare, ocurrence, d);
-                
-                if(lastTokenSquare == null)
-                {
-                    rep.setState(StateRepair.FAILED);
-                    return rep;
-                }
-                else if(!w.isWellFormed(firstTokenSquare, Enclosure.ENCLOSED, lastTokenSquare, Enclosure.ENCLOSED))
-                     ocurrence++;
-                else
-                {
-                    //Si hemos llegado aquí es porque hemos encontrado una ocurrencia 
-                    //que delimita un código bien formado:
-                    lastTokenList = lastTokenSquare;
-                    break;
-                }
+                rep.setState(StateRepair.FAILED);
+                return rep;
             }
+
+            //Si hemos llegado aquí es porque hemos encontrado una ocurrencia 
+            //que delimita un código bien formado:
+            lastTokenList = lastTokenSquare;
+
             
             // Ya tenemos definido la zona de squareW, ahora le creamos un wrapper        
             Wrapper squareW = w.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new Tuple());     
@@ -146,26 +139,14 @@ public class AddList extends IOperator
             itS.goTo(t);
             lastDelim = (Token) itS.previous();
             
-            int ocurrence = 0;     
-            while(true)
+            lastTokenSquare =  s.searchWellFormed(lastDelim, firstTokenSquare, d);
+
+            if(lastTokenSquare == null)
             {
-                lastTokenSquare =  s.search(lastDelim, firstTokenSquare, ocurrence, d);
-                
-                if(lastTokenSquare == null)
-                {
-                    rep.setState(StateRepair.FAILED);
-                    return rep;
-                }
-                else if(!s.isWellFormed( (Text) firstTokenSquare, Enclosure.ENCLOSED, (Text) lastTokenSquare, Enclosure.ENCLOSED))
-                     ocurrence++;
-                else
-                {
-                    //Si hemos llegado aquí es porque hemos encontrado una ocurrencia 
-                    //que delimita un código bien formado
-                    break;
-                }
+                rep.setState(StateRepair.FAILED);
+                return rep;
             }
-            
+                        
             // Ya tenemos definido la zona de squareS, ahora le creamos un wrapper        
             Wrapper squareS = s.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new Tuple());     
                              

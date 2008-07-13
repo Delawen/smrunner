@@ -67,37 +67,22 @@ public class AddOptional extends IOperator
         
         if(super.where == WebPageOperator.WRAPPER)
         {
-            int ocurrence = 0;
-            while(true)
+
+            // Buscamos el token que aparecera justo detras de la supuesta opcionalidad
+            lastTokenOptional =  w.searchWellFormed(t, (Token) n, d);
+
+            // Si no lo hemos encontrado entonces
+            //  no se puede crear reparacion con addoptional en el wrapper
+            if(lastTokenOptional == null)
             {
-                // Buscamos el token que aparecera justo detra de la supuesta opcionalidad
-                lastTokenOptional =  w.search(t, (Token) n, ocurrence, d);
-
-                // Si no lo hemos encontrado paramos de buscar
-                // porque no se puede crear reparacion con addoptional en el wrapper
-                if(lastTokenOptional == null)
-                {
-                    rep.setState(StateRepair.FAILED);
-                    return rep;
-                }
-                // Si hemos encontrado uno, tenemos que ver si es una porcion
-                // de codigo bien formada
-               //Si no está bien formado, seguimos buscando la siguiente ocurrencia
-                else if(!w.isWellFormed( (Text)n, Enclosure.ENCLOSED, (Text)lastTokenOptional, Enclosure.NOT_ENCLOSED))
-                     ocurrence++;
-                else
-                {
-                    //Si hemos llegado aquí es porque hemos encontrado una ocurrencia 
-                    //que delimita un código bien formado
-
-                    // y ahora si que nos quedamos con el token ultimo de la opcionalidad
-                    itW.goTo(lastTokenOptional);
-                    
-                    lastTokenOptional = (Token) itW.previous();
-                    firstTokenOptional = (Token) n;
-                    break;
-                }
+                rep.setState(StateRepair.FAILED);
+                return rep;
             }
+            
+            // lastTokenOptional contiene al nodo posterior, asi que nos quedamos con el ultimo de la opcionalidad
+            itW.goTo(lastTokenOptional);
+            lastTokenOptional = (Token) itW.previous();
+            firstTokenOptional = (Token) n;
             
             // comprobamos que no estamos ante una lista          
             itS.goTo(t);
@@ -130,32 +115,22 @@ public class AddOptional extends IOperator
         }
         else if(where == WebPageOperator.SAMPLE)
         {     
-            int ocurrence = 0;
-            while(true)
-            {
-                // Buscamos el token que aparecera justo detra de la supuesta opcionalidad
-                lastTokenOptional =  s.search((Token) n, t, ocurrence, d);
+ 
+            // Buscamos el token que aparecera justo detra de la supuesta opcionalidad
+            lastTokenOptional =  s.searchWellFormed((Token) n, t, d);
 
-                // Si no lo hemos encontrado paramos de buscar
-                // porque no se puede crear reparacion con addoptional en el wrapper
-                if(lastTokenOptional == null)
-                {
-                    rep.setState(StateRepair.FAILED);
-                    return rep;
-                }
-                // Si lo hemos encontrado tenemos que ver si es una porcion
-                // de codigo bien formada, sino seguimos buscando la siguiente ocurrencia
-                else if(!s.isWellFormed( (Text) t, Enclosure.ENCLOSED, (Text) lastTokenOptional, Enclosure.NOT_ENCLOSED))
-                     ocurrence++;
-                else
-                {
-                    // y ahora si que nos quedamos con el token ultimo de la opcionalidad
-                    itS.goTo(lastTokenOptional);
-                    lastTokenOptional = (Token) itS.previous();
-                    firstTokenOptional = (Token) t;
-                    break;
-                }
+            // Si no lo hemos encontrado paramos de buscar
+            // porque no se puede crear reparacion con addoptional en el wrapper
+            if(lastTokenOptional == null)
+            {
+                rep.setState(StateRepair.FAILED);
+                return rep;
             }
+
+            // y ahora si que nos quedamos con el token ultimo de la opcionalidad
+            itS.goTo(lastTokenOptional);
+            lastTokenOptional = (Token) itS.previous();
+            firstTokenOptional = (Token) t;
             
             itS.goTo(t);
             Token tokenInmediatelyBeforeT = (Token) itS.previous();
