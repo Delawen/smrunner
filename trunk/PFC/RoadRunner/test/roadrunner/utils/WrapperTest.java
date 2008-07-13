@@ -28,6 +28,8 @@ public class WrapperTest
     
     private static Wrapper instance;
 
+    private static Wrapper instance2;
+
     public WrapperTest() 
     {
     }
@@ -41,12 +43,21 @@ public class WrapperTest
         tree.addObject(lista, raiz, Kinship.CHILD);
         SMTreeNode<Item> listaNode = tree.getNode(lista);
             tree.addObject(new Tag("<li>"), listaNode, Kinship.CHILD);
-                tree.addObject(new Tag("<p>"), listaNode, Kinship.CHILD);
-                    tree.addObject(new Variable(), listaNode, Kinship.CHILD);
-                tree.addObject(new Tag("</p>"), listaNode, Kinship.CHILD);
+                tree.addObject(new Variable(), listaNode, Kinship.CHILD);
             tree.addObject(new Tag("</li>"), listaNode, Kinship.CHILD);
-            
        instance = new Wrapper(tree);
+       
+        SMTreeNode<Item> raiz2 = new SMTreeNode<Item>(new Tuple());
+        SMTree<Item> tree2 = new SMTree<Item>(raiz2);
+        tree2.addObject(new DOF(), raiz2, Kinship.CHILD);
+        Item lista2 = new roadrunner.node.List();
+        tree2.addObject(lista2, raiz2, Kinship.CHILD);
+        SMTreeNode<Item> listaNode2 = tree2.getNode(lista2);
+            tree2.addObject(new Tag("<li>"), listaNode2, Kinship.CHILD);
+                tree2.addObject(new Variable(), listaNode2, Kinship.CHILD);
+            tree2.addObject(new Tag("</li>"), listaNode2, Kinship.CHILD);
+        tree2.addObject(new DOF(), raiz2, Kinship.CHILD);
+       instance2 = new Wrapper(tree2);
     }
 
     @AfterClass
@@ -69,6 +80,7 @@ public class WrapperTest
         System.out.println("eatSquare");
         Edible e = new Sample("test/roadrunner/utils/sample1.html");
         EdibleIterator it = (EdibleIterator) e.iterator(webPageForwardIterator.class);
+        it.next();
         Item t = (Item) it.next();
         DirectionOperator d = DirectionOperator.DOWNWARDS;
         Item expResult = null;
@@ -91,21 +103,21 @@ public class WrapperTest
         System.out.println("eat");
         Sample s = new Sample("test/roadrunner/utils/sample2.html");
         DirectionOperator d = DirectionOperator.DOWNWARDS;
-        Mismatch result = instance.eat(s, d);
+        Mismatch result = instance2.eat(s, d);
         assertNull(result);
         d = DirectionOperator.UPWARDS;
-        result = instance.eat(s, d);
+        result = instance2.eat(s, d);
         assertNull(result);      
         s = new Sample("test/roadrunner/utils/sample3.html");
         d = DirectionOperator.DOWNWARDS;
-        result = instance.eat(s, d);
+        result = instance2.eat(s, d);
         assertNull(result);
         d = DirectionOperator.UPWARDS;
-        result = instance.eat(s, d);
+        result = instance2.eat(s, d);
         assertNull(result);
         s = new Sample("test/roadrunner/utils/sample4.html");
         d = DirectionOperator.DOWNWARDS;
-        result = instance.eat(s, d);
+        result = instance2.eat(s, d);
         assertNotNull(result);
     }
 
