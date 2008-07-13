@@ -63,8 +63,11 @@ public class Sample implements Edible{
             // Tokenizo
             ITokenizedWebPage twp = tokenizer.tokenize(webpage);
 
-            for (IToken token : twp) {
-                tokens.add((Token) limpiar((XMLTokenizer.Token)token));
+            for (IToken token : twp) 
+            {
+                XMLTokenizer.Token t = (XMLTokenizer.Token) token;
+                if(!t.getText().equals("\n"))
+                    tokens.add((Token) limpiar(t));
             }
 
             tokens.add(new DOF());
@@ -303,5 +306,10 @@ public class Sample implements Edible{
             treeCloned.addObject(i, rootNode, Kinship.CHILD);
         }
         return new Wrapper(treeCloned);
+    }
+    
+    public int getNumToken()
+    {
+        return tokens.size();
     }
 }

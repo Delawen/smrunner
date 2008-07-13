@@ -215,8 +215,12 @@ public class Wrapper implements Edible{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.CB10757A-C05C-4F36-13C5-A851167056BD]
     // </editor-fold> 
-    public Mismatch eat (Sample s, DirectionOperator d) {
-        return eat(s, s.getToken(0), treeWrapper.getRootObject(), d);
+    public Mismatch eat (Sample s, DirectionOperator d) 
+    {
+        if(d == DirectionOperator.DOWNWARDS)
+            return eat(s, s.getToken(0), treeWrapper.getRootObject(), d);
+        else
+            return eat(s, s.getToken(s.getNumToken()-1), treeWrapper.getRootObject(), d);  
     }
 
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
@@ -325,6 +329,9 @@ public class Wrapper implements Edible{
     // </editor-fold> 
     public Mismatch eat (Edible e, Item t, Item n, DirectionOperator d) 
     {
+        if(e == null || t == null || n == null || d == null)
+            throw new IllegalArgumentException("eat no puede tener parámetros nulos.");
+        
         //Iteradores de los Edibles:
         EdibleIterator itWrapper = null;
         EdibleIterator itSample = null;
