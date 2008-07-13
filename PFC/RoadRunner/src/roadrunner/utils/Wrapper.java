@@ -106,6 +106,7 @@ public class Wrapper implements Edible{
             
             //Si nos ha devuelto un único camino
             if(edibleToken instanceof Token)
+            {
                 // y no puede ser el siguiente del wrapper
                 if(!itSquare.isNext((Token) edibleToken))
                 {
@@ -127,6 +128,7 @@ public class Wrapper implements Edible{
                     else
                         return null;
                 }
+            }
             else if(edibleToken instanceof java.util.List)//Vamos probando todos los caminos
             {
                 //La pila irá guardando los caminos no recorridos:
