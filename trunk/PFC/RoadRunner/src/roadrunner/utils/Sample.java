@@ -76,10 +76,8 @@ public class Sample implements Edible{
     }
 
     
-    public Token search (Token t, Token from, int ocurrence, DirectionOperator d) 
+    public Token searchWellFormed (Token t, Token from, DirectionOperator d) 
     {
-        if(ocurrence < 0)
-            return null;
         
         EdibleIterator itSample = null;
         
@@ -92,25 +90,20 @@ public class Sample implements Edible{
             return null;
         
         Token token=null;
-        boolean find=false;
 
-        while(itSample.hasNext() && !find && ocurrence >= 0)
+        while(itSample.hasNext())
         {
             //Al ser un sample, sabemos que sólo hay un camino:
             token = (Token)itSample.next();
             
-            if(t.equals(token))
+            if(t.match(token))
             {
-                if(ocurrence == 0)
-                    find = true;         
+                if(isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED))
+                    break;
                 else
-                    ocurrence--;
+                    token = null;
             }
         }
-        
-        if(!find)
-            token=null;
-        
         return token;
     }
     

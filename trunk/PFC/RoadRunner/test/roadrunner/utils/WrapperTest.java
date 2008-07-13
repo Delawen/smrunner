@@ -139,18 +139,17 @@ public class WrapperTest
     }
 
     /**
-     * Test of search method, of class Wrapper.
+     * Test of searchWellFormed method, of class Wrapper.
      */
     @Test
-    public void search() {
-        System.out.println("search");
+    public void searchWellFormed() {
+        System.out.println("searchWellFormed");
         Token t = null;
         Token from = null;
-        int ocurrence = 0;
         DirectionOperator d = null;
         Wrapper instance = new Wrapper();
         Token expResult = null;
-        Token result = instance.search(t, from, ocurrence, d);
+        Token result = instance.searchWellFormed(t, from, d);
         assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }

@@ -8,6 +8,8 @@ import roadrunner.iterator.BackwardTokenIterator;
 import SMTree.iterator.SMTreeIterator;
 import roadrunner.node.Token;
 import SMTree.*;
+import SMTree.iterator.BackwardIterator;
+import SMTree.iterator.ForwardIterator;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -226,7 +228,7 @@ public class Wrapper implements Edible{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E5C3243F-4177-9A70-094F-C76645D7AD05]
     // </editor-fold> 
-    public boolean isWellFormed (Token from,Enclosure inclusionFrom, Token to,Enclosure inclusionTo) {
+    private boolean isWellFormed (Token from,Enclosure inclusionFrom, Token to,Enclosure inclusionTo) {
         
         if(from==null || to==null)
            throw new NullPointerException("");
@@ -447,39 +449,37 @@ public class Wrapper implements Edible{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.F925FF52-82A2-AFA9-A17C-8A6B6DE5DDAF]
     // </editor-fold> 
-    public Token search (Token t, Token from,int ocurrence, DirectionOperator d) 
+    public Token searchWellFormed (Token t, Token from, DirectionOperator d) 
     {
-        if(ocurrence < 0)
-            return null;
-        
         SMTreeIterator<Item> itWrapper = null;
         
         if(DirectionOperator.DOWNWARDS == d)
-            itWrapper = treeWrapper.iterator(ForwardTokenIterator.class);    
+            itWrapper = treeWrapper.iterator(ForwardIterator.class);    
         else if(DirectionOperator.UPWARDS == d)
-            itWrapper = treeWrapper.iterator(BackwardTokenIterator.class);
+            itWrapper = treeWrapper.iterator(BackwardIterator.class);
         
         if(!itWrapper.goTo(from))
             return null;
         
         Token token=null;
-        boolean find=false;
 
-        while(itWrapper.hasNext() && !find && ocurrence >= 0)
+        while(itWrapper.hasNext())
         {
-            token = (Token) itWrapper.nextObject();
+            Item i = (Item) itWrapper.nextObject();
             
-            if(t.equals(token))
+            //Sabremos que estamos en una hoja si es un token
+            if(i instanceof Token)
             {
-                if(ocurrence == 0)
-                    find = true;         
-                else
-                    ocurrence --;
+                token = (Token) i;
+                if(token.match(t))
+                {
+                    if(isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED))
+                        break;
+                    else
+                        token = null;
+                }
             }
         }
-        
-        if(!find)
-            token=null;
         
         return token;
     }
