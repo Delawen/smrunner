@@ -228,7 +228,7 @@ public class Wrapper implements Edible{
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E5C3243F-4177-9A70-094F-C76645D7AD05]
     // </editor-fold> 
-    private boolean isWellFormed (Token from,Enclosure inclusionFrom, Token to,Enclosure inclusionTo) {
+    private boolean isWellFormed (Token from,Enclosure inclusionFrom, Token to,Enclosure inclusionTo, DirectionOperator d) {
         
         if(from==null || to==null)
            throw new NullPointerException("");
@@ -239,7 +239,12 @@ public class Wrapper implements Edible{
         
         boolean isWellFormed = true;
         Stack<Tag> openTags = new Stack(); 
-        SMTreeIterator<Item> it = treeWrapper.iterator(ForwardTokenIterator.class);
+        SMTreeIterator<Item> it = null;
+        
+        if(d == DirectionOperator.DOWNWARDS)
+            it = treeWrapper.iterator(ForwardTokenIterator.class);
+        else if(d == DirectionOperator.UPWARDS)
+            it = treeWrapper.iterator(BackwardTokenIterator.class);
 
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
@@ -252,26 +257,44 @@ public class Wrapper implements Edible{
             
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
-            it.nextObject();
+            from = (Token) it.nextObject();
         
         if(from==to && !(from instanceof Tag))
             return true;
         else if (from==to)
             return false;
         
-        Token t;
-        do
+        if(d == DirectionOperator.DOWNWARDS)
         {
-            t = (Token) it.nextObject();
-            if(t instanceof Tag && ((Tag)t).isOpenTag())
-                openTags.push((Tag)t);
-            else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
-                    openTags.pop();
-            else
-                isWellFormed = false;
+            Token t;
+            do
+            {
+                t = (Token) it.nextObject();
+                if(t instanceof Tag && ((Tag)t).isOpenTag())
+                    openTags.push((Tag)t);
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
+                        openTags.pop();
+                else
+                    isWellFormed = false;
+
+            } while(it.hasNext() && t!=to && isWellFormed);
+        }
+        else if(d == DirectionOperator.UPWARDS)
+        {
+            Token t;
+            do
+            {
+                t = (Token) it.nextObject();
+                if(t instanceof Tag && ((Tag)t).isCloseTag())
+                    openTags.push((Tag)t);
+                else if (t instanceof Tag && ((Tag)t).isOpenTag() && openTags.firstElement().isCloseTag() && openTags.firstElement().getContent().equals(t))
+                        openTags.pop();
+                else
+                    isWellFormed = false;
+
+            } while(it.hasNext() && t!=to && isWellFormed);      
+        }
             
-        } while(it.hasNext() && t!=to && isWellFormed);
-        
         if(!openTags.empty())
             isWellFormed=false;
         
@@ -473,7 +496,7 @@ public class Wrapper implements Edible{
                 token = (Token) i;
                 if(token.match(t))
                 {
-                    if(isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED))
+                    if(isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
                         break;
                     else
                         token = null;

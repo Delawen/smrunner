@@ -27,6 +27,7 @@ import Tokenizer.IToken;
 import Tokenizer.ITokenizedWebPage;
 import WebModel.URIWebPage;
 import java.util.Iterator;
+import roadrunner.iterator.webPageBackwardIterator;
 import roadrunner.iterator.webPageForwardIterator;
 
 public class Sample implements Edible{
@@ -98,7 +99,7 @@ public class Sample implements Edible{
             
             if(t.match(token))
             {
-                if(isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED))
+                if(isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
                     break;
                 else
                     token = null;
@@ -118,7 +119,7 @@ public class Sample implements Edible{
         return resultado;
     }
             
-    public boolean isWellFormed (Token from, Enclosure inclusionFrom, Token to, Enclosure inclusionTo) {
+    public boolean isWellFormed (Token from, Enclosure inclusionFrom, Token to, Enclosure inclusionTo, DirectionOperator d) {
         
         if(from==null || to==null)
            throw new NullPointerException("");
@@ -129,7 +130,12 @@ public class Sample implements Edible{
         
         boolean isWellFormed = true;
         Stack<Tag> openTags = new Stack(); 
-        EdibleIterator it = iterator(webPageForwardIterator.class);
+        EdibleIterator it = null;
+        
+        if(d == DirectionOperator.DOWNWARDS)
+            it = iterator(webPageForwardIterator.class);
+        else if( d == DirectionOperator.UPWARDS)
+            it = iterator(webPageBackwardIterator.class);
 
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
@@ -142,26 +148,44 @@ public class Sample implements Edible{
             
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
-            it.next();
+            from = (Token) it.next();
         
         if(from==to && !(from instanceof Tag))
             return true;
         else if (from==to)
             return false;
         
-        Tag t;
-        do
+        if(d == DirectionOperator.DOWNWARDS)
         {
-            t = (Tag)it.next();
-            if(t.isOpenTag())
-                openTags.push(t);
-            else if (t.isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
-                    openTags.pop();
-            else
-                isWellFormed = false;
-            
-        } while(it.hasNext() && t!=to && isWellFormed);
-        
+            Tag t;
+            do
+            {
+                t = (Tag)it.next();
+                if(t.isOpenTag())
+                    openTags.push(t);
+                else if (t.isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t))
+                        openTags.pop();
+                else
+                    isWellFormed = false;
+
+            } while(it.hasNext() && t!=to && isWellFormed);   
+        }
+        else if( d == DirectionOperator.UPWARDS)       
+        {
+            Tag t;
+            do
+            {
+                t = (Tag)it.next();
+                if(t.isCloseTag())
+                    openTags.push(t);
+                else if (t.isOpenTag() && openTags.firstElement().isCloseTag() && openTags.firstElement().getContent().equals(t))
+                        openTags.pop();
+                else
+                    isWellFormed = false;
+
+            } while(it.hasNext() && t!=to && isWellFormed);
+        }
+           
         if(!openTags.empty())
             isWellFormed=false;
         
