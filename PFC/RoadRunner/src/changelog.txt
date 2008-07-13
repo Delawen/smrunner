@@ -7,22 +7,11 @@ y no "text"
 
 CORREGIR
 ========
-* addOptional:
-    - Cuando la opcionalidad se ha encontrado en el Sample tenemos que añadirla en el wrapper,
-        el problema es que ahora mismo no tenemos forma de crear reparaciones a las que pueda decirles
-        que la reparacion va delante o despues de algo, no es suficiente con decir [from... to] porque en 
-        este caso añadimos algo nuevo al wrapper que no existe.
-    - Lo anterior hace que Repair.apply() considere tambien ese caso.
 
 
 TODO
 ====
-* Adaptar el tokenizador de juanma.
-* smtindex.clone  smtindex.equals
-* Smtree.clone Smtree.equals smtree.clonesubtree
-* Smtreenode.clone Smtreenode.equals
-* wrapper.clone wrapper.equals wrapper.clonesubwrapper
-* Los iteradores deberian permitir el constructor vacio y que en dicho caso se comience desde la raiz real.
+* Dar soporte a etiquetas: <img/>
 
 22-06-2008
 ==========
