@@ -97,7 +97,7 @@ public class Sample implements Edible{
         while(itSample.hasNext() && !find && ocurrence >= 0)
         {
             //Al ser un sample, sabemos que sólo hay un camino:
-            token = (Token)((java.util.List<Item>)itSample.next()).get(0);
+            token = (Token)itSample.next();
             
             if(t.equals(token))
             {
