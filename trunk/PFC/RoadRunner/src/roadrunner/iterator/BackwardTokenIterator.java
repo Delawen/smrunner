@@ -130,14 +130,18 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 //es porque ya habíamos entrado en ella
                 if(super.lastNode.getObject() instanceof List)
                     ((List)super.lastNode.getObject()).setAccessed(true);
-
             }
-            //Si es una lista es porque es la primera vez que entramos
-            if(super.lastNode.getObject() instanceof List)
-                ((List)super.lastNode.getObject()).setAccessed(false);
-
-            super.lastNode = super.lastNode.getPrevious();
             
+            if(super.lastNode.getObject() instanceof List || super.lastNode.getObject() instanceof Optional)
+            {
+                java.util.List<Item> resultado = new LinkedList<Item>();
+                resultado.add((Item)super.lastNode.getPrevious().getObject());
+                resultado.add((Item)super.lastNode.getLastChild().getObject());
+                super.lastNode = super.lastNode.getPrevious();
+                return resultado;
+            }
+            
+            super.lastNode = super.lastNode.getPrevious();
             return super.lastNode.getObject();
         }
         
@@ -334,12 +338,16 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                     ((List)super.lastNode.getObject()).setAccessed(true);
             }
             
-            //Hemos encontrado el siguiente nodo
-            //Si es una lista es porque es la primera vez que entramos
-            if(super.lastNode.getObject() instanceof List)
-                ((List)super.lastNode.getObject()).setAccessed(false);
-            super.lastNode = super.lastNode.getNext();
+            if(super.lastNode.getObject() instanceof List || super.lastNode.getObject() instanceof Optional)
+            {
+                java.util.List<Item> resultado = new LinkedList<Item>();
+                resultado.add((Item)super.lastNode.getNext().getObject());
+                resultado.add((Item)super.lastNode.getFirstChild().getObject());
+                super.lastNode = super.lastNode.getNext();
+                return resultado;
+            }
             
+            super.lastNode = super.lastNode.getNext();
             return super.lastNode.getObject();
         }
         
