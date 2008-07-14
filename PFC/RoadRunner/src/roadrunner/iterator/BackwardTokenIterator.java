@@ -87,7 +87,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             if(super.lastNode.getLastChild().getObject() instanceof List)
                 ((List)super.lastNode.getLastChild().getObject()).setAccessed(false);
             
-            if((item instanceof List && ((List)item).isAccessed()) || item instanceof Optional)
+            if(((List)item).isAccessed())
             {
                 SMTreeNode<Item> nodo = super.lastNode;
                 while(nodo.getPrevious() == null)
