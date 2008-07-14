@@ -57,12 +57,18 @@ public class AddOptional extends IOperator
         if(d == DirectionOperator.DOWNWARDS)
         {
             itW = w.iterator(ForwardTokenIterator.class);
-            itS = s.iterator(webPageForwardIterator.class);
+            if(s instanceof Sample) 
+                itS = s.iterator(webPageForwardIterator.class);
+            else
+                itS = s.iterator(ForwardTokenIterator.class);
         }
         else if(d == DirectionOperator.UPWARDS)
         {
             itW = w.iterator(BackwardTokenIterator.class);
-            itS = s.iterator(webPageBackwardIterator.class);
+            if(s instanceof Sample) 
+                itS = s.iterator(webPageBackwardIterator.class);
+            else
+                itS = s.iterator(BackwardTokenIterator.class);
         }
         
         if(super.where == WebPageOperator.WRAPPER)
