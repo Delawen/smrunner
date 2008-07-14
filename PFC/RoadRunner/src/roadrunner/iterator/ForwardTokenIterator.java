@@ -71,8 +71,54 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
          */
         Item item = super.lastNode.getObject();
         
+        
+        /**
+         * Este será el caso más común 
+         */
+        if(item instanceof Token)
+        {
+            /**
+             * Buscamos el siguiente, subiendo al padre si es necesario
+             */
+            while(super.lastNode.getNext() == null)
+            {
+                //Si el padre es nulo es que estamos en la raiz
+                if(super.lastNode.getParent() == null)
+                    return null;
+                super.lastNode = super.lastNode.getParent();
+               
+                //Estamos subiendo porque no había un hermano, por tanto...
+                //si subimos y encontramos que el padre es una lista 
+                //es porque ya habíamos entrado en ella
+                if(super.lastNode.getObject() instanceof List)
+                    ((List)super.lastNode.getObject()).setAccessed(true);
+            }
+            
+            /**
+             * Ahora comprobamos si el item que tenemos aquí es un compositeItem (varios caminos)
+             */
+            if(super.lastNode.getObject() instanceof List || super.lastNode.getObject() instanceof Optional)
+            {
+                /**
+                 * Lo preparamos para los siguientes if
+                 */
+                item = super.lastNode.getObject();
+            }
+            else
+            {
+                /**
+                 * Si no era un compositeItem, está claro:
+                 */
+                super.lastNode = super.lastNode.getNext();
+                return super.lastNode.getObject();
+            }
+        }
+        
+        
         /**
          * Si estamos en un opcional, podemos o introducirnos en el opcional, o devolver el siguiente al opcional.
+         * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
+         * la llamada del método.
          */
         if(item instanceof Optional)
         {
@@ -206,42 +252,18 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 ((List)super.lastNode.getObject()).setAccessed(false);
             return super.lastNode.getObject();
         }
-        /**
-         * Este será el caso más común 
-         */
-        else if(item instanceof Token)
-        {
-            //Buscamos el siguiente
-            while(super.lastNode.getNext() == null)
-            {
-                //Si el padre es nulo es que estamos en la raiz
-                if(super.lastNode.getParent() == null)
-                    return null;
-                super.lastNode = super.lastNode.getParent();
-               
-                //Estamos subiendo porque no había un hermano, por tanto...
-                //si subimos y encontramos que el padre es una lista 
-                //es porque ya habíamos entrado en ella
-                if(super.lastNode.getObject() instanceof List)
-                    ((List)super.lastNode.getObject()).setAccessed(true);
-            }
-            
-            if(super.lastNode.getObject() instanceof List || super.lastNode.getObject() instanceof Optional)
-            {
-                java.util.List<Item> resultado = new LinkedList<Item>();
-                resultado.add((Item)super.lastNode.getNext().getObject());
-                resultado.add((Item)super.lastNode.getFirstChild().getObject());
-                super.lastNode = super.lastNode.getNext();
-                return resultado;
-            }
-            
-            super.lastNode = super.lastNode.getNext();
-            return super.lastNode.getObject();
-        }
         
+        /**
+         * Aquí ha pasado algo que no debería:
+         */
         return null;
     }
     
+    /**
+     * Se mueve de forma que el siguiente next() será este item
+     * @param objeto
+     * @return
+     */
     @Override
      public boolean goTo (Item objeto) 
     {
@@ -254,6 +276,11 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     }
 
     
+    /**
+     * Comprueba si el siguiente objeto será nulo.
+     * En cualquier caso, no se mueve.
+     * @return
+     */
     @Override
     public boolean hasNext()
     {
@@ -274,13 +301,22 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         }
     }
     
+    /**
+     * Comprueba si en la lista de siguientes nodos está el item pasado como parámetro
+     * @param i
+     * @return
+     */
     @Override
     public boolean isNext(Item i)
     {
         int k = 0;
         
+        /**
+         * temporal sirve para volver atrás si el isNext() resulta fallido
+         */
         SMTreeNode temporal = super.lastNode;
-        //Si tenemos cache, la usamos. Si no, sacamos de siguiente()
+        
+        //Si tenemos cache, la usamos. Si no, lo sacamos de next()
         if(cache == null)
         {
             Object siguiente = this.nextObject();
@@ -291,19 +327,28 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 cache = (java.util.LinkedList<Item>)siguiente;
         }
         
-        
+        /**
+         * Si tenemos un next claro, no hay que darle más vueltas:
+         */
         if(next != null)
         {
             cache.clear();
             cache.add(next.getObject());
         }   
-        //Vamos recorriendo todos los posibles siguiente hasta que encuentra uno que haga match
+        
+        /**
+         * Vamos recorriendo todos los posibles siguiente hasta que encuentra uno que haga match.
+         * k sirve para mantenerlos ordenados, sin perder ni un solo camino
+         * por si el isNext() resulta fallido, tener la caché.
+         */
         while(!cache.isEmpty() && k < cache.size())
         {
             //Sacamos un item de la lista
             Item item = cache.remove(k);
+            
             //Si sacamos un token, intentamos hacer matching
             if(item instanceof Token)
+            {
                 if(item.match(i))
                 {
                     //Hemos hecho matching, avanzamos y borramos la caché.
@@ -313,21 +358,45 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 }
                 else
                 {
-                //Volvemos a guardarlo en la caché, por si hace falta
+                //Volvemos a guardarlo en la caché, por si hace falta en otra llamada
                     cache.add(k, item);
                     k++;
                 }
-            //Si el siguiente es una lista o un opcional:
+            }
+            
+            /**
+             * Si el siguiente es una lista o un opcional, calculamos los siguientes a esa lista u opcional
+             */
             else if((item instanceof List)||(item instanceof Optional))
             {
+                /**
+                 * nodos por si hay que volver atrás
+                 */
                 SMTreeNode nodo_backup = super.lastNode;
                 LinkedList cache_backup = this.cache;
+                
+                /**
+                 * vamos hasta el item siguiente
+                 */
                 goTo(item);
+                
+                /**
+                 * Sacamos la lista de siguientes.
+                 */
                 this.nextObject();
                 Object siguiente = this.nextObject();
+                
+                /**
+                 * Deshacemos los cambios
+                 */
                 this.cache = cache_backup;
                 super.lastNode = nodo_backup;
                 
+                /**
+                 * Metemos el resultado en la caché para las próximas vueltas.
+                 * Se tienen que meter en el mismo sitio por donde vamos, para que sea lo 
+                 * siguiente a comprobar.
+                 */
                 if(siguiente instanceof Item)
                     cache.add(k, (Token)siguiente);
                 else if(siguiente instanceof java.util.List)
@@ -335,14 +404,14 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                         cache.add(k, elem);
                         
             }
-            //Si es una tupla
+            //Si es una tupla, buscamos su primer hijo y lo metemos en la caché para estudiarlo
             else if(item instanceof Tuple)
             {
                 Item siguiente = (Item) this.tree.getNode(item).getFirstChild().getObject();
                 cache.add(k, siguiente);
             }
             
-            //Si sacamos una lista, la metemos en la cache
+            //Si sacamos una lista de caminos, los metemos uno a uno en la caché.
             else if(item instanceof java.util.List)
             {
                 for (Item elem : (java.util.List<Item>)item)
@@ -350,10 +419,21 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             }
             
         }
+        
+        /**
+         * Deshacemos los cambios.
+         */
         super.lastNode = temporal;
+        /**
+         * Si llegamos aquí es porque no hemos conseguido encajarlo en ninguna parte.
+         */
         return false;
     }
     
+    /**
+     * Es como el next, pero hacia atrás.
+     * @return
+     */
     @Override
     public Object previous()
     {
@@ -449,6 +529,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         throw new UnsupportedOperationException("Probably you need a BackwardTokenIterator ;)");
     }
 
+    @Override
     public Object next() 
     {
         return this.nextObject();
