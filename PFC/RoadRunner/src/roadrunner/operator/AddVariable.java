@@ -6,7 +6,9 @@ import roadrunner.utils.Mismatch;
 import roadrunner.utils.Wrapper;
 import roadrunner.utils.Repair;
 import roadrunner.*;
+import roadrunner.iterator.BackwardTokenIterator;
 import roadrunner.iterator.EdibleIterator;
+import roadrunner.iterator.ForwardTokenIterator;
 import roadrunner.iterator.webPageBackwardIterator;
 import roadrunner.iterator.webPageForwardIterator;
 import roadrunner.node.Item;
@@ -51,9 +53,19 @@ public class AddVariable extends IOperator
             Sample s = (Sample) m.getSample();
             EdibleIterator it;
             if(d == DirectionOperator.DOWNWARDS)
-                it = s.iterator(webPageForwardIterator.class);
+            {
+                if(s instanceof Sample) 
+                    it = s.iterator(webPageForwardIterator.class);
+                else
+                    it = s.iterator(ForwardTokenIterator.class);
+            }
             else
-                it = s.iterator(webPageBackwardIterator.class);
+            {
+                if(s instanceof Sample) 
+                    it = s.iterator(webPageBackwardIterator.class);
+                else
+                    it = s.iterator(BackwardTokenIterator.class);
+            }
             
             it.goTo(t);
             

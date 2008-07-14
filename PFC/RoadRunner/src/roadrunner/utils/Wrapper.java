@@ -159,9 +159,19 @@ public class Wrapper implements Edible{
                         //Calculamos las bifurcaciones con un nuevo iterador:
                         EdibleIterator ited;
                         if(DirectionOperator.DOWNWARDS == d)
-                            ited = e.iterator(webPageForwardIterator.class);
+                        {
+                            if(e instanceof Sample) 
+                                ited = e.iterator(webPageForwardIterator.class);
+                            else
+                                ited = e.iterator(ForwardTokenIterator.class);
+                        }
                         else
-                            ited = e.iterator(webPageBackwardIterator.class);
+                        {
+                            if(e instanceof Sample) 
+                                ited = e.iterator(webPageBackwardIterator.class);
+                            else
+                                ited = e.iterator(BackwardTokenIterator.class);
+                        }
                         
                         ited.goTo((Item)ways);
                         Object caminos = ited.next();
@@ -342,12 +352,18 @@ public class Wrapper implements Edible{
         if(DirectionOperator.DOWNWARDS == d)
         {
             itWrapper = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
-            itSample = e.iterator(webPageForwardIterator.class);
+            if(e instanceof Sample) 
+                itSample = e.iterator(webPageForwardIterator.class);
+            else
+                itSample = e.iterator(ForwardTokenIterator.class);
         }
         else if(DirectionOperator.UPWARDS == d)
         {
             itWrapper = (EdibleIterator) treeWrapper.iterator(BackwardTokenIterator.class);
-            itSample = e.iterator(webPageBackwardIterator.class);
+            if(e instanceof Sample) 
+                itSample = e.iterator(webPageBackwardIterator.class);
+            else
+                itSample = e.iterator(BackwardTokenIterator.class);
         }
  
         //Nos colocamos para empezar a comer:
@@ -404,9 +420,19 @@ public class Wrapper implements Edible{
                         //Calculamos las bifurcaciones con un nuevo iterador:
                         EdibleIterator ited;
                         if(DirectionOperator.DOWNWARDS == d)
-                            ited = e.iterator(webPageForwardIterator.class);
+                        {
+                            if(e instanceof Sample) 
+                                ited = e.iterator(webPageForwardIterator.class);
+                            else
+                                ited = e.iterator(ForwardTokenIterator.class);
+                        }
                         else
-                            ited = e.iterator(webPageBackwardIterator.class);
+                        {
+                            if(e instanceof Sample) 
+                                ited = e.iterator(webPageBackwardIterator.class);
+                            else
+                                ited = e.iterator(BackwardTokenIterator.class);
+                        }
                         
                         ited.goTo((Item)ways);
                         Object caminos = ited.next();

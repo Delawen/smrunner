@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import roadrunner.iterator.EdibleIterator;
+import roadrunner.iterator.ForwardTokenIterator;
 import roadrunner.iterator.webPageForwardIterator;
 import static org.junit.Assert.*;
 import roadrunner.node.*;
@@ -99,7 +100,13 @@ public class WrapperTest
     public void eatSquare() {
         System.out.println("eatSquare");
         Edible e = new Sample("test/roadrunner/utils/sample1.html");
-        EdibleIterator it = (EdibleIterator) e.iterator(webPageForwardIterator.class);
+        
+        EdibleIterator it;
+        if(e instanceof Sample) 
+            it = e.iterator(webPageForwardIterator.class);
+        else
+            it = e.iterator(ForwardTokenIterator.class);
+        
         it.next();
         Item t = (Item) it.next();
         DirectionOperator d = DirectionOperator.DOWNWARDS;
