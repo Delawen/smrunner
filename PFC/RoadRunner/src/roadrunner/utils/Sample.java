@@ -166,7 +166,7 @@ public class Sample implements Edible{
                 t = (Token) it.next();
                 if(t instanceof Tag && ((Tag)t).isOpenTag())
                     openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
                         openTags.pop();
                 else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;
@@ -181,7 +181,7 @@ public class Sample implements Edible{
                 t = (Token) it.next();
                 if(t instanceof Tag && ((Tag)t).isOpenTag())
                     openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                else if (t instanceof Tag && ((Tag)t).isCloseTag()  && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
                         openTags.pop();
                 else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;
