@@ -355,7 +355,6 @@ public class Wrapper implements Edible{
         itSample.goTo(t);
         
         Item itemWrapper = null;
-        Token token = null;
 
         /*mientras no se produzca un mismatch y no me coma entero el sample o el wrapper*/
         while(itSample.hasNext() && itWrapper.hasNext() && m==null)

@@ -8,7 +8,20 @@ import roadrunner.node.*;
 
 public class ForwardTokenIterator extends ForwardIterator<Item> implements EdibleIterator
 {
+    /**
+     * Sirve para guardar los resultados del isNext por si acaso falla, 
+     * no tener que repetir las operaciones otra vez en el siguiente isNext.
+     * Se borra cuando se avanza.
+     */
     private LinkedList<Item> cache = null;
+    
+    /**
+     * Este item se utiliza sólo cuando se usa un goTo o un previous. 
+     * Sirve para distinguir el next exacto cuando hay varios caminos. 
+     * Nótese que el camino siempre se calcula desde el nodo anterior,
+     * así que cuando hay varios caminos es la única forma de saber 
+     * por cual tenemos que ir.
+     */
     private SMTreeNode<Item> next;
     
     
@@ -17,10 +30,19 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         super();
     }
 
+    /**
+     * Calcula los posibles caminos siguientes al nodo actual.
+     * Sirve tanto para el isNext() como para cuando se llama directamente.
+     * 
+     * @return siguiente objeto o lista de siguientes caminos
+     */
     @Override
     public Object nextObject()
     {
-        //Para cuando hacemos un goTo con varios caminos:
+        /**
+         * Si tenemos el next, no hace falta calcularlo,
+         * ya sabemos por dónde tenemos que ir.
+         */
         if(next != null)
         {
             super.lastNode = next;
@@ -29,77 +51,154 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             return super.lastNode.getObject();
         }
         
-        //Inicialización:
+        /**
+         * Inicialización.
+         * Si es el primer movimiento del iterador.
+         * No tenemos nodo anterior, pero tenemos raiz del iterador
+         */
         if(super.lastNode == null && super.getRootIterator()!=null)
             super.lastNode = getRootIterator();
 
         
-        //Limpiamos la cache porque nos vamos a mover:
+        /**
+         * Limpiamos la cache porque nos vamos a mover
+         * (es un next(), no un isNext()).
+         */
         cache = null;
         
-        
+        /**
+         * Calculamos el siguiente en función del último item recorrido:
+         */
         Item item = super.lastNode.getObject();
         
-        
+        /**
+         * Si estamos en un opcional, podemos o introducirnos en el opcional, o devolver el siguiente al opcional.
+         */
         if(item instanceof Optional)
         {
+            /**
+             * Por regla general tendremos dos caminos, a no ser que sea el último item hoja del Wrapper.
+             */
             LinkedList<Item> resultado = new LinkedList<Item>();
             
-            //Buscamos el siguiente (nextObject)
+            /**
+             * Buscamos el siguiente (nextObject)
+             */
+            
+            /**
+             * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual 
+             * para poder volver si fuese necesario.
+             */
             SMTreeNode<Item> nodo = super.lastNode;
+            
+            /**
+             * Este bucle detecta si el item es el último del opcional (no tiene siguiente)
+             * Va subiendo al padre hasta encontrar el camino a seguir hacia delante.
+             */
             while(nodo.getNext() == null && nodo.getParent() != null)
             {
                 nodo = nodo.getParent();
+                
+                /**
+                 * Si nos encontramos una lista por el camino, es que acabamos de salir de ella.
+                 */
                 if(nodo.getObject() instanceof List)
                     ((List)nodo.getObject()).setAccessed(true);
             }
+            
+            /**
+             * Si hay un next después de subir en el bucle anterior, 
+             * es que hay un item después del opcional.
+             * Si no lo hubiera es porque es el último item del Wrapper.
+             */
             if(nodo.getNext() != null)
                 resultado.add((Item)nodo.getNext().getObject());
             
-            //Buscamos el primer hijo (principio del opcional)
+            /**
+             * Buscamos el primer hijo (principio del opcional)
+             * Esta comprobación nunca debería saltar si el Wrapper se forma correctamente.
+             */
             if(super.lastNode.getFirstChild() == null)
                 throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
             resultado.add((Item)super.lastNode.getFirstChild().getObject());
 
+            /**
+             * Vamos hacia delante con el SMTreeNode<Item> nodo que guardamos antes.
+             */
             super.lastNode = nodo;
             return resultado;
         }
+         /**
+         * Si estamos en una lista, podemos o introducirnos en la lista, o devolver el siguiente a la lista.
+         */
         else if(item instanceof List)
         {
+            /**
+             * De nuevo tenemos varios caminos.
+             */
             LinkedList<Item> resultado = new LinkedList<Item>();
+            
+            /**
+             * Esta vez empezamos introduciendo el primer hijo de la lista.
+             * Esto es para el Mismatch, que es más lógico así.
+             */
             if(super.lastNode.getFirstChild() == null)
                 throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
             resultado.add((Item)super.lastNode.getFirstChild().getObject());
             
-            //Si es el hijo de donde estamos, entonces es la primera vez que entramos
+            /**
+             * Si este hijo es una lista, no hemos entrado en este recorrido.
+             */
             if(super.lastNode.getFirstChild().getObject() instanceof List)
                 ((List)super.lastNode.getFirstChild().getObject()).setAccessed(false);
             
-            if((item instanceof List && ((List)item).isAccessed()) || item instanceof Optional)
+            /**
+             * Si el nodo en el que estamos (item) ya ha sido accedido, podemos saltarnos la lista 
+             * hasta el siguiente item.
+             */
+            if(((List)item).isAccessed())
             {
-
+                /**
+                 * Vamos buscando el siguiente, subiendo si hace falta, como antes
+                 */
                 SMTreeNode<Item> nodo = super.lastNode;
 
                 while(nodo.getNext() == null)
                 {
                     nodo = nodo.getParent();
-                    //Estamos subiendo porque no había un hermano, por tanto,
-                    //si subimos y encontramos que el padre es una lista 
-                    //es porque ya habíamos entrado en ella
+                    /**
+                     * Estamos subiendo porque no había un hermano, por tanto,
+                     * si subimos y encontramos que el padre es una lista 
+                     * es porque ya habíamos entrado en ella
+                     **/
                     if(nodo.getObject() instanceof List)
                         ((List)nodo.getObject()).setAccessed(true);
                 }
-                //Si es el hermano de donde estamos, entonces es la primera vez que entramos
+                
+                /**
+                 * Si el siguiente a la lista es otra lista, esta no 
+                 * ha sido accedida todavía.
+                 */
                if(nodo.getNext() != null && (nodo.getNext().getObject() instanceof List))
                     ((List)nodo.getNext().getObject()).setAccessed(false);
 
                 resultado.add((Item)nodo.getNext().getObject());
             }
+            
+            /**
+             * Esta vez vamos hacia delante pero entrando en el hijo.
+             */
             super.lastNode = super.lastNode.getFirstChild();
             return resultado;
         }
+        /**
+         * En verdad este caso sólo se debería de dar en el inicio
+         */
         else if(item instanceof Tuple)
         {
+            /**
+             * Vamos al primer hijo
+             */
             super.lastNode = super.lastNode.getFirstChild();
             
             //Si es el hijo de una tupla es porque es la primera vez que entramos
@@ -107,6 +206,9 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 ((List)super.lastNode.getObject()).setAccessed(false);
             return super.lastNode.getObject();
         }
+        /**
+         * Este será el caso más común 
+         */
         else if(item instanceof Token)
         {
             //Buscamos el siguiente
