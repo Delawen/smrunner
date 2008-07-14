@@ -375,7 +375,7 @@ public class Wrapper implements Edible{
                     else if(next instanceof Token)//Un único camino:
                         itemWrapper = (Token)next;
                     else
-                        throw new ClassCastException("El next del wrapper devolvió un tipo extraño.");
+                        throw new ClassCastException("El next del wrapper devolvió un tipo extraño: " + next.getClass().getName());
 
                     m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
                 }
