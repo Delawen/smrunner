@@ -107,152 +107,163 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             else
             {
                 /**
-                 * Si no era un compositeItem, está claro:
+                 * Si no era un compositeItem, seguimos adelante
                  */
                 super.lastNode = super.lastNode.getPrevious();
-                return super.lastNode.getObject();
             }
         }
-        
         
         /**
-         * Si estamos en un opcional, podemos o introducirnos en el opcional, o devolver el siguiente al opcional.
-         * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
-         * la llamada del método.
+         * Por regla general tendremos varios caminos, a no ser que sea el último item hoja del Wrapper.
          */
-        if(item instanceof Optional)
+        LinkedList<SMTreeNode<Item>> resultado = new LinkedList<SMTreeNode<Item>>();
+        resultado.add(super.lastNode);
+        
+        /**
+         * Recorremos la lista de resultados hasta que no queden CompositeItems:
+         */
+        while(tieneCompositeItem(resultado))
         {
             /**
-             * Por regla general tendremos dos caminos, a no ser que sea el último item hoja del Wrapper.
+             * Nos vamos al primer resultado con hijos:
              */
-            LinkedList<Item> resultado = new LinkedList<Item>();
-            
-            /**
-             * Buscamos el siguiente (nextObject)
-             */
-            
-            /**
-             * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual 
-             * para poder volver si fuese necesario.
-             */
-            SMTreeNode<Item> nodo = super.lastNode;
-            
-            /**
-             * Este bucle detecta si el item es el último del opcional (no tiene siguiente)
-             * Va subiendo al padre hasta encontrar el camino a seguir hacia delante.
-             */
-            while(nodo.getPrevious() == null && nodo.getParent() != null)
+            int k = 0;
+            for(SMTreeNode<Item> n : resultado)
             {
-                nodo = nodo.getParent();
-                
-                /**
-                 * Si nos encontramos una lista por el camino, es que acabamos de salir de ella.
-                 */
-                if(nodo.getObject() instanceof List)
-                    ((List)nodo.getObject()).setAccessed(true);
+                if(n.getObject() instanceof CompositeItem)
+                {
+                    item = resultado.remove(k).getObject();
+                    super.lastNode = n;
+                    break;
+                }
+                k++;
             }
             
-            /**
-             * Si hay un next después de subir en el bucle anterior, 
-             * es que hay un item después del opcional.
-             * Si no lo hubiera es porque es el último item del Wrapper.
-             */
-            if(nodo.getPrevious() != null)
-                resultado.add((Item)nodo.getPrevious().getObject());
             
             /**
-             * Buscamos el primer hijo (principio del opcional)
-             * Esta comprobación nunca debería saltar si el Wrapper se forma correctamente.
+             * Si estamos en un opcional, podemos o introducirnos en el opcional, o devolver el siguiente al opcional.
+             * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
+             * la llamada del método.
              */
-            if(super.lastNode.getLastChild() == null)
-                throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
-            resultado.add((Item)super.lastNode.getLastChild().getObject());
-
-            /**
-             * Vamos hacia delante con el SMTreeNode<Item> nodo que guardamos antes.
-             */
-            super.lastNode = nodo;
-            return resultado;
-        }
-         /**
-         * Si estamos en una lista, podemos o introducirnos en la lista, o devolver el siguiente a la lista.
-         */
-        else if(item instanceof List)
-        {
-            /**
-             * De nuevo tenemos varios caminos.
-             */
-            LinkedList<Item> resultado = new LinkedList<Item>();
-            
-            /**
-             * Esta vez empezamos introduciendo el primer hijo de la lista.
-             * Esto es para el Mismatch, que es más lógico así.
-             */
-            if(super.lastNode.getLastChild() == null)
-                throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
-            resultado.add((Item)super.lastNode.getLastChild().getObject());
-            
-            /**
-             * Si este hijo es una lista, no hemos entrado en este recorrido.
-             */
-            if(super.lastNode.getLastChild().getObject() instanceof List)
-                ((List)super.lastNode.getLastChild().getObject()).setAccessed(false);
-            
-            /**
-             * Si el nodo en el que estamos (item) ya ha sido accedido, podemos saltarnos la lista 
-             * hasta el siguiente item.
-             */
-            if(((List)item).isAccessed())
+            if(item instanceof Optional)
             {
                 /**
-                 * Vamos buscando el siguiente, subiendo si hace falta, como antes
+                 * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual 
+                 * para poder volver si fuese necesario.
                  */
                 SMTreeNode<Item> nodo = super.lastNode;
 
-                while(nodo.getPrevious() == null)
+                /**
+                 * Este bucle detecta si el item es el último del opcional (no tiene siguiente)
+                 * Va subiendo al padre hasta encontrar el camino a seguir hacia delante.
+                 */
+                while(nodo.getPrevious() == null && nodo.getParent() != null)
                 {
                     nodo = nodo.getParent();
+
                     /**
-                     * Estamos subiendo porque no había un hermano, por tanto,
-                     * si subimos y encontramos que el padre es una lista 
-                     * es porque ya habíamos entrado en ella
-                     **/
+                     * Si nos encontramos una lista por el camino, es que acabamos de salir de ella.
+                     */
                     if(nodo.getObject() instanceof List)
                         ((List)nodo.getObject()).setAccessed(true);
                 }
-                
-                /**
-                 * Si el siguiente a la lista es otra lista, esta no 
-                 * ha sido accedida todavía.
-                 */
-               if(nodo.getPrevious() != null && (nodo.getPrevious().getObject() instanceof List))
-                    ((List)nodo.getPrevious().getObject()).setAccessed(false);
 
-                resultado.add((Item)nodo.getPrevious().getObject());
+                /**
+                 * Si hay un next después de subir en el bucle anterior, 
+                 * es que hay un item después del opcional.
+                 * Si no lo hubiera es porque es el último item del Wrapper.
+                 */
+                if(nodo.getPrevious() != null)
+                    resultado.add(k, nodo.getPrevious());
+
+                /**
+                 * Buscamos el primer hijo (principio del opcional)
+                 * Esta comprobación nunca debería saltar si el Wrapper se forma correctamente.
+                 */
+                if(super.lastNode.getLastChild() == null)
+                    throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
+                resultado.add(k+1, super.lastNode.getLastChild());
             }
-            
-            /**
-             * Esta vez vamos hacia delante pero entrando en el hijo.
+             /**
+             * Si estamos en una lista, podemos o introducirnos en la lista, o devolver el siguiente a la lista.
              */
-            super.lastNode = super.lastNode.getLastChild();
-            return resultado;
-        }
-        /**
-         * En verdad este caso sólo se debería de dar en el inicio
-         */
-        else if(item instanceof Tuple)
-        {
+            else if(item instanceof List)
+            {            
+                /**
+                 * Esta vez empezamos introduciendo el primer hijo de la lista.
+                 * Esto es para el Mismatch, que es más lógico así.
+                 */
+                if(super.lastNode.getLastChild() == null)
+                    throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
+                resultado.add(k, super.lastNode.getLastChild());
+
+                /**
+                 * Si este hijo es una lista, no hemos entrado en este recorrido.
+                 */
+                if(super.lastNode.getLastChild().getObject() instanceof List)
+                    ((List)super.lastNode.getLastChild().getObject()).setAccessed(false);
+
+                /**
+                 * Si el nodo en el que estamos (item) ya ha sido accedido, podemos saltarnos la lista 
+                 * hasta el siguiente item.
+                 */
+                if(((List)item).isAccessed())
+                {
+                    /**
+                     * Vamos buscando el siguiente, subiendo si hace falta, como antes
+                     */
+                    SMTreeNode<Item> nodo = super.lastNode;
+
+                    while(nodo.getPrevious() == null)
+                    {
+                        nodo = nodo.getParent();
+                        /**
+                         * Estamos subiendo porque no había un hermano, por tanto,
+                         * si subimos y encontramos que el padre es una lista 
+                         * es porque ya habíamos entrado en ella
+                         **/
+                        if(nodo.getObject() instanceof List)
+                            ((List)nodo.getObject()).setAccessed(true);
+                    }
+
+                    /**
+                     * Si el siguiente a la lista es otra lista, esta no 
+                     * ha sido accedida todavía.
+                     */
+                   if(nodo.getPrevious() != null && (nodo.getPrevious().getObject() instanceof List))
+                        ((List)nodo.getPrevious().getObject()).setAccessed(false);
+
+                    resultado.add(k+1, nodo.getPrevious());
+                }
+            }
             /**
-             * Vamos al primer hijo
+             * En verdad este caso sólo se debería de dar en el inicio
              */
-            super.lastNode = super.lastNode.getLastChild();
-            
-            //Si es el hijo de una tupla es porque es la primera vez que entramos
-            if(super.lastNode.getObject() instanceof List)
-                ((List)super.lastNode.getObject()).setAccessed(false);
-            return super.lastNode.getObject();
+            else if(item instanceof Tuple)
+            {
+                super.lastNode = super.lastNode.getLastChild();
+                item = super.lastNode.getObject();
+                //Si una lista es el hijo de una tupla es porque es la primera vez que entramos
+                if(item instanceof List)
+                    ((List)item).setAccessed(false);
+                resultado.add(k, super.lastNode);
+            }
         }
         
+        if(resultado.size() > 1)
+        {
+            super.lastNode = resultado.getFirst();
+            LinkedList<Item> items = new LinkedList<Item>();
+            for(SMTreeNode<Item> n : resultado)
+                items.add(n.getObject());
+            return items;
+        }
+        
+        if(resultado.size() == 1)
+        {
+            super.lastNode = resultado.getFirst();
+            return resultado.getFirst().getObject();
+        }
         /**
          * Aquí ha pasado algo que no debería:
          */
@@ -438,69 +449,45 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     public Object previous()
     {
         
-        //Inicialización:
-        if(super.lastNode == null && super.getRootIterator()!=null)
-            return null;
-
-        //Limpiamos la cache porque nos vamos a mover:
-        cache = null;
-        
         //El nextObject será el nodo en el que estamos ahora:
         next = super.lastNode;
         
+        /**
+         * Inicialización.
+         * Si es el primer movimiento del iterador.
+         * No tenemos nodo anterior, pero tenemos raiz del iterador
+         */
+        if(super.lastNode == null && super.getRootIterator()!=null)
+            super.lastNode = getRootIterator();
+
+        
+        /**
+         * Limpiamos la cache porque nos vamos a mover
+         * (es un next(), no un isNext()).
+         */
+        cache = null;
+        
+        /**
+         * Calculamos el siguiente en función del último item recorrido:
+         */
         Item item = super.lastNode.getObject();
         
-        if(item instanceof Optional || item instanceof List)
+        
+        /**
+         * Este será el caso más común 
+         */
+        if(item instanceof Token)
         {
-            LinkedList<Item> resultado = new LinkedList<Item>();
-            if(super.lastNode.getFirstChild() == null)
-                throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
-            resultado.add((Item)super.lastNode.getFirstChild().getObject());
-            
-            //Si es el hijo de donde estamos, entonces es la primera vez que entramos
-            if(super.lastNode.getLastChild().getObject() instanceof List)
-                ((List)super.lastNode.getLastChild().getObject()).setAccessed(false);
-            
-                        
-            if((item instanceof List && ((List)item).isAccessed()) || item instanceof Optional)
-            {
-
-                SMTreeNode<Item> nodo = super.lastNode;
-                while(nodo.getNext() == null)
-                {
-                    nodo = nodo.getParent();
-                    //Estamos subiendo porque no había un hermano, por tanto,
-                    //si subimos y encontramos que el padre es una lista 
-                    //es porque ya habíamos entrado en ella
-                    if(nodo.getObject() instanceof List)
-                        ((List)nodo.getObject()).setAccessed(true);
-                }
-                //Si es el hermano de donde estamos, entonces es la primera vez que entramos
-                if(nodo.getPrevious() != null && (nodo.getPrevious().getObject() instanceof List))
-                    ((List)nodo.getPrevious().getObject()).setAccessed(false);
-
-                resultado.add((Item)nodo.getNext().getObject());
-            super.lastNode = super.lastNode.getFirstChild();
-            }
-            return resultado;
-        }
-        else if(item instanceof Tuple)
-        {
-            super.lastNode = super.lastNode.getFirstChild();
-            //Si es el hijo de una tupla es porque es la primera vez que entramos
-            if(super.lastNode.getObject() instanceof List)
-                ((List)super.lastNode.getObject()).setAccessed(false);
-
-            return super.lastNode.getObject();
-        }
-        else if(item instanceof Token)
-        {
+            /**
+             * Buscamos el siguiente, subiendo al padre si es necesario
+             */
             while(super.lastNode.getNext() == null)
             {
+                //Si el padre es nulo es que estamos en la raiz
                 if(super.lastNode.getParent() == null)
                     return null;
                 super.lastNode = super.lastNode.getParent();
-                
+               
                 //Estamos subiendo porque no había un hermano, por tanto...
                 //si subimos y encontramos que el padre es una lista 
                 //es porque ya habíamos entrado en ella
@@ -508,31 +495,201 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                     ((List)super.lastNode.getObject()).setAccessed(true);
             }
             
+            /**
+             * Ahora comprobamos si el item que tenemos aquí es un compositeItem (varios caminos)
+             */
             if(super.lastNode.getObject() instanceof List || super.lastNode.getObject() instanceof Optional)
             {
-                java.util.List<Item> resultado = new LinkedList<Item>();
-                resultado.add((Item)super.lastNode.getNext().getObject());
-                resultado.add((Item)super.lastNode.getFirstChild().getObject());
-                super.lastNode = super.lastNode.getNext();
-                return resultado;
+                /**
+                 * Lo preparamos para los siguientes if
+                 */
+                item = super.lastNode.getObject();
             }
-            
-            super.lastNode = super.lastNode.getNext();
-            return super.lastNode.getObject();
+            else
+            {
+                /**
+                 * Si no era un compositeItem, seguimos adelante
+                 */
+                super.lastNode = super.lastNode.getNext();
+            }
         }
         
+        /**
+         * Por regla general tendremos varios caminos, a no ser que sea el último item hoja del Wrapper.
+         */
+        LinkedList<SMTreeNode<Item>> resultado = new LinkedList<SMTreeNode<Item>>();
+        resultado.add(super.lastNode);
+        
+        /**
+         * Recorremos la lista de resultados hasta que no queden CompositeItems:
+         */
+        while(tieneCompositeItem(resultado))
+        {
+            /**
+             * Nos vamos al primer resultado con hijos:
+             */
+            int k = 0;
+            for(SMTreeNode<Item> n : resultado)
+            {
+                if(n.getObject() instanceof CompositeItem)
+                {
+                    item = resultado.remove(k).getObject();
+                    super.lastNode = n;
+                    break;
+                }
+                k++;
+            }
+            
+            
+            /**
+             * Si estamos en un opcional, podemos o introducirnos en el opcional, o devolver el siguiente al opcional.
+             * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
+             * la llamada del método.
+             */
+            if(item instanceof Optional)
+            {
+                /**
+                 * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual 
+                 * para poder volver si fuese necesario.
+                 */
+                SMTreeNode<Item> nodo = super.lastNode;
+
+                /**
+                 * Este bucle detecta si el item es el último del opcional (no tiene siguiente)
+                 * Va subiendo al padre hasta encontrar el camino a seguir hacia delante.
+                 */
+                while(nodo.getNext() == null && nodo.getParent() != null)
+                {
+                    nodo = nodo.getParent();
+
+                    /**
+                     * Si nos encontramos una lista por el camino, es que acabamos de salir de ella.
+                     */
+                    if(nodo.getObject() instanceof List)
+                        ((List)nodo.getObject()).setAccessed(true);
+                }
+
+                /**
+                 * Si hay un next después de subir en el bucle anterior, 
+                 * es que hay un item después del opcional.
+                 * Si no lo hubiera es porque es el último item del Wrapper.
+                 */
+                if(nodo.getNext() != null)
+                    resultado.add(k, nodo.getNext());
+
+                /**
+                 * Buscamos el primer hijo (principio del opcional)
+                 * Esta comprobación nunca debería saltar si el Wrapper se forma correctamente.
+                 */
+                if(super.lastNode.getFirstChild() == null)
+                    throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
+                resultado.add(k+1, super.lastNode.getFirstChild());
+            }
+             /**
+             * Si estamos en una lista, podemos o introducirnos en la lista, o devolver el siguiente a la lista.
+             */
+            else if(item instanceof List)
+            {            
+                /**
+                 * Esta vez empezamos introduciendo el primer hijo de la lista.
+                 * Esto es para el Mismatch, que es más lógico así.
+                 */
+                if(super.lastNode.getFirstChild() == null)
+                    throw new RuntimeException("El arbol está mal formado, hay un compositeItem sin hijos.");
+                resultado.add(k, super.lastNode.getFirstChild());
+
+                /**
+                 * Si este hijo es una lista, no hemos entrado en este recorrido.
+                 */
+                if(super.lastNode.getFirstChild().getObject() instanceof List)
+                    ((List)super.lastNode.getFirstChild().getObject()).setAccessed(false);
+
+                /**
+                 * Si el nodo en el que estamos (item) ya ha sido accedido, podemos saltarnos la lista 
+                 * hasta el siguiente item.
+                 */
+                if(((List)item).isAccessed())
+                {
+                    /**
+                     * Vamos buscando el siguiente, subiendo si hace falta, como antes
+                     */
+                    SMTreeNode<Item> nodo = super.lastNode;
+
+                    while(nodo.getNext() == null)
+                    {
+                        nodo = nodo.getParent();
+                        /**
+                         * Estamos subiendo porque no había un hermano, por tanto,
+                         * si subimos y encontramos que el padre es una lista 
+                         * es porque ya habíamos entrado en ella
+                         **/
+                        if(nodo.getObject() instanceof List)
+                            ((List)nodo.getObject()).setAccessed(true);
+                    }
+
+                    /**
+                     * Si el siguiente a la lista es otra lista, esta no 
+                     * ha sido accedida todavía.
+                     */
+                   if(nodo.getNext() != null && (nodo.getNext().getObject() instanceof List))
+                        ((List)nodo.getNext().getObject()).setAccessed(false);
+
+                    resultado.add(k+1, nodo.getNext());
+                }
+            }
+            /**
+             * En verdad este caso sólo se debería de dar en el inicio
+             */
+            else if(item instanceof Tuple)
+            {
+                super.lastNode = super.lastNode.getFirstChild();
+                item = super.lastNode.getObject();
+                //Si una lista es el hijo de una tupla es porque es la primera vez que entramos
+                if(item instanceof List)
+                    ((List)item).setAccessed(false);
+                resultado.add(k, super.lastNode);
+            }
+        }
+        
+        if(resultado.size() > 1)
+        {
+            super.lastNode = resultado.getFirst();
+            LinkedList<Item> items = new LinkedList<Item>();
+            for(SMTreeNode<Item> n : resultado)
+                items.add(n.getObject());
+            return items;
+        }
+        
+        if(resultado.size() == 1)
+        {
+            super.lastNode = resultado.getFirst();
+            return resultado.getFirst().getObject();
+        }
+        /**
+         * Aquí ha pasado algo que no debería:
+         */
         return null;
     }
     
     public boolean isPrevious()
     {
-        throw new UnsupportedOperationException("Probably you need a BackwardTokenIterator ;)");
+        throw new UnsupportedOperationException("Probably you need a ForwardTokenIterator ;)");
     }
 
     @Override
     public Object next() 
     {
         return this.nextObject();
+    }
+
+    private boolean tieneCompositeItem(LinkedList<SMTreeNode<Item>> lista) 
+    {
+        for(SMTreeNode<Item> nodo : lista)
+        {
+            if(nodo.getObject() instanceof CompositeItem)
+                return true;
+        }
+        return false;
     }
 
 }
