@@ -445,39 +445,9 @@ public class Wrapper implements Edible{
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado, 
          * entonces lanzamos otro mismatch
          */
-        if(m == null)
+        if(m == null && (itWrapper.hasNext() ||itSample.hasNext()))
         {
-            if(itWrapper.hasNext())
-            {
-                token = (Token)itSample.next();
-                if(token instanceof DOF)
-                {
-                    Object items = itWrapper.next();
-                    if(items instanceof Item)
-                        itemWrapper = (Item)items;
-                    else
-                        itemWrapper = ((java.util.List<Item>)items).get(0);
-
-                    m = new Mismatch(this, e, itemWrapper, token);
-                }
-                else
-                    throw new RuntimeException("El sample terminó y no era un EOF.");
-            }
-            else if(itSample.hasNext())
-            {
-                itemWrapper = (Token)itWrapper.next();
-                if(itemWrapper instanceof DOF)
-                {
-                    Object items = itSample.next();
-                    if(items instanceof Token)
-                        token = (Token)items;
-                    else
-                        token = (Token)((java.util.List<Item>)items).get(0);
-                    m = new Mismatch(this, e, itemWrapper,token);
-                }
-                else
-                    throw new RuntimeException("El wrapper terminó y no era un EOF.");
-            }
+           throw new RuntimeException("Se ha liado con los DOF. Probablemente el isNext() está fallando.");
         }
         
         return m;

@@ -20,9 +20,9 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     
     
     @Override
-    public Object nextObject()
+    public Object next()
     {
-        return next();
+        return nextObject();
     }    
     
     @Override
@@ -32,7 +32,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     }
     
     @Override
-    public Object next()
+    public Object nextObject()
     {
         //Para cuando hacemos un goTo con varios caminos:
         if(next != null)
@@ -84,8 +84,8 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             resultado.add((Item)super.lastNode.getLastChild().getObject());
             
             //Si es el hijo de donde estamos, entonces es la primera vez que entramos
-            if(super.lastNode.getFirstChild().getObject() instanceof List)
-                ((List)super.lastNode.getFirstChild().getObject()).setAccessed(false);
+            if(super.lastNode.getLastChild().getObject() instanceof List)
+                ((List)super.lastNode.getLastChild().getObject()).setAccessed(false);
             
             if((item instanceof List && ((List)item).isAccessed()) || item instanceof Optional)
             {
@@ -100,8 +100,8 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                         ((List)nodo.getObject()).setAccessed(true);
                 }
                 //Si es el hermano de donde estamos, entonces es la primera vez que entramos
-                if(nodo.getNext() != null && (nodo.getNext().getObject() instanceof List))
-                    ((List)nodo.getNext().getObject()).setAccessed(false);
+                if(nodo.getPrevious() != null && (nodo.getPrevious().getObject() instanceof List))
+                    ((List)nodo.getPrevious().getObject()).setAccessed(false);
 
                 resultado.add((Item)nodo.getPrevious().getObject());
             }
@@ -287,7 +287,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             resultado.add((Item)super.lastNode.getFirstChild().getObject());
             
             //Si es el hijo de donde estamos, entonces es la primera vez que entramos
-            if(super.lastNode.getFirstChild().getObject() instanceof List)
+            if(super.lastNode.getLastChild().getObject() instanceof List)
                 ((List)super.lastNode.getFirstChild().getObject()).setAccessed(false);
             
             if((item instanceof List && ((List)item).isAccessed()) || item instanceof Optional)
