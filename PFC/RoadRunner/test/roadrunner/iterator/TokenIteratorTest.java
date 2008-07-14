@@ -191,14 +191,13 @@ public class TokenIteratorTest {
         LinkedList<Item> resultado = (LinkedList) it.nextObject();
         assertEquals(resultado.size(), 2);
         assertEquals(resultado.getFirst(), actual.getLastChild().getPrevious().getObject());
-        assertEquals(resultado.getLast(), actual.getPrevious().getLastChild().getLastChild().getObject());
-        
+        System.out.println("-->" + resultado.getFirst());
+        assertEquals(resultado.getLast(), actual.getLastChild().getLastChild().getLastChild().getObject());
         
         //Comprueba que hay un unico camino correcto
-        resultado = (LinkedList<Item>) it.nextObject();
-        assertTrue(resultado.size() == 1);
-        assertEquals(resultado.getFirst(), actual.getLastChild().getObject());
-        System.out.println("-->" + actual.getLastChild().getObject());
+        Item i = (Item) it.nextObject();
+        assertEquals(i, actual.getFirstChild().getObject());
+        System.out.println("-->" + actual.getFirstChild().getObject());
         
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getLastChild().getObject());
@@ -209,25 +208,7 @@ public class TokenIteratorTest {
         //Comprueba que el opcional tiene dos caminos:
         resultado = (LinkedList<Item>) it.nextObject();
         assertTrue(resultado.size() == 2);
-        assertEquals(resultado.getLast(), actual.getLastChild().getObject());
-        System.out.println("-->" + actual.getLastChild().getObject());
-        assertEquals(resultado.getFirst(), actual.getPrevious().getObject());
-        System.out.println("-->" + actual.getPrevious().getObject());
-        
-        //Nos vamos por el primer camino:
-        it.goTo((Item)actual.getLastChild().getObject());
-        actual = actual.getLastChild();
-        Item i = (Item) it.nextObject();
-        assertTrue(i instanceof List);
-        assertEquals(i, actual.getObject());
-        System.out.println("repetimos (goto)-->" + actual.getObject());
-        
-        //Comprobamos que tambien la segunda lista tiene un único camino:
-        resultado = (LinkedList<Item>) it.nextObject();
-        assertTrue(resultado.size() == 1);
-        assertEquals(resultado.getFirst(), actual.getLastChild().getObject());
-        System.out.println("-->" + actual.getLastChild().getObject());
-        
+               
     }
 
     /**
