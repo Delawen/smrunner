@@ -148,7 +148,7 @@ public class AddList extends IOperator
             
             lastTokenSquare =  s.searchWellFormed(lastDelim, firstTokenSquare, d);
 
-            if(lastTokenSquare == null)
+            if(lastTokenSquare == null || lastTokenSquare == firstTokenSquare)
             {
                 rep.setState(StateRepair.FAILED);
                 return rep;
@@ -161,7 +161,7 @@ public class AddList extends IOperator
             Item whereEat;   
             itW.goTo(n);
             whereEat = lastTokenList;
-            Object whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.UPWARDS);
+            Object whatEaten = squareS.eatSquare(w, whereEat, DirectionOperator.UPWARDS);
             
             
             // para asegurarnos de que es un plus al menos tengo que comerme
@@ -177,19 +177,24 @@ public class AddList extends IOperator
                 firstTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.previous();
-                whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.UPWARDS);
+                whatEaten = squareS.eatSquare(w, whereEat, DirectionOperator.UPWARDS);
             }
                 
            // Ahora comemos hacia abajo en el sample
            itS.goTo(lastTokenSquare);
+           itS.next();
            whereEat = (Item) itS.next();
            whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.DOWNWARDS);
+           Item lastEatenSuccess = (Item) whatEaten;
             
-            while( whatEaten != null)
+            while(true)
             {
                 itS.goTo((Item) whatEaten);
                 whereEat = (Item) itS.next();
                 whatEaten = squareS.eatSquare(s, whereEat, DirectionOperator.DOWNWARDS);
+                if(whatEaten == null)
+                    break;
+                lastEatenSuccess =  (Item) whatEaten;
             }
            
             squareS.getTree().setRootObject(new List());
@@ -198,7 +203,8 @@ public class AddList extends IOperator
             rep.setFinalItem(lastTokenList);
             rep.setState(StateRepair.SUCESSFULL);
             rep.setToRepair((Wrapper) w);
-            itS.goTo((Item) whereEat);
+            itS.goTo((Item) lastEatenSuccess);
+            itS.next();
             rep.setIndexSample((Token) itS.next());
            
         }

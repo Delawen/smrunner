@@ -62,15 +62,15 @@ public class webPageBackwardIterator implements webPageIterator
     }
     public boolean goTo(Item t)
     {
-        if(!tokens.contains((Token)t))
-            return false;
-        
-        int index = tokens.lastIndexOf(t);
-        
-        this.it = tokens.listIterator(index+1);
-        
-        return true;
-/*
+//        if(!tokens.contains((Token)t))
+//            return false;
+//        
+//        int index = tokens.lastIndexOf(t);
+//        
+//        this.it = tokens.listIterator(index+1);
+//        
+//        return true;
+
         boolean result=false;
         
         it = tokens.listIterator();
@@ -86,7 +86,7 @@ public class webPageBackwardIterator implements webPageIterator
             }
         }
         return result;
- * */
+
     }
 
     public boolean hasNext() {

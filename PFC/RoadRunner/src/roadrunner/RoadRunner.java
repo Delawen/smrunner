@@ -113,6 +113,8 @@ public class RoadRunner {
                         throw new RuntimeException("I couldn't repair a mismatch.");
                     t = reparacion.getIndexSample();
                     n = reparacion.getReparator().getTree().getRootObject();
+                    if(n instanceof roadrunner.node.List)
+                        ((roadrunner.node.List)n).setAccessed(true);
                 }
                 else break; //Hemos terminado
             }

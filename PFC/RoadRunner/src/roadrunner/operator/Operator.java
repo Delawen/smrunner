@@ -42,13 +42,11 @@ public class Operator {
     public Repair repair(Mismatch m)
     {
     
-        IOperator operacion = this.getNextOperator();
+        IOperator operacion;
         Repair reparacion = new Repair(m);
-        while(operacion != null && reparacion.getState() != StateRepair.SUCESSFULL)
-        {
-            reparacion = operacion.apply(m, DirectionOperator.DOWNWARDS);
-            operacion = this.getNextOperator();
-        }
+        while((operacion = this.getNextOperator()) != null && reparacion.getState() != StateRepair.SUCESSFULL)
+            reparacion = operacion.apply(m, m.getDirection());
+            
         return reparacion;
     }
 }

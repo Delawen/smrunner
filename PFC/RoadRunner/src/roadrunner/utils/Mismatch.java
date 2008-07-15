@@ -3,6 +3,7 @@ package roadrunner.utils;
 import roadrunner.*;
 import roadrunner.node.Item; 
 import roadrunner.node.Token; 
+import roadrunner.operator.DirectionOperator;
 
 /**
  *  Class Mismatch
@@ -31,6 +32,8 @@ public class Mismatch {
     // #[regen=yes,id=DCE.6A751045-25EC-614F-CE2F-C0DF77F64B7A]
     // </editor-fold> 
     private Item node;
+    
+    private DirectionOperator direction;
 
     /**
      *  Constructors
@@ -43,13 +46,14 @@ public class Mismatch {
         super();
     }
 
-    Mismatch(Wrapper w, Edible s, Item next, Token token) 
+    Mismatch(Wrapper w, Edible s, Item next, Token token, DirectionOperator d) 
     {
         this();
         this.w = w;
         this.s = s;
         this.node = next;
         this.token = token;
+        this.direction = d;
     }
 
     /**
@@ -141,6 +145,14 @@ public class Mismatch {
     // </editor-fold> 
    public Item getNode () {
         return node;
+    }
+
+    public DirectionOperator getDirection() {
+        return direction;
+    }
+
+    public void setDirection(DirectionOperator direction) {
+        this.direction = direction;
     }
 
 }

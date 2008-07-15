@@ -99,15 +99,10 @@ public class Sample implements Edible{
             //Al ser un sample, sabemos que sólo hay un camino:
             token = (Token)itSample.next();
             
-            if(t.match(token))
-            {
-                if(isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
-                    break;
-                else
-                    token = null;
-            }
+            if(t.match(token) && isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
+                return token;
         }
-        return token;
+        return null;
     }
     
     private Token limpiar(XMLTokenizer.Token t)
@@ -304,15 +299,16 @@ public class Sample implements Edible{
         SMTreeNode<Item> rootNode = treeCloned.getNode(root);
         
         Iterator<Token> it = tokens.iterator();
-        while(it.hasNext() && !it.next().equals(firstTokenSquare))
-            it.next();
+        Item i = null;
+        while(it.hasNext() && !firstTokenSquare.equals(i))
+            i = it.next();
         
         while(it.hasNext())
         {
-            Item i = it.next();
+            treeCloned.addObject(i, rootNode, Kinship.CHILD);
             if(i.equals(lastTokenSquare))
                 break;
-            treeCloned.addObject(i, rootNode, Kinship.CHILD);
+            i = it.next();
         }
         return new Wrapper(treeCloned);
     }

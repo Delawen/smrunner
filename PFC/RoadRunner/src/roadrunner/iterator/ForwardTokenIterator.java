@@ -39,6 +39,15 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     @Override
     public Object nextObject()
     {
+        
+        /**
+         * Inicialización.
+         * Si es el primer movimiento del iterador.
+         * No tenemos nodo anterior, pero tenemos raiz del iterador
+         */
+        if(super.lastNode == null && super.getRootIterator()!=null)
+            super.lastNode = getRootIterator();
+
         /**
          * Si tenemos el next, no hace falta calcularlo,
          * ya sabemos por dónde tenemos que ir.
@@ -50,15 +59,6 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             cache = null;
             return super.lastNode.getObject();
         }
-        
-        /**
-         * Inicialización.
-         * Si es el primer movimiento del iterador.
-         * No tenemos nodo anterior, pero tenemos raiz del iterador
-         */
-        if(super.lastNode == null && super.getRootIterator()!=null)
-            super.lastNode = getRootIterator();
-
         
         /**
          * Limpiamos la cache porque nos vamos a mover
@@ -448,18 +448,21 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     @Override
     public Object previous()
     {
-        
-        //El nextObject será el nodo en el que estamos ahora:
-        next = super.lastNode;
-        
         /**
          * Inicialización.
          * Si es el primer movimiento del iterador.
          * No tenemos nodo anterior, pero tenemos raiz del iterador
          */
+        if(next != null)
+            super.lastNode = next;
+        
         if(super.lastNode == null && super.getRootIterator()!=null)
             super.lastNode = getRootIterator();
 
+        
+        
+        //El nextObject será el nodo en el que estamos ahora:
+        next = super.lastNode;
         
         /**
          * Limpiamos la cache porque nos vamos a mover
