@@ -8,7 +8,6 @@ import SMTree.utils.Enclosure;
 import SMTree.utils.Kinship;
 import SMTree.SMTree;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +65,7 @@ public class Sample implements Edible{
             for (IToken token : twp) 
             {
                 XMLTokenizer.Token t = (XMLTokenizer.Token) token;
-                if(!t.getText().equals("\n"))
+                if(!vacio(t.getText()))
                     tokens.add((Token) limpiar(t));
             }
 
@@ -204,8 +203,6 @@ public class Sample implements Edible{
     }
     public Wrapper getAsWrapper(Token from, Enclosure inclusionFrom, Token to, Enclosure inclusionTo, Item newParent)
     {
-        Wrapper w = null;
-        boolean success = false;
         SMTree<Item> tree = null;
         EdibleIterator it = new webPageForwardIterator();
         
@@ -258,6 +255,18 @@ public class Sample implements Edible{
         tree.addObject((Token)it.next(), tree.getRoot() , Kinship.CHILD);
         
         return new Wrapper(tree);
+    }
+
+    private boolean vacio(String text) 
+    {
+        String cadenas[] = {System.getProperty("line.separator"), " ", "\r", "\t", "\n"};
+        
+        for(String cadena:cadenas)
+            text = text.replaceAll(cadena, "");
+            
+        if(text.equals(""))
+            return true;
+        return false;
     }
     
     public interface webPageIterator extends EdibleIterator

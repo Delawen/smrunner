@@ -77,7 +77,7 @@ public class AddList extends IOperator
    
             lastTokenSquare =  w.searchWellFormed(lastDelim, firstTokenSquare, d);
 
-            if(lastTokenSquare == null)
+            if(lastTokenSquare == null || lastTokenSquare == firstTokenSquare)
             {
                 rep.setState(StateRepair.FAILED);
                 return rep;
