@@ -86,10 +86,7 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample3.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        Wrapper w = rr.process();
-        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
-        while(it.hasNext())
-            System.out.println(it.next());
+        rr.process();
 
     }
     

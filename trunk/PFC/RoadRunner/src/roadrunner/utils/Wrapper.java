@@ -125,7 +125,7 @@ public class Wrapper implements Edible{
                     else
                         throw new ClassCastException("El next del wrapper devolvió un tipo extraño.");
 
-                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
+                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken, d);
                     
                     op = new Operator();
                     Repair r = op.repair(m);
@@ -198,7 +198,7 @@ public class Wrapper implements Edible{
                     else
                         throw new ClassCastException("El next del wrapper devolvió un tipo extraño.");
 
-                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);                    
+                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken, d);                    
                     
                     op = new Operator();
                     Repair r = op.repair(m);
@@ -393,7 +393,7 @@ public class Wrapper implements Edible{
                     else
                         throw new ClassCastException("El next del wrapper devolvió un tipo extraño: " + next.getClass().getName());
 
-                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
+                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken, d);
                 }
             }
             else if(edibleToken instanceof java.util.List)//Vamos probando todos los caminos
@@ -459,7 +459,7 @@ public class Wrapper implements Edible{
                     else
                         throw new ClassCastException("El next del wrapper devolvió un tipo extraño.");
 
-                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken);
+                    m = new Mismatch(this, e, itemWrapper, (Token)edibleToken, d);
                 }
             }
             else 
@@ -504,17 +504,12 @@ public class Wrapper implements Edible{
             if(i instanceof Token)
             {
                 token = (Token) i;
-                if(token.match(t))
-                {
-                    if(isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
-                        break;
-                    else
-                        token = null;
-                }
-            }
+                if(token.match(t) && isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
+                    return token;
+            }            
         }
         
-        return token;
+        return null;
     }
     
     public EdibleIterator iterator (Class iteratorClass)
