@@ -19,7 +19,8 @@ public interface EdibleIterator
 {
     public boolean goTo (Item objeto);
     public boolean isNext (Item o);
-    public Object next();
+    public Object nextAll();
+    public Item next();
     public Object previous();
     public boolean hasNext();
     public void setRootIterator(SMTreeNode<Item> root);
