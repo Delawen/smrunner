@@ -7,6 +7,7 @@ package roadrunner.utils;
 
 import SMTree.SMTree;
 import SMTree.SMTreeNode;
+import SMTree.utils.Enclosure;
 import SMTree.utils.Kinship;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -158,7 +159,7 @@ public class WrapperTest
         Token t = new Tag("</li>");
         DirectionOperator d = DirectionOperator.DOWNWARDS;
         Token expResult = (Token) instance.getTree().getRoot().getFirstChild().getLastChild().getObject();
-        Token result = instance.searchWellFormed(t, from, d);
+        Token result = instance.searchWellFormed(t, Enclosure.ENCLOSED, from, Enclosure.ENCLOSED, d);
         assertEquals(expResult, result);
     }
 }
