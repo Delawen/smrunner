@@ -94,4 +94,8 @@ public class webPageForwardIterator implements webPageIterator
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public Object nextAll() {
+        return this.next();
+    }
+
 }

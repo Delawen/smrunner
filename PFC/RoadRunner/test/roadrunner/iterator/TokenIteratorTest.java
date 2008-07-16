@@ -6,7 +6,6 @@
 package roadrunner.iterator;
 
 import SMTree.*;
-import SMTree.iterator.SMTreeIterator;
 import SMTree.utils.*;
 import java.util.LinkedList;
 import org.junit.After;
@@ -113,7 +112,7 @@ public class TokenIteratorTest {
     @Test
     public void next_forward() {
         System.out.println("next forward");
-        SMTreeIterator<Item> it = arbol.iterator(ForwardTokenIterator.class);
+        ForwardTokenIterator it = (ForwardTokenIterator) arbol.iterator(ForwardTokenIterator.class);
         
         //actual irá recorriendo los nodos "manualmente" para comprobar si el iterador
         //devuelve lo que debe.
@@ -147,7 +146,7 @@ public class TokenIteratorTest {
         System.out.println("-->" + actual.getObject());
         
         //Comprueba que hay dos caminos y que son los correctos.
-        LinkedList<Item> resultado = (LinkedList<Item>) it.nextObject();
+        LinkedList<Item> resultado = (LinkedList<Item>) it.nextAll();
         assertTrue(resultado.size() == 2);
         actual = actual.getNext();
         assertEquals(resultado.getFirst(), actual.getParent().getNext().getObject());
@@ -176,7 +175,7 @@ public class TokenIteratorTest {
     public void next_backwards() {
     
         System.out.println("next backwards");
-        SMTreeIterator<Item> it = arbol.iterator(BackwardTokenIterator.class);
+        BackwardTokenIterator it = (BackwardTokenIterator) arbol.iterator(BackwardTokenIterator.class);
         
         //actual irá recorriendo los nodos "manualmente" para comprobar si el iterador
         //devuelve lo que debe.
@@ -188,7 +187,7 @@ public class TokenIteratorTest {
         System.out.println("-->" + actual.getObject());
         
         actual = actual.getPrevious();
-        LinkedList<Item> resultado = (LinkedList) it.nextObject();
+        LinkedList<Item> resultado = (LinkedList) it.nextAll();
         assertEquals(resultado.size(), 2);
         assertEquals(resultado.getFirst(), actual.getLastChild().getPrevious().getObject());
         System.out.println("-->" + resultado.getFirst());
@@ -206,7 +205,7 @@ public class TokenIteratorTest {
         System.out.println("repetimos (goto)-->" + actual.getObject());
         
         //Comprueba que el opcional tiene dos caminos:
-        resultado = (LinkedList<Item>) it.nextObject();
+        resultado = (LinkedList<Item>) it.nextAll();
         assertTrue(resultado.size() == 2);
                
     }
@@ -220,7 +219,7 @@ public class TokenIteratorTest {
     public void hasNext() {
         System.out.println("hasNext");
         
-        SMTreeIterator<Item> it = arbol.iterator(ForwardTokenIterator.class);
+        ForwardTokenIterator it = (ForwardTokenIterator) arbol.iterator(ForwardTokenIterator.class);
         
         it.nextObject();
         assertTrue(it.hasNext());
@@ -238,7 +237,7 @@ public class TokenIteratorTest {
     public void isNext() {
         System.out.println("isNext Forward");
         SMTreeNode<Item> actual = arbol.getRoot().getFirstChild().getNext();
-        SMTreeIterator<Item> it = arbol.iterator(ForwardTokenIterator.class);
+        ForwardTokenIterator it = (ForwardTokenIterator) arbol.iterator(ForwardTokenIterator.class);
         actual = actual.getNext();
         
         assertFalse(it.isNext(null));

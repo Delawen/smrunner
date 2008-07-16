@@ -121,4 +121,9 @@ public class webPageBackwardIterator implements webPageIterator
     public void setTree(SMTree<Item> treeWrapper) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public Object nextAll()
+    {
+        return this.next();
+    }
 }

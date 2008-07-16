@@ -9,23 +9,23 @@ import roadrunner.node.*;
 public class BackwardTokenIterator extends BackwardIterator<Item> implements EdibleIterator
 {
     /**
-     * Sirve para guardar los resultados del isNext por si acaso falla, 
+     * Sirve para guardar los resultados del isNext por si acaso falla,
      * no tener que repetir las operaciones otra vez en el siguiente isNext.
      * Se borra cuando se avanza.
      */
     private LinkedList<Item> cache = null;
-    
+
     /**
-     * Este item se utiliza sólo cuando se usa un goTo o un previous. 
-     * Sirve para distinguir el next exacto cuando hay varios caminos. 
+     * Este item se utiliza sólo cuando se usa un goTo o un previous.
+     * Sirve para distinguir el next exacto cuando hay varios caminos.
      * Nótese que el camino siempre se calcula desde el nodo anterior,
-     * así que cuando hay varios caminos es la única forma de saber 
+     * así que cuando hay varios caminos es la única forma de saber
      * por cual tenemos que ir.
      */
     private SMTreeNode<Item> next;
-    
-    
-    public BackwardTokenIterator() 
+
+
+    public BackwardTokenIterator()
     {
         super();
     }
@@ -33,12 +33,42 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     /**
      * Calcula los posibles caminos siguientes al nodo actual.
      * Sirve tanto para el isNext() como para cuando se llama directamente.
-     * 
+     *
      * @return siguiente objeto o lista de siguientes caminos
      */
+
     @Override
-    public Object nextObject()
+    public Item next()
     {
+        Object o = this.nextAll();
+
+        if(o == null)
+            return null;
+
+        Item i;
+        if(o instanceof Item)
+            i = (Item)o;
+        else if(o instanceof java.util.List)
+            i = ((java.util.List<Item>)o).get(0);
+        else
+            throw new RuntimeException("El nextAll() devolvió un objeto extraño.");
+
+        super.lastNode = super.tree.getNode(i);
+        return i;
+    }
+
+    @Override
+    public Object nextAll()
+    {
+
+        /**
+         * Inicialización.
+         * Si es el primer movimiento del iterador.
+         * No tenemos nodo anterior, pero tenemos raiz del iterador
+         */
+        if(super.lastNode == null && super.getRootIterator()!=null)
+            super.lastNode = getRootIterator();
+
         /**
          * Si tenemos el next, no hace falta calcularlo,
          * ya sabemos por dónde tenemos que ir.
@@ -50,30 +80,21 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             cache = null;
             return super.lastNode.getObject();
         }
-        
-        /**
-         * Inicialización.
-         * Si es el primer movimiento del iterador.
-         * No tenemos nodo anterior, pero tenemos raiz del iterador
-         */
-        if(super.lastNode == null && super.getRootIterator()!=null)
-            super.lastNode = getRootIterator();
 
-        
         /**
          * Limpiamos la cache porque nos vamos a mover
          * (es un next(), no un isNext()).
          */
         cache = null;
-        
+
         /**
          * Calculamos el siguiente en función del último item recorrido:
          */
         Item item = super.lastNode.getObject();
-        
-        
+
+
         /**
-         * Este será el caso más común 
+         * Este será el caso más común
          */
         if(item instanceof Token)
         {
@@ -86,14 +107,14 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 if(super.lastNode.getParent() == null)
                     return null;
                 super.lastNode = super.lastNode.getParent();
-               
+
                 //Estamos subiendo porque no había un hermano, por tanto...
-                //si subimos y encontramos que el padre es una lista 
+                //si subimos y encontramos que el padre es una lista
                 //es porque ya habíamos entrado en ella
                 if(super.lastNode.getObject() instanceof List)
                     ((List)super.lastNode.getObject()).setAccessed(true);
             }
-            
+
             /**
              * Ahora comprobamos si el item que tenemos aquí es un compositeItem (varios caminos)
              */
@@ -112,13 +133,13 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 super.lastNode = super.lastNode.getPrevious();
             }
         }
-        
+
         /**
          * Por regla general tendremos varios caminos, a no ser que sea el último item hoja del Wrapper.
          */
         LinkedList<SMTreeNode<Item>> resultado = new LinkedList<SMTreeNode<Item>>();
         resultado.add(super.lastNode);
-        
+
         /**
          * Recorremos la lista de resultados hasta que no queden CompositeItems:
          */
@@ -138,8 +159,8 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 }
                 k++;
             }
-            
-            
+
+
             /**
              * Si estamos en un opcional, podemos o introducirnos en el opcional, o devolver el siguiente al opcional.
              * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
@@ -148,7 +169,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             if(item instanceof Optional)
             {
                 /**
-                 * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual 
+                 * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual
                  * para poder volver si fuese necesario.
                  */
                 SMTreeNode<Item> nodo = super.lastNode;
@@ -169,7 +190,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 }
 
                 /**
-                 * Si hay un next después de subir en el bucle anterior, 
+                 * Si hay un next después de subir en el bucle anterior,
                  * es que hay un item después del opcional.
                  * Si no lo hubiera es porque es el último item del Wrapper.
                  */
@@ -188,7 +209,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
              * Si estamos en una lista, podemos o introducirnos en la lista, o devolver el siguiente a la lista.
              */
             else if(item instanceof List)
-            {            
+            {
                 /**
                  * Esta vez empezamos introduciendo el primer hijo de la lista.
                  * Esto es para el Mismatch, que es más lógico así.
@@ -204,7 +225,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                     ((List)super.lastNode.getLastChild().getObject()).setAccessed(false);
 
                 /**
-                 * Si el nodo en el que estamos (item) ya ha sido accedido, podemos saltarnos la lista 
+                 * Si el nodo en el que estamos (item) ya ha sido accedido, podemos saltarnos la lista
                  * hasta el siguiente item.
                  */
                 if(((List)item).isAccessed())
@@ -219,7 +240,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                         nodo = nodo.getParent();
                         /**
                          * Estamos subiendo porque no había un hermano, por tanto,
-                         * si subimos y encontramos que el padre es una lista 
+                         * si subimos y encontramos que el padre es una lista
                          * es porque ya habíamos entrado en ella
                          **/
                         if(nodo.getObject() instanceof List)
@@ -227,7 +248,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                     }
 
                     /**
-                     * Si el siguiente a la lista es otra lista, esta no 
+                     * Si el siguiente a la lista es otra lista, esta no
                      * ha sido accedida todavía.
                      */
                    if(nodo.getPrevious() != null && (nodo.getPrevious().getObject() instanceof List))
@@ -249,7 +270,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 resultado.add(k, super.lastNode);
             }
         }
-        
+
         if(resultado.size() > 1)
         {
             super.lastNode = resultado.getFirst();
@@ -258,7 +279,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 items.add(n.getObject());
             return items;
         }
-        
+
         if(resultado.size() == 1)
         {
             super.lastNode = resultado.getFirst();
@@ -269,24 +290,24 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
          */
         return null;
     }
-    
+
     /**
      * Se mueve de forma que el siguiente next() será este item
      * @param objeto
      * @return
      */
     @Override
-     public boolean goTo (Item objeto) 
+     public boolean goTo (Item objeto)
     {
-        
+
         next = getTree().getNode(objeto);
         if(next==null)
-            return false; 
-        
+            return false;
+
         return true;
     }
 
-    
+
     /**
      * Comprueba si el siguiente objeto será nulo.
      * En cualquier caso, no se mueve.
@@ -297,8 +318,8 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     {
         SMTreeNode<Item> node = super.lastNode;
         SMTreeNode<Item> nodeNext = next;
-        
-        if(this.nextObject() == null)
+
+        if(this.nextAll() == null)
         {
             super.lastNode = node;
             next = nodeNext;
@@ -311,7 +332,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             return true;
         }
     }
-    
+
     /**
      * Comprueba si en la lista de siguientes nodos está el item pasado como parámetro
      * @param i
@@ -321,23 +342,23 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     public boolean isNext(Item i)
     {
         int k = 0;
-        
+
         /**
          * temporal sirve para volver atrás si el isNext() resulta fallido
          */
         SMTreeNode temporal = super.lastNode;
-        
+
         //Si tenemos cache, la usamos. Si no, lo sacamos de next()
         if(cache == null)
         {
-            Object siguiente = this.nextObject();
+            Object siguiente = this.nextAll();
             cache = new LinkedList<Item>();
             if(siguiente instanceof Item)
                 cache.add((Item)siguiente);
             else
                 cache = (java.util.LinkedList<Item>)siguiente;
         }
-        
+
         /**
          * Si tenemos un next claro, no hay que darle más vueltas:
          */
@@ -345,8 +366,8 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         {
             cache.clear();
             cache.add(next.getObject());
-        }   
-        
+        }
+
         /**
          * Vamos recorriendo todos los posibles siguiente hasta que encuentra uno que haga match.
          * k sirve para mantenerlos ordenados, sin perder ni un solo camino
@@ -356,7 +377,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         {
             //Sacamos un item de la lista
             Item item = cache.remove(k);
-            
+
             //Si sacamos un token, intentamos hacer matching
             if(item instanceof Token)
             {
@@ -374,7 +395,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                     k++;
                 }
             }
-            
+
             /**
              * Si el siguiente es una lista o un opcional, calculamos los siguientes a esa lista u opcional
              */
@@ -385,27 +406,27 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                  */
                 SMTreeNode nodo_backup = super.lastNode;
                 LinkedList cache_backup = this.cache;
-                
+
                 /**
                  * vamos hasta el item siguiente
                  */
                 goTo(item);
-                
+
                 /**
                  * Sacamos la lista de siguientes.
                  */
-                this.nextObject();
-                Object siguiente = this.nextObject();
-                
+                this.nextAll();
+                Object siguiente = this.nextAll();
+
                 /**
                  * Deshacemos los cambios
                  */
                 this.cache = cache_backup;
                 super.lastNode = nodo_backup;
-                
+
                 /**
                  * Metemos el resultado en la caché para las próximas vueltas.
-                 * Se tienen que meter en el mismo sitio por donde vamos, para que sea lo 
+                 * Se tienen que meter en el mismo sitio por donde vamos, para que sea lo
                  * siguiente a comprobar.
                  */
                 if(siguiente instanceof Item)
@@ -413,7 +434,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 else if(siguiente instanceof java.util.List)
                     for (Item elem : (java.util.List<Item>)siguiente)
                         cache.add(k, elem);
-                        
+
             }
             //Si es una tupla, buscamos su primer hijo y lo metemos en la caché para estudiarlo
             else if(item instanceof Tuple)
@@ -421,16 +442,16 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 Item siguiente = (Item) this.tree.getNode(item).getLastChild().getObject();
                 cache.add(k, siguiente);
             }
-            
+
             //Si sacamos una lista de caminos, los metemos uno a uno en la caché.
             else if(item instanceof java.util.List)
             {
                 for (Item elem : (java.util.List<Item>)item)
                         cache.add(k, elem);
             }
-            
+
         }
-        
+
         /**
          * Deshacemos los cambios.
          */
@@ -440,7 +461,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
          */
         return false;
     }
-    
+
     /**
      * Es como el next, pero hacia atrás.
      * @return
@@ -448,33 +469,36 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     @Override
     public Object previous()
     {
-        
-        //El nextObject será el nodo en el que estamos ahora:
-        next = super.lastNode;
-        
         /**
          * Inicialización.
          * Si es el primer movimiento del iterador.
          * No tenemos nodo anterior, pero tenemos raiz del iterador
          */
+        if(next != null)
+            super.lastNode = next;
+
         if(super.lastNode == null && super.getRootIterator()!=null)
             super.lastNode = getRootIterator();
 
-        
+
+
+        //El nextObject será el nodo en el que estamos ahora:
+        next = super.lastNode;
+
         /**
          * Limpiamos la cache porque nos vamos a mover
          * (es un next(), no un isNext()).
          */
         cache = null;
-        
+
         /**
          * Calculamos el siguiente en función del último item recorrido:
          */
         Item item = super.lastNode.getObject();
-        
-        
+
+
         /**
-         * Este será el caso más común 
+         * Este será el caso más común
          */
         if(item instanceof Token)
         {
@@ -487,14 +511,14 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 if(super.lastNode.getParent() == null)
                     return null;
                 super.lastNode = super.lastNode.getParent();
-               
+
                 //Estamos subiendo porque no había un hermano, por tanto...
-                //si subimos y encontramos que el padre es una lista 
+                //si subimos y encontramos que el padre es una lista
                 //es porque ya habíamos entrado en ella
                 if(super.lastNode.getObject() instanceof List)
                     ((List)super.lastNode.getObject()).setAccessed(true);
             }
-            
+
             /**
              * Ahora comprobamos si el item que tenemos aquí es un compositeItem (varios caminos)
              */
@@ -513,13 +537,13 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 super.lastNode = super.lastNode.getNext();
             }
         }
-        
+
         /**
          * Por regla general tendremos varios caminos, a no ser que sea el último item hoja del Wrapper.
          */
         LinkedList<SMTreeNode<Item>> resultado = new LinkedList<SMTreeNode<Item>>();
         resultado.add(super.lastNode);
-        
+
         /**
          * Recorremos la lista de resultados hasta que no queden CompositeItems:
          */
@@ -539,8 +563,8 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 }
                 k++;
             }
-            
-            
+
+
             /**
              * Si estamos en un opcional, podemos o introducirnos en el opcional, o devolver el siguiente al opcional.
              * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
@@ -549,7 +573,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             if(item instanceof Optional)
             {
                 /**
-                 * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual 
+                 * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual
                  * para poder volver si fuese necesario.
                  */
                 SMTreeNode<Item> nodo = super.lastNode;
@@ -570,7 +594,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 }
 
                 /**
-                 * Si hay un next después de subir en el bucle anterior, 
+                 * Si hay un next después de subir en el bucle anterior,
                  * es que hay un item después del opcional.
                  * Si no lo hubiera es porque es el último item del Wrapper.
                  */
@@ -589,7 +613,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
              * Si estamos en una lista, podemos o introducirnos en la lista, o devolver el siguiente a la lista.
              */
             else if(item instanceof List)
-            {            
+            {
                 /**
                  * Esta vez empezamos introduciendo el primer hijo de la lista.
                  * Esto es para el Mismatch, que es más lógico así.
@@ -605,7 +629,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                     ((List)super.lastNode.getFirstChild().getObject()).setAccessed(false);
 
                 /**
-                 * Si el nodo en el que estamos (item) ya ha sido accedido, podemos saltarnos la lista 
+                 * Si el nodo en el que estamos (item) ya ha sido accedido, podemos saltarnos la lista
                  * hasta el siguiente item.
                  */
                 if(((List)item).isAccessed())
@@ -620,7 +644,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                         nodo = nodo.getParent();
                         /**
                          * Estamos subiendo porque no había un hermano, por tanto,
-                         * si subimos y encontramos que el padre es una lista 
+                         * si subimos y encontramos que el padre es una lista
                          * es porque ya habíamos entrado en ella
                          **/
                         if(nodo.getObject() instanceof List)
@@ -628,7 +652,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                     }
 
                     /**
-                     * Si el siguiente a la lista es otra lista, esta no 
+                     * Si el siguiente a la lista es otra lista, esta no
                      * ha sido accedida todavía.
                      */
                    if(nodo.getNext() != null && (nodo.getNext().getObject() instanceof List))
@@ -650,7 +674,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 resultado.add(k, super.lastNode);
             }
         }
-        
+
         if(resultado.size() > 1)
         {
             super.lastNode = resultado.getFirst();
@@ -659,7 +683,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 items.add(n.getObject());
             return items;
         }
-        
+
         if(resultado.size() == 1)
         {
             super.lastNode = resultado.getFirst();
@@ -670,19 +694,19 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
          */
         return null;
     }
-    
+
     public boolean isPrevious()
     {
-        throw new UnsupportedOperationException("Probably you need a ForwardTokenIterator ;)");
+        throw new UnsupportedOperationException("Probably you need a BackwardTokenIterator ;)");
     }
 
     @Override
-    public Object next() 
+    public Object nextObject()
     {
-        return this.nextObject();
+        return this.next();
     }
 
-    private boolean tieneCompositeItem(LinkedList<SMTreeNode<Item>> lista) 
+    private boolean tieneCompositeItem(LinkedList<SMTreeNode<Item>> lista)
     {
         for(SMTreeNode<Item> nodo : lista)
         {

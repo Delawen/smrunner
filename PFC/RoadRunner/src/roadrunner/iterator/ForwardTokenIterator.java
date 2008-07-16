@@ -36,8 +36,29 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
      * 
      * @return siguiente objeto o lista de siguientes caminos
      */
+
     @Override
-    public Object nextObject()
+    public Item next()
+    {
+        Object o = this.nextAll();
+
+        if(o == null)
+            return null;
+
+        Item i;
+        if(o instanceof Item)
+            i = (Item)o;
+        else if(o instanceof java.util.List)
+            i = ((java.util.List<Item>)o).get(0);
+        else
+            throw new RuntimeException("El nextAll() devolvió un objeto extraño.");
+
+        super.lastNode = super.tree.getNode(i);
+        return i;
+    }
+
+    @Override
+    public Object nextAll()
     {
         
         /**
@@ -298,7 +319,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         SMTreeNode<Item> node = super.lastNode;
         SMTreeNode<Item> nodeNext = next;
         
-        if(this.nextObject() == null)
+        if(this.nextAll() == null)
         {
             super.lastNode = node;
             next = nodeNext;
@@ -330,7 +351,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         //Si tenemos cache, la usamos. Si no, lo sacamos de next()
         if(cache == null)
         {
-            Object siguiente = this.nextObject();
+            Object siguiente = this.nextAll();
             cache = new LinkedList<Item>();
             if(siguiente instanceof Item)
                 cache.add((Item)siguiente);
@@ -394,8 +415,8 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 /**
                  * Sacamos la lista de siguientes.
                  */
-                this.nextObject();
-                Object siguiente = this.nextObject();
+                this.nextAll();
+                Object siguiente = this.nextAll();
                 
                 /**
                  * Deshacemos los cambios
@@ -680,9 +701,9 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     }
 
     @Override
-    public Object next() 
+    public Object nextObject()
     {
-        return this.nextObject();
+        return this.next();
     }
 
     private boolean tieneCompositeItem(LinkedList<SMTreeNode<Item>> lista) 
