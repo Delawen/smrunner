@@ -75,7 +75,7 @@ public class AddList extends IOperator
             lastDelim = (Token) itS.previous();
             
    
-            lastTokenSquare =  w.searchWellFormed(lastDelim, firstTokenSquare, d);
+            lastTokenSquare =  w.searchWellFormed(lastDelim, Enclosure.ENCLOSED, firstTokenSquare, Enclosure.ENCLOSED, d);
 
             if(lastTokenSquare == null || lastTokenSquare == firstTokenSquare)
             {
@@ -146,7 +146,7 @@ public class AddList extends IOperator
             itS.goTo(t);
             lastDelim = (Token) itS.previous();
             
-            lastTokenSquare =  s.searchWellFormed(lastDelim, firstTokenSquare, d);
+            lastTokenSquare =  s.searchWellFormed(lastDelim,Enclosure.ENCLOSED, firstTokenSquare, Enclosure.ENCLOSED, d);
 
             if(lastTokenSquare == null || lastTokenSquare == firstTokenSquare)
             {

@@ -477,41 +477,7 @@ public class Wrapper implements Edible{
         
         return m;
     }
-    
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
-    // #[regen=yes,id=DCE.F925FF52-82A2-AFA9-A17C-8A6B6DE5DDAF]
-    // </editor-fold> 
-    public Token searchWellFormed (Token t, Token from, DirectionOperator d) 
-    {
-        SMTreeIterator<Item> itWrapper = null;
-        
-        if(DirectionOperator.DOWNWARDS == d)
-            itWrapper = treeWrapper.iterator(ForwardIterator.class);    
-        else if(DirectionOperator.UPWARDS == d)
-            itWrapper = treeWrapper.iterator(BackwardIterator.class);
-        
-        if(!itWrapper.goTo(from))
-            return null;
-        
-        Token token=null;
-
-        while(itWrapper.hasNext())
-        {
-            Item i = (Item) itWrapper.nextObject();
-            
-            //Sabremos que estamos en una hoja si es un token
-            if(i instanceof Token)
-            {
-                token = (Token) i;
-                if(token.match(t) && isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
-                    return token;
-            }            
-        }
-        
-        return null;
-    }
-    
     public EdibleIterator iterator (Class iteratorClass)
     {
         EdibleIterator wi = null;
@@ -559,6 +525,36 @@ public class Wrapper implements Edible{
         }
         
         return new Wrapper(treeCloned);
+    }
+
+    public Token searchWellFormed(Token t, Enclosure tokenEnclosure, Token from, Enclosure tEnclosure, DirectionOperator d) {
+                
+        SMTreeIterator<Item> itWrapper = null;
+        
+        if(DirectionOperator.DOWNWARDS == d)
+            itWrapper = treeWrapper.iterator(ForwardIterator.class);    
+        else if(DirectionOperator.UPWARDS == d)
+            itWrapper = treeWrapper.iterator(BackwardIterator.class);
+        
+        if(!itWrapper.goTo(from))
+            return null;
+        
+        Token token=null;
+
+        while(itWrapper.hasNext())
+        {
+            Item i = (Item) itWrapper.nextObject();
+            
+            //Sabremos que estamos en una hoja si es un token
+            if(i instanceof Token)
+            {
+                token = (Token) i;
+                if(token.match(t) && isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
+                    return token;
+            }            
+        }
+        
+        return null;
     }
 }
 

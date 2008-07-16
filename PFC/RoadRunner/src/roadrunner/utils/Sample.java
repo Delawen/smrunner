@@ -79,32 +79,6 @@ public class Sample implements Edible{
     }
 
     
-    public Token searchWellFormed (Token t, Token from, DirectionOperator d) 
-    {
-        
-        EdibleIterator itSample = null;
-        
-        if(DirectionOperator.DOWNWARDS == d)
-            itSample = iterator(webPageForwardIterator.class);      
-        else if(DirectionOperator.UPWARDS == d)
-            itSample = iterator(webPageForwardIterator.class);
-        
-        if(!itSample.goTo(from))
-            return null;
-        
-        Token token=null;
-
-        while(itSample.hasNext())
-        {
-            //Al ser un sample, sabemos que sólo hay un camino:
-            token = (Token)itSample.next();
-            
-            if(t.match(token) && isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
-                return token;
-        }
-        return null;
-    }
-    
     private Token limpiar(XMLTokenizer.Token t)
     {
         Token resultado;
@@ -316,5 +290,29 @@ public class Sample implements Edible{
     public int getNumToken()
     {
         return tokens.size();
+    }
+
+    public Token searchWellFormed(Token t, Enclosure tokenEnclosure, Token from, Enclosure tEnclosure, DirectionOperator d) {
+                EdibleIterator itSample = null;
+        
+        if(DirectionOperator.DOWNWARDS == d)
+            itSample = iterator(webPageForwardIterator.class);      
+        else if(DirectionOperator.UPWARDS == d)
+            itSample = iterator(webPageBackwardIterator.class);
+        
+        if(!itSample.goTo(from))
+            return null;
+        
+        Token token=null;
+
+        while(itSample.hasNext())
+        {
+            //Al ser un sample, sabemos que sólo hay un camino:
+            token = (Token)itSample.next();
+            
+            if(t.match(token) && isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
+                return token;
+        }
+        return null;
     }
 }
