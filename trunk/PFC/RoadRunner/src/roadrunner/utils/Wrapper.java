@@ -272,7 +272,7 @@ public class Wrapper implements Edible{
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
             it.goTo(to);
-            to = (Text)it.previous();
+            to = (Token)it.previous();
         }
         
         it.goTo(from);
@@ -549,7 +549,7 @@ public class Wrapper implements Edible{
             if(i instanceof Token)
             {
                 token = (Token) i;
-                if(token.match(t) && isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
+                if(token.match(t) && isWellFormed(from, tEnclosure, token, tokenEnclosure, d))
                     return token;
             }            
         }

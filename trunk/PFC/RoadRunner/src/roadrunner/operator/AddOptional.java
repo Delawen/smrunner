@@ -75,7 +75,7 @@ public class AddOptional extends IOperator
         {
 
             // Buscamos el token que aparecera justo detras de la supuesta opcionalidad
-            lastTokenOptional =  w.searchWellFormed(t, Enclosure.ENCLOSED, (Token) n, Enclosure.NOT_ENCLOSED, d);
+            lastTokenOptional =  w.searchWellFormed(t, Enclosure.NOT_ENCLOSED, (Token) n, Enclosure.ENCLOSED, d);
 
             // Si no lo hemos encontrado entonces
             //  no se puede crear reparacion con addoptional en el wrapper
@@ -123,7 +123,7 @@ public class AddOptional extends IOperator
         {     
  
             // Buscamos el token que aparecera justo detra de la supuesta opcionalidad
-            lastTokenOptional =  s.searchWellFormed((Token) n, Enclosure.ENCLOSED, t, Enclosure.NOT_ENCLOSED, d);
+            lastTokenOptional =  s.searchWellFormed((Token) n, Enclosure.NOT_ENCLOSED, t, Enclosure.ENCLOSED, d);
 
             // Si no lo hemos encontrado paramos de buscar
             // porque no se puede crear reparacion con addoptional en el wrapper
@@ -143,8 +143,8 @@ public class AddOptional extends IOperator
             itS.goTo(t);
             Token tokenInmediatelyAfterT = (Token) itS.next();
             
-            if(!lastTokenOptional.match(tokenInmediatelyBeforeT) || 
-                    !firstTokenOptional.match(tokenInmediatelyAfterT)) //TODO asegurarse de que hace esta condicion de abajo
+            if(lastTokenOptional.match(tokenInmediatelyBeforeT) /*|| 
+                     firstTokenOptional.match(tokenInmediatelyAfterT)*/ ) //TODO asegurarse de que hace esta condicion de abajo
             {
                 // falla: estabamos ante una lista.
                 rep.setState(StateRepair.FAILED);
@@ -161,6 +161,7 @@ public class AddOptional extends IOperator
             rep.setFinalEnclosure(Enclosure.NOT_ENCLOSED);
             rep.setState(StateRepair.SUCESSFULL);
             itS.goTo(lastTokenOptional);
+            itS.next();
             rep.setIndexSample((Token) itS.next()); 
         }
     

@@ -371,16 +371,6 @@ public class SMTree<T> implements Cloneable{
         if(from == null || inclusionFrom == null || inclusionTo == null
                 || to == null)
             throw new NullPointerException("");
-            
-            
-        /*
-         * La idea es borrar toda la region que va [desde,hasta]
-         * ambos extremos inclusive 
-         */
-        if(inclusionFrom == Enclosure.NOT_ENCLOSED)
-            from = from.getNext();
-        if(inclusionTo == Enclosure.NOT_ENCLOSED)
-             to = to.getPrevious();
         
          if(from == null || to == null)
             throw new NullPointerException("from o to acabaron siendo null tras aplicar NOT_ENCLOSED");
@@ -417,6 +407,29 @@ public class SMTree<T> implements Cloneable{
             if(from.getParent() != to.getParent())
                 throw new IllegalStateException("La región a sustituir no forma parte del mismo nivel.");
         }
+        
+        
+        //queremos insertar entre dos nodos, en una región vacia
+        if(inclusionFrom == Enclosure.NOT_ENCLOSED && inclusionTo == Enclosure.NOT_ENCLOSED && from.getNext() == to)
+        {
+            SMTreeNode rootSubs = tree.getRoot();
+            
+            from.setNext(rootSubs);
+            to.setPrevious(rootSubs);
+            rootSubs.setNext(to);
+            rootSubs.setPrevious(from);
+            rootSubs.setParent(from.getParent());
+            return true;       
+        }
+            
+        /*
+         * La idea es borrar toda la region que va [desde,hasta]
+         * ambos extremos inclusive 
+         */
+        if(inclusionFrom == Enclosure.NOT_ENCLOSED)
+            from = from.getNext();
+        if(inclusionTo == Enclosure.NOT_ENCLOSED)
+             to = to.getPrevious();
         
         //comprobamos que from y to tengan una posicion logica
         boolean fromIsLeftTo = false;

@@ -112,7 +112,7 @@ public class Sample implements Edible{
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
             it.goTo(to);
-            to = (Text) ((java.util.List<Item>)it.previous()).get(0);
+            to = (Token) it.previous();
         }
         
         it.goTo(from);
@@ -310,7 +310,7 @@ public class Sample implements Edible{
             //Al ser un sample, sabemos que sólo hay un camino:
             token = (Token)itSample.next();
             
-            if(t.match(token) && isWellFormed(from, Enclosure.ENCLOSED, token, Enclosure.ENCLOSED, d))
+            if(t.match(token) && isWellFormed(from, tEnclosure, token, tokenEnclosure, d))
                 return token;
         }
         return null;
