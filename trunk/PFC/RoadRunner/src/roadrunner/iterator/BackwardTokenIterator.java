@@ -675,16 +675,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             }
         }
 
-        if(resultado.size() > 1)
-        {
-            super.lastNode = resultado.getFirst();
-            LinkedList<Item> items = new LinkedList<Item>();
-            for(SMTreeNode<Item> n : resultado)
-                items.add(n.getObject());
-            return items;
-        }
-
-        if(resultado.size() == 1)
+        if(resultado.size() >= 1)
         {
             super.lastNode = resultado.getFirst();
             return resultado.getFirst().getObject();
