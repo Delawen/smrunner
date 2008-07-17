@@ -116,6 +116,7 @@ public class AddList extends IOperator
                 
            // Ahora comemos hacia abajo
            itW.goTo(lastTokenList);
+           itW.next();
            whereEat = (Item) itW.next();
            whatEaten = squareW.eatSquare(w, whereEat, DirectionOperator.DOWNWARDS);
             

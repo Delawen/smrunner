@@ -91,13 +91,44 @@ public class RoadRunnerTest {
     }
     
     @Test
+    public void test3_1()
+    {
+        System.out.println("Test complejo para RoadRunner: dos sample y un addList simple");
+        String[] prueba = new String[2];
+        String s = "test/roadrunner/sample3.html";
+        prueba[0] = s;
+        s = "test/roadrunner/sample1.html";
+        prueba[1] = s;
+        RoadRunner rr = new RoadRunner(prueba);
+        rr.process();
+
+    }
+    
+    @Test
     public void test4()
     {
-        System.out.println("Test complejo para RoadRunner: dos sample y un addOptional simple");
+        System.out.println("Test complejo para RoadRunner: dos sample y un addOptional simple (Optional en Wrapper)");
         String[] prueba = new String[2];
         String s = "test/roadrunner/sample1.html";
         prueba[0] = s;
         s = "test/roadrunner/sample4.html";
+        prueba[1] = s;
+        RoadRunner rr = new RoadRunner(prueba);
+        Wrapper w = rr.process();
+        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
+        while(it.hasNext())
+            System.out.println(it.next());
+
+    }
+    
+    @Test
+    public void test4_1()
+    {
+        System.out.println("Test complejo para RoadRunner: dos sample y un addOptional simple (Optional en Sample)");
+        String[] prueba = new String[2];
+        String s = "test/roadrunner/sample4.html";
+        prueba[0] = s;
+        s = "test/roadrunner/sample1.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Wrapper w = rr.process();
