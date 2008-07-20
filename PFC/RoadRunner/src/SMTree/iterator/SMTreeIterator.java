@@ -86,7 +86,7 @@ public abstract class SMTreeIterator<T>
 
     public void setTree(SMTree<T> arbol) {
         this.tree = arbol;
-        lastNode = null;
+        setRootIterator(tree.getRoot());
     }
 
     public SMTreeNode<T> getRootIterator() {

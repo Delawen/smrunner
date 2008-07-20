@@ -105,7 +105,6 @@ public class AddList extends IOperator
                 rep.setState(StateRepair.FAILED);
                 return rep;
             }
-            
             while( whatEaten != null)
             {
                 firstTokenList = (Token) whatEaten;

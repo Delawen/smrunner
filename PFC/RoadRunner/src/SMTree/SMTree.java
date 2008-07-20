@@ -412,13 +412,14 @@ public class SMTree<T> implements Cloneable{
         //queremos insertar entre dos nodos, en una región vacia
         if(inclusionFrom == Enclosure.NOT_ENCLOSED && inclusionTo == Enclosure.NOT_ENCLOSED && from.getNext() == to)
         {
-            SMTreeNode rootSubs = tree.getRoot();
+//            SMTreeNode rootSubs = tree.getRoot();     
+//            from.setNext(rootSubs);
+//            to.setPrevious(rootSubs);
+//            rootSubs.setNext(to);
+//            rootSubs.setPrevious(from);
+//            rootSubs.setParent(from.getParent());
+            addSubSMTree(tree, from, Kinship.CHILD.RIGHTSIBLING);
             
-            from.setNext(rootSubs);
-            to.setPrevious(rootSubs);
-            rootSubs.setNext(to);
-            rootSubs.setPrevious(from);
-            rootSubs.setParent(from.getParent());
             return true;       
         }
             
@@ -799,16 +800,19 @@ public class SMTree<T> implements Cloneable{
         
         SMTreeNode rootClone = newParent.clone();
         SMTreeNode auxNodeClone;
-        
         //.. y lo añadimos al index       
         indexClone.add(rootClone);
-       
-        // From es el primer hijo del arbol clonado
-        auxNodeClone = cloneSubTree(from).getRoot();    
-        rootClone.setFirstChild(auxNodeClone);
-        auxNodeClone.setParent(rootClone);
+        
         SMTree auxTreeClone;
         SMTreeNode auxPreviousNodeClone;
+       
+        // From es el primer hijo del arbol clonado
+        auxTreeClone = cloneSubTree(from);
+        indexClone.add(auxTreeClone.getMapa());
+        auxNodeClone = auxTreeClone.getRoot();
+        rootClone.setFirstChild(auxNodeClone);
+        auxNodeClone.setParent(rootClone);
+
         
         // Iteramos sobre los nodos hermanos intermedios.
         auxNode = from.getNext();
@@ -832,8 +836,11 @@ public class SMTree<T> implements Cloneable{
             auxNode = auxNode.getNext();
         }
         
+        
         //To es el ultimo hijo del arbol clonado
-        auxNodeClone = cloneSubTree(to).getRoot();    
+        auxTreeClone = cloneSubTree(to);
+        indexClone.add(auxTreeClone.getMapa());
+        auxNodeClone = auxTreeClone.getRoot();    
         rootClone.setLastChild(auxNodeClone);
         auxNodeClone.setParent(rootClone);
         auxNodeClone.setPrevious(auxPreviousNodeClone);

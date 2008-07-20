@@ -246,6 +246,41 @@ public class Wrapper implements Edible{
     public Mismatch eat (Sample s) {
         return eat(s,DirectionOperator.DOWNWARDS);
     }
+
+    private Mismatch comparaListas(Item edible, Item eater, DirectionOperator d, Wrapper e) 
+    {
+        SMTreeNode<Item> edibleNode;
+        SMTreeNode<Item> eaterNode;
+        Mismatch m = null;
+        if(d == DirectionOperator.DOWNWARDS)
+        {
+            edibleNode = e.getTree().getNode(edible).getFirstChild();
+            eaterNode = getTree().getNode(eater).getFirstChild();
+            
+            while(edibleNode != null && eaterNode != null && m == null)
+            {
+                m = this.eat((Edible)e, 
+                        edibleNode.getObject(), 
+                        eaterNode.getObject(), 
+                        d);
+                
+                edibleNode = edibleNode.getNext();
+                eaterNode = eaterNode.getNext();
+            }
+            
+            if(m == null && (edibleNode != null || eaterNode != null))
+            {
+                
+            }
+        }
+        else
+        {
+        
+        }
+        
+        return m;
+    }
+    
     
     // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
     // #[regen=yes,id=DCE.E5C3243F-4177-9A70-094F-C76645D7AD05]
@@ -376,7 +411,7 @@ public class Wrapper implements Edible{
         while(itSample.hasNext() && itWrapper.hasNext() && m==null)
         {
             //Buscamos el siguiente del sample:
-            Object edibleToken = itSample.next();
+            Object edibleToken = itSample.nextAll();
             
             //Si nos ha devuelto un único camino
             if(edibleToken instanceof Token)
@@ -398,6 +433,21 @@ public class Wrapper implements Edible{
             }
             else if(edibleToken instanceof java.util.List)//Vamos probando todos los caminos
             {
+                //Cuando comparamos lista con lista
+                Item parentW = this.getTree().getNode((Item) ((java.util.List)edibleToken).get(0)).getObject();
+                if(parentW instanceof roadrunner.node.List)
+                {
+                    Item edibleParent = null;
+                    if(((Wrapper)e).getTree().getNode((Item) edibleToken).getParent() != null)
+                       edibleParent =  (Item) ((Wrapper)e).getTree().getNode((Item) edibleToken).getParent().getObject();
+
+                        if(edibleParent != null && edibleParent instanceof roadrunner.node.List)
+                        {
+                            ((Wrapper)e).getTree().getNode((Item) edibleToken).getParent().setObject(new Tuple());              
+                        }
+                    
+                }
+                
                 //La pila irá guardando los caminos no recorridos:
                 Stack<Item> stack = new Stack<Item>();
                 for(Item i : (java.util.List<Item>)edibleToken)
@@ -555,6 +605,19 @@ public class Wrapper implements Edible{
         }
         
         return null;
+    }
+    
+    public String toString()
+    {
+        String result = "";
+        ForwardIterator it = new ForwardIterator();
+        it.setTree(treeWrapper);
+               
+        while(it.hasNext())
+        {
+            result += it.nextObject().toString();
+        }
+     return result;  
     }
 }
 
