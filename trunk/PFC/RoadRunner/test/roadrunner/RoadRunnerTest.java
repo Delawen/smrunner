@@ -50,12 +50,7 @@ public class RoadRunnerTest {
         prueba[0] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Wrapper w = rr.process();
-        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
-        while(it.hasNext())
-        {
-            Token i = (Token) it.next();
-            System.out.println(i.toString());
-        }
+        System.out.println(w);
 
     }
     
@@ -70,9 +65,7 @@ public class RoadRunnerTest {
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Wrapper w = rr.process();
-        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
-        while(it.hasNext())
-            System.out.println(it.next());
+        System.out.println(w);
 
     }
     
@@ -86,7 +79,8 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample3.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        rr.process();
+        Wrapper w = rr.process();
+        System.out.println(w);
 
     }
     
@@ -100,7 +94,8 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample1.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        rr.process();
+        Wrapper w = rr.process();
+        System.out.println(w);
 
     }
     
@@ -115,9 +110,7 @@ public class RoadRunnerTest {
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Wrapper w = rr.process();
-        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
-        while(it.hasNext())
-            System.out.println(it.next());
+        System.out.println(w);
 
     }
     
@@ -132,9 +125,7 @@ public class RoadRunnerTest {
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Wrapper w = rr.process();
-        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
-        while(it.hasNext())
-            System.out.println(it.next());
+        System.out.println(w);
 
     }
     
@@ -155,9 +146,7 @@ public class RoadRunnerTest {
         prueba[4] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Wrapper w = rr.process();
-        EdibleIterator it = w.iterator(ForwardTokenIterator.class);
-        while(it.hasNext())
-            System.out.println(it.next());
+        System.out.println(w);
 
     }
     
