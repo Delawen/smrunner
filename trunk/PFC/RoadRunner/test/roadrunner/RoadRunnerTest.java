@@ -13,6 +13,7 @@ import org.junit.Test;
 import roadrunner.iterator.EdibleIterator;
 import roadrunner.iterator.ForwardTokenIterator;
 import roadrunner.node.Token;
+import roadrunner.utils.Edible;
 import roadrunner.utils.Wrapper;
 import static org.junit.Assert.*;
 
@@ -49,7 +50,7 @@ public class RoadRunnerTest {
         String s = "test/roadrunner/sample1.html";
         prueba[0] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        Wrapper w = rr.process();
+        Edible w = rr.process();
         System.out.println(w);
 
     }
@@ -64,7 +65,7 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample2.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        Wrapper w = rr.process();
+        Edible w = rr.process();
         System.out.println(w);
 
     }
@@ -79,7 +80,7 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample3.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        Wrapper w = rr.process();
+        Edible w = rr.process();
         System.out.println(w);
 
     }
@@ -94,7 +95,7 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample1.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        Wrapper w = rr.process();
+        Edible w = rr.process();
         System.out.println(w);
 
     }
@@ -109,7 +110,7 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample4.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        Wrapper w = rr.process();
+        Edible w = rr.process();
         System.out.println(w);
 
     }
@@ -124,12 +125,11 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample1.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        Wrapper w = rr.process();
+        Edible w = rr.process();
         System.out.println(w);
 
     }
     
-    @Test
     public void test5()
     {
         System.out.println("¡¡Todo junto!!");
@@ -145,7 +145,7 @@ public class RoadRunnerTest {
         s = "test/roadrunner/sample5.html";
         prueba[4] = s;
         RoadRunner rr = new RoadRunner(prueba);
-        Wrapper w = rr.process();
+        Edible w = rr.process();
         System.out.println(w);
 
     }

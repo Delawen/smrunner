@@ -95,7 +95,7 @@ public class WrapperTest
     }
 
     /**
-     * Test of eatSquare method, of class Wrapper.
+     * Test of eatOneSquare method, of class Wrapper.
      */
     @Test
     public void eatSquare() {
@@ -119,7 +119,7 @@ public class WrapperTest
                 break;
         }
         assertNotNull(expResult);
-        Item result = instance.eatSquare(e, t, d);
+        Item result = instance.eatOneSquare(e, t, d);
         assertEquals(expResult, result);
     }
 
@@ -161,5 +161,17 @@ public class WrapperTest
         Token expResult = (Token) instance.getTree().getRoot().getFirstChild().getLastChild().getObject();
         Token result = instance.searchWellFormed(t, Enclosure.ENCLOSED, from, Enclosure.ENCLOSED, d);
         assertEquals(expResult, result);
+    }
+
+    @Test
+    public void eatWrapper()
+    {
+        System.out.println("eating another Wrapper");
+        instance.eat(instance, instance.getTree().getRootObject(), instance.getTree().getRootObject(), DirectionOperator.DOWNWARDS);
+        instance.eat(instance, instance.getTree().getRootObject(), instance.getTree().getRootObject(), DirectionOperator.UPWARDS);
+        instance2.eat(instance2, instance2.getTree().getRootObject(), instance2.getTree().getRootObject(), DirectionOperator.DOWNWARDS);
+        instance2.eat(instance2, instance2.getTree().getRootObject(), instance2.getTree().getRootObject(), DirectionOperator.UPWARDS);
+        instance3.eat(instance3, instance3.getTree().getRootObject(), instance3.getTree().getRootObject(), DirectionOperator.DOWNWARDS);
+        instance3.eat(instance3, instance3.getTree().getRootObject(), instance3.getTree().getRootObject(), DirectionOperator.UPWARDS);
     }
 }

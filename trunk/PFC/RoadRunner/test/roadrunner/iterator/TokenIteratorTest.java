@@ -200,14 +200,10 @@ public class TokenIteratorTest {
         
         //Nos vamos por el primer camino:
         it.goTo((Item)actual.getLastChild().getObject());
-        actual = actual.getLastChild();
-        assertEquals(it.nextObject(), actual.getObject());
-        System.out.println("repetimos (goto)-->" + actual.getObject());
-        
-        //Comprueba que el opcional tiene dos caminos:
-        resultado = (LinkedList<Item>) it.nextAll();
-        assertTrue(resultado.size() == 2);
-               
+        actual = actual.getLastChild().getLastChild().getLastChild();
+        Object o = actual.getObject();
+        assertEquals(it.nextObject(), o);
+        System.out.println("-->" + actual.getObject());               
     }
 
     /**
