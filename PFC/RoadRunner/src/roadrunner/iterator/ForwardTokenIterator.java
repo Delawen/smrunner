@@ -231,7 +231,6 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             {            
                 /**
                  * Esta vez empezamos introduciendo el primer hijo de la lista.
-                 * Esto es para el Mismatch, que es más lógico así.
                  */
                 assert(super.lastNode.getFirstChild() != null);
                 resultado.add(k, super.lastNode.getFirstChild());
@@ -267,12 +266,14 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
 
                     /**
                      * Si el siguiente a la lista es otra lista, esta no 
-                     * ha sido accedida todavía.
+                     * ha sido accedida todavía. Lo metemos en k porque
+                     * para los Mismatches, tiene que estar delante del primer
+                     * hijo de la lista.
                      */
                    if(nodo.getNext() != null && (nodo.getNext().getObject() instanceof List))
                         ((List)nodo.getNext().getObject()).setAccessed(false);
 
-                    resultado.add(k+1, nodo.getNext());
+                    resultado.add(k, nodo.getNext());
                 }
             }
             /**

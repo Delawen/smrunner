@@ -105,12 +105,17 @@ public class AddList extends IOperator
                 rep.setState(StateRepair.FAILED);
                 return rep;
             }
+
+            Item whatEatenTemp = null;
             while( whatEaten != null)
             {
                 firstTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.previous();
+                whatEatenTemp = whatEaten;
                 whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+                if(whatEaten == whatEatenTemp)
+                    break;
             }
                 
            // Ahora comemos hacia abajo
@@ -124,7 +129,10 @@ public class AddList extends IOperator
                 lastTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.next();
+                whatEatenTemp = whatEaten;
                 whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.DOWNWARDS);
+                if(whatEaten == whatEatenTemp)
+                    return null;
             }
            
             squareW.getTree().setRootObject(new List());
@@ -161,7 +169,7 @@ public class AddList extends IOperator
             Item whereEat;   
             itW.goTo(n);
             whereEat = lastTokenList;
-            Object whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+            Item whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
             
             
             // para asegurarnos de que es un plus al menos tengo que comerme
@@ -171,13 +179,17 @@ public class AddList extends IOperator
                 rep.setState(StateRepair.FAILED);
                 return rep;
             }
-            
+
+            Item whatEatenTemp = null;
             while(whatEaten != null)
             {
                 firstTokenList = (Token) whatEaten;
-                itW.goTo((Item) whatEaten);
-                whereEat = (Item) itW.previous();
+                itW.goTo(whatEaten);
+                whereEat =  (Item) itW.previous();
+                whatEatenTemp = whatEaten;
                 whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+                if(whatEaten == whatEatenTemp)
+                    break;
             }
                 
            // Ahora comemos hacia abajo en el sample
@@ -191,8 +203,9 @@ public class AddList extends IOperator
             {
                 itS.goTo((Item) whatEaten);
                 whereEat = (Item) itS.next();
+                whatEatenTemp = whatEaten;
                 whatEaten = squareS.eatOneSquare(s, whereEat, DirectionOperator.DOWNWARDS);
-                if(whatEaten == null)
+                if(whatEaten == null || whatEaten == whatEatenTemp)
                     break;
                 lastEatenSuccess =  (Item) whatEaten;
             }

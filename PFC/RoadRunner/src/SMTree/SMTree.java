@@ -381,31 +381,29 @@ public class SMTree<T> implements Cloneable{
         
         if(from.getParent() != to.getParent())
         {
-            if(nivelFrom < nivelTo)
+            if(nivelFrom > nivelTo)
             {
-                while(from.getParent() != to.getParent() 
-                        && nivelFrom != nivelTo 
-                        && from.getParent().getFirstChild() == from)
+                while(nivelFrom != nivelTo)
                 {
                     from = from.getParent();
                     nivelFrom--;
                 }
                 
             }
-            else if(nivelFrom > nivelTo)
+            else if(nivelFrom < nivelTo)
             {
-                while(from.getParent() != to.getParent() 
-                        && nivelFrom != nivelTo 
-                        && to.getParent().getFirstChild() == to)
+                while(nivelFrom != nivelTo)
                 {
                     to = to.getParent();
                     nivelTo--;
                 }
-                
             }
 
-            if(from.getParent() != to.getParent())
-                throw new IllegalStateException("La región a sustituir no forma parte del mismo nivel.");
+            while(from.getParent() != to.getParent())
+            {
+                from = from.getParent();
+                to = to.getParent();
+            }
         }
         
         
@@ -435,7 +433,7 @@ public class SMTree<T> implements Cloneable{
         //comprobamos que from y to tengan una posicion logica
         boolean fromIsLeftTo = false;
         SMTreeNode auxNode = from;
-        while(!fromIsLeftTo && auxNode.getNext()!=null)
+        while(!fromIsLeftTo && auxNode!=null)
         {
             fromIsLeftTo = auxNode == to;
             auxNode = auxNode.getNext();
