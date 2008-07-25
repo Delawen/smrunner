@@ -129,7 +129,8 @@ public class RoadRunnerTest {
         System.out.println(w);
 
     }
-    
+
+    @Test
     public void test5()
     {
         System.out.println("¡¡Todo junto!!");

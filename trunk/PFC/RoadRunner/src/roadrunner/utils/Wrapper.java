@@ -219,6 +219,8 @@ public class Wrapper implements Edible{
                 if(itWrapper.isNext(i))
                 {
                     encontrado = true;
+                    itSample.goTo(i);
+                    itSample.next();
                     break;
                 }
             }

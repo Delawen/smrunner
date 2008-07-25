@@ -276,7 +276,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                    if(nodo.getPrevious() != null && (nodo.getPrevious().getObject() instanceof List))
                         ((List)nodo.getPrevious().getObject()).setAccessed(false);
 
-                    resultado.add(k+1, nodo.getPrevious());
+                    resultado.add(k, nodo.getPrevious());
                 }
             }
             /**
