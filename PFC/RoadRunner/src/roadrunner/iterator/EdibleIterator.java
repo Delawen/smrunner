@@ -22,6 +22,9 @@ public interface EdibleIterator
     public Object nextAll();
     public Item next();
     public Object previous();
+    public Object previous(boolean optional);
+    public Object nextObject(boolean optional);
+    public Object nextObject();
     public boolean hasNext();
     public void setRootIterator(SMTreeNode<Item> root);
     public void setTree(SMTree<Item> treeWrapper);

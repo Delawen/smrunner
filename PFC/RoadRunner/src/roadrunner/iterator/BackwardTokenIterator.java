@@ -37,10 +37,17 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
      * @return siguiente objeto o lista de siguientes caminos
      */
 
+
+
     @Override
     public Item next()
     {
-        Object o = this.nextAll();
+        return next(false);
+    }
+    
+    public Item next(boolean optional)
+    {
+        Object o = this.nextAll(optional);
 
         //Esto no debería ocurrir si comprobamos antes el hasNext()
         if(o == null)
@@ -60,6 +67,11 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
 
     @Override
     public Object nextAll()
+    {
+        return this.nextAll(false);
+    }
+
+    public Object nextAll(boolean optional)
     {
 
         /**
@@ -226,7 +238,10 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                if(super.lastNode.getPrevious() != null && (super.lastNode.getPrevious().getObject() instanceof List))
                     ((List)super.lastNode.getPrevious().getObject()).setAccessed(false);
 
-                resultado.add(k+1, super.lastNode.getLastChild());
+                if(!optional)
+                    resultado.add(k+1, super.lastNode.getLastChild());
+                else
+                    resultado.add(k, super.lastNode.getLastChild());
             }
              /**
              * Si estamos en una lista, podemos o introducirnos en la lista, o devolver el siguiente a la lista.
@@ -490,6 +505,11 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     @Override
     public Object previous()
     {
+        return previous(false);
+    }
+
+    public Object previous(boolean optional)
+    {
         /**
          * Inicialización.
          * Si es el primer movimiento del iterador.
@@ -591,7 +611,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
              * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
              * la llamada del método.
              */
-            if(item instanceof Optional)
+            if(item instanceof Optional && !optional)
             {
                 /**
                  * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual
@@ -685,7 +705,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             /**
              * En verdad este caso sólo se debería de dar en el inicio
              */
-            else if(item instanceof Tuple)
+            else if(item instanceof Tuple || (item instanceof Optional && optional))
             {
                 super.lastNode = super.lastNode.getFirstChild();
                 item = super.lastNode.getObject();
@@ -718,6 +738,12 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         return this.next();
     }
 
+
+    public Object nextObject(boolean optional)
+    {
+        return this.next(optional);
+    }
+
     private boolean tieneCompositeItem(LinkedList<SMTreeNode<Item>> lista)
     {
         for(SMTreeNode<Item> nodo : lista)
@@ -727,6 +753,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
         }
         return false;
     }
+
 
 }
 

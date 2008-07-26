@@ -74,7 +74,6 @@ public abstract class SMTreeIterator<T>
     public  abstract boolean hasNext ();
     public abstract boolean hasPrevious();
     public abstract Object previous();
-
     public void remove() 
     {
         throw new UnsupportedOperationException("Not supported yet.");
