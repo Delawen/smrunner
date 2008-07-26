@@ -126,4 +126,18 @@ public class webPageBackwardIterator implements webPageIterator
     {
         return this.next();
     }
+
+    public Object previous(boolean optional) {
+        return previous();
+    }
+
+    public Object nextObject(boolean optional)
+    {
+        return nextObject();
+    }
+
+    public Object nextObject()
+    {
+        return next();
+    }
 }

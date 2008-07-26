@@ -87,12 +87,12 @@ public class AddOptional extends IOperator
             
             // lastTokenOptional contiene al nodo posterior, asi que nos quedamos con el ultimo de la opcionalidad
             itW.goTo(lastTokenOptional);
-            lastTokenOptional = (Token) itW.previous();
+            lastTokenOptional = (Token) itW.previous(true);
             firstTokenOptional = (Token) n;
             
             // comprobamos que no estamos ante una lista          
             itS.goTo(t);
-            Token tokenInmediatelyBeforeT = (Token) itS.previous();
+            Token tokenInmediatelyBeforeT = (Token) itS.previous(true);
             itS.goTo(t);
             Token tokenInmediatelyAfterT = (Token) itS.next();
             
@@ -135,11 +135,11 @@ public class AddOptional extends IOperator
 
             // y ahora si que nos quedamos con el token ultimo de la opcionalidad
             itS.goTo(lastTokenOptional);
-            lastTokenOptional = (Token) itS.previous();
+            lastTokenOptional = (Token) itS.previous(true);
             firstTokenOptional = (Token) t;
             
             itS.goTo(t);
-            Token tokenInmediatelyBeforeT = (Token) itS.previous();
+            Token tokenInmediatelyBeforeT = (Token) itS.previous(true);
             itS.goTo(t);
             Token tokenInmediatelyAfterT = (Token) itS.next();
             
@@ -155,7 +155,7 @@ public class AddOptional extends IOperator
             
             rep.setReparator(wrapperReparator);
             itW.goTo(n);      
-            rep.setInitialItem((Item) itW.previous());
+            rep.setInitialItem((Item) itW.previous(true));
             rep.setInitialEnclosure(Enclosure.NOT_ENCLOSED);
             rep.setFinalItem(n);
             rep.setFinalEnclosure(Enclosure.NOT_ENCLOSED);

@@ -261,25 +261,25 @@ public class Wrapper implements Edible{
         
         boolean isWellFormed = true;
         Stack<Tag> openTags = new Stack(); 
-        SMTreeIterator<Item> it = null;
+        EdibleIterator it = null;
         
         if(d == DirectionOperator.DOWNWARDS)
-            it = treeWrapper.iterator(ForwardTokenIterator.class);
+            it = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
         else if(d == DirectionOperator.UPWARDS)
-            it = treeWrapper.iterator(BackwardTokenIterator.class);
+            it = (EdibleIterator) treeWrapper.iterator(BackwardTokenIterator.class);
 
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
             it.goTo(to);
-            to = (Token)it.previous();
+            to = (Token)it.previous(true);
         }
         
         it.goTo(from);
             
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
-            from = (Token) it.nextObject();
+            from = (Token) it.nextObject(true);
         
         if(from==to && !(from instanceof Tag))
             return true;

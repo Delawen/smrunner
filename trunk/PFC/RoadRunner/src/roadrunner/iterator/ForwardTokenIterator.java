@@ -40,7 +40,13 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     @Override
     public Item next()
     {
-        Object o = this.nextAll();
+        return this.next(false);
+    }
+
+
+    public Item next(boolean optional)
+    {
+        Object o = this.nextAll(optional);
 
         //Esto no debería ocurrir si comprobamos antes el hasNext()
         if(o == null)
@@ -61,7 +67,11 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     @Override
     public Object nextAll()
     {
-        
+        return this.nextAll(false);
+    }
+
+    public Object nextAll(boolean optional)
+    {
         /**
          * Inicialización.
          * Si es el primer movimiento del iterador.
@@ -222,7 +232,11 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                if(super.lastNode.getNext() != null && (super.lastNode.getNext().getObject() instanceof List))
                     ((List)super.lastNode.getNext().getObject()).setAccessed(false);
 
-                resultado.add(k+1, super.lastNode.getFirstChild());
+                if(!optional)
+                    resultado.add(k+1, super.lastNode.getFirstChild());
+                else
+                    resultado.add(k, super.lastNode.getFirstChild());
+
             }
              /**
              * Si estamos en una lista, podemos o introducirnos en la lista, o devolver el siguiente a la lista.
@@ -487,6 +501,16 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
     @Override
     public Object previous()
     {
+        return previous(false);
+    }
+
+    /**
+     * El parametro indica si debe (true) o no debe(false) introducirse en los opcionales.
+     * @param optional
+     * @return
+     */
+    public Object previous(boolean optional)
+    {
         /**
          * Inicialización.
          * Si es el primer movimiento del iterador.
@@ -588,7 +612,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
              * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
              * la llamada del método.
              */
-            if(item instanceof Optional)
+            if(item instanceof Optional && !optional)
             {
                 /**
                  * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual 
@@ -682,7 +706,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             /**
              * En verdad este caso sólo se debería de dar en el inicio
              */
-            else if(item instanceof Tuple)
+            else if(item instanceof Tuple || (item instanceof Optional && optional))
             {
                 super.lastNode = super.lastNode.getLastChild();
                 item = super.lastNode.getObject();
@@ -715,6 +739,12 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         return this.next();
     }
 
+    public Object nextObject(boolean optional)
+    {
+        return this.next(optional);
+    }
+
+
     private boolean tieneCompositeItem(LinkedList<SMTreeNode<Item>> lista) 
     {
         for(SMTreeNode<Item> nodo : lista)
@@ -724,6 +754,5 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
         }
         return false;
     }
-
 }
 
