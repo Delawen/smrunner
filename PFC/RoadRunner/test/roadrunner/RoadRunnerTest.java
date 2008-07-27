@@ -47,7 +47,7 @@ public class RoadRunnerTest {
     {
         System.out.println("Test simple para RoadRunner: un solo sample");
         String[] prueba = new String[1];
-        String s = "test/roadrunner/sample1.html";
+        String s = "test/roadrunner/ejemplosSimples/sample1.html";
         prueba[0] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
@@ -60,9 +60,9 @@ public class RoadRunnerTest {
     {
         System.out.println("Test complejo para RoadRunner: dos sample y un addVariable");
         String[] prueba = new String[2];
-        String s = "test/roadrunner/sample1.html";
+        String s = "test/roadrunner/ejemplosSimples/sample1.html";
         prueba[0] = s;
-        s = "test/roadrunner/sample2.html";
+        s = "test/roadrunner/ejemplosSimples/sample2.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
@@ -75,9 +75,9 @@ public class RoadRunnerTest {
     {
         System.out.println("Test complejo para RoadRunner: dos sample y un addList simple");
         String[] prueba = new String[2];
-        String s = "test/roadrunner/sample1.html";
+        String s = "test/roadrunner/ejemplosSimples/sample1.html";
         prueba[0] = s;
-        s = "test/roadrunner/sample3.html";
+        s = "test/roadrunner/ejemplosSimples/sample3.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
@@ -90,9 +90,9 @@ public class RoadRunnerTest {
     {
         System.out.println("Test complejo para RoadRunner: dos sample y un addList simple");
         String[] prueba = new String[2];
-        String s = "test/roadrunner/sample3.html";
+        String s = "test/roadrunner/ejemplosSimples/sample3.html";
         prueba[0] = s;
-        s = "test/roadrunner/sample1.html";
+        s = "test/roadrunner/ejemplosSimples/sample1.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
@@ -105,9 +105,9 @@ public class RoadRunnerTest {
     {
         System.out.println("Test complejo para RoadRunner: dos sample y un addOptional simple (Optional en Wrapper)");
         String[] prueba = new String[2];
-        String s = "test/roadrunner/sample1.html";
+        String s = "test/roadrunner/ejemplosSimples/sample1.html";
         prueba[0] = s;
-        s = "test/roadrunner/sample4.html";
+        s = "test/roadrunner/ejemplosSimples/sample4.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
@@ -120,9 +120,9 @@ public class RoadRunnerTest {
     {
         System.out.println("Test complejo para RoadRunner: dos sample y un addOptional simple (Optional en Sample)");
         String[] prueba = new String[2];
-        String s = "test/roadrunner/sample4.html";
+        String s = "test/roadrunner/ejemplosSimples/sample4.html";
         prueba[0] = s;
-        s = "test/roadrunner/sample1.html";
+        s = "test/roadrunner/ejemplosSimples/sample1.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
@@ -135,15 +135,15 @@ public class RoadRunnerTest {
     {
         System.out.println("¡¡Todo junto!!");
         String[] prueba = new String[5];
-        String s = "test/roadrunner/sample1.html";
+        String s = "test/roadrunner/ejemplosSimples/sample1.html";
         prueba[0] = s;
-        s = "test/roadrunner/sample2.html";
+        s = "test/roadrunner/ejemplosSimples/sample2.html";
         prueba[1] = s;
-        s = "test/roadrunner/sample3.html";
+        s = "test/roadrunner/ejemplosSimples/sample3.html";
         prueba[2] = s;
-        s = "test/roadrunner/sample4.html";
+        s = "test/roadrunner/ejemplosSimples/sample4.html";
         prueba[3] = s;
-        s = "test/roadrunner/sample5.html";
+        s = "test/roadrunner/ejemplosSimples/sample5.html";
         prueba[4] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
