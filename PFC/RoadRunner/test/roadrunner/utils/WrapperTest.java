@@ -174,4 +174,19 @@ public class WrapperTest
         instance3.eat(instance3, instance3.getTree().getRootObject(), instance3.getTree().getRootObject(), DirectionOperator.DOWNWARDS);
         instance3.eat(instance3, instance3.getTree().getRootObject(), instance3.getTree().getRootObject(), DirectionOperator.UPWARDS);
     }
+    
+    @Test
+    public void wrapperString() 
+    {
+        System.out.println("wrapperString");
+        String w1String = "(<li>0123456789</li>)+";
+        Wrapper w1 = new Wrapper(w1String);
+
+       assertEquals(w1.toString(), w1String);
+       
+       String w2String = "((<li>012345</li>)+<b>hola</b>)?<i>adios</i>";
+        
+        Wrapper w2 = new Wrapper(w2String);
+        assertEquals(w2.toString(), w2String);
+    }
 }

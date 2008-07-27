@@ -12,6 +12,7 @@ import SMTree.iterator.ForwardIterator;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.StyledEditorKit.BoldAction;
 import roadrunner.node.*; 
 import roadrunner.operator.DirectionOperator;
 import roadrunner.iterator.webPageBackwardIterator;
@@ -58,6 +59,77 @@ public class Wrapper implements Edible{
     {
         super();
         this.treeWrapper = tree;
+    }
+    
+    public Wrapper(String regexp)
+    {
+        super();
+        treeWrapper = new SMTree<Item>();
+        
+        Stack<Item> s = new Stack<Item>();
+        Item lastParentItem = new Tuple();
+        
+        treeWrapper.setRootObject(lastParentItem);
+        treeWrapper.addObject(new DOF(), treeWrapper.getRoot(), Kinship.CHILD);
+        
+        for(int i=0; i<regexp.length(); i++ )
+        {
+            if(regexp.charAt(i) == '(')
+            {
+                Item oldParent = lastParentItem;
+                lastParentItem = s.push(new Tuple());
+                treeWrapper.addObject(lastParentItem,treeWrapper.getNode(oldParent), Kinship.CHILD);
+                
+            }
+            else if (regexp.charAt(i) == ')')
+            {
+                if(s.isEmpty())
+                    throw new IllegalArgumentException("La expresión regular no está bien formada");
+                
+                if(regexp.charAt(i+1) == '+')
+                {
+                    i++;
+                    treeWrapper.getNode(s.pop()).setObject(new List());
+                    lastParentItem = (Item) treeWrapper.getNode(lastParentItem).getParent().getObject();
+                }
+                else if(regexp.charAt(i+1) == '?')
+                {
+                    i++;
+                    treeWrapper.getNode(s.pop()).setObject(new Optional());
+                    lastParentItem = (Item) treeWrapper.getNode(lastParentItem).getParent().getObject();
+                }
+                else
+                    continue;      
+            }
+            else if(regexp.charAt(i) == '<')
+            {
+                int j = regexp.indexOf(">", i);
+                if(j<0)
+                    throw new IllegalArgumentException("La expresión regular no está bien formada");
+                
+                String tag = regexp.substring(i, j+1);
+                
+                treeWrapper.addObject(new Tag(tag), treeWrapper.getNode(lastParentItem), Kinship.CHILD);
+                
+                i = j;
+            }
+            else
+            {
+                int j = i;
+                while(j<regexp.length() && regexp.charAt(j)!='<' && regexp.charAt(j)!='>' 
+                        && regexp.charAt(j)!='(' && regexp.charAt(j)!=')')
+                {
+                    j++;
+                }
+                
+                String text = regexp.substring(i, j);
+                            
+                treeWrapper.addObject(new Text(text), treeWrapper.getNode(lastParentItem), Kinship.CHILD);
+                i = j-1;        
+            }
+        }
+        
+        treeWrapper.addObject(new DOF(), treeWrapper.getRoot(), Kinship.CHILD);
     }
 
     /**
@@ -438,15 +510,65 @@ public class Wrapper implements Edible{
     @Override
     public String toString()
     {
-        String result = "";
-        ForwardIterator it = new ForwardIterator();
-        it.setTree(treeWrapper);
-               
-        while(it.hasNext())
+//        String result = "";
+//        ForwardIterator it = new ForwardIterator();
+//        it.setTree(treeWrapper);
+//               
+//        while(it.hasNext())
+//        {
+//            result += it.nextObject().toString();
+//        }
+//     return result;
+//     
+//        String result = "";
+//        ForwardIterator it = new ForwardIterator();
+//        it.setTree(treeWrapper);
+//            
+//        SMTreeNode aux = null;
+//        while(it.hasNext())
+//        {
+//            aux = (SMTreeNode) it.next();
+//            if(aux.getObject() instanceof DOF)
+//                continue;
+//            else if(!(aux.getObject() instanceof Token))
+//                result += "(";
+//            else if(aux.getPrevious() !=null && aux.getPrevious().getObject() instanceof Token)
+//                continue;
+//                
+//            //result += it.nextObject().toString();
+//        }
+//     return result;
+        
+        return toStringWrapper(treeWrapper.getRoot());
+    }
+    
+    private String toStringWrapper(SMTreeNode n)
+    {
+        
+        if(n.getObject() instanceof DOF)
+            return "";
+        
+        String result = "";     
+        SMTreeNode aux = n.getFirstChild();     
+
+        if(n != treeWrapper.getRoot() && aux==null)
+            return n.getObject().toString();
+
+        if(n != treeWrapper.getRoot())
+            result += "(";
+        
+        while(aux!=n.getLastChild())
         {
-            result += it.nextObject().toString();
+            result += toStringWrapper(aux);
+            aux = aux.getNext(); 
         }
-     return result;  
+        
+        result += toStringWrapper(aux);
+        
+        if(n != treeWrapper.getRoot())
+            result += ")"+n.getObject().toString();
+      
+        return result;
     }
 }
 
