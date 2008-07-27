@@ -17,6 +17,7 @@ import roadrunner.node.*;
 import roadrunner.operator.DirectionOperator;
 import roadrunner.iterator.webPageBackwardIterator;
 import roadrunner.iterator.webPageForwardIterator;
+import roadrunner.node.Variable;
 import roadrunner.operator.Operator;
 
 /**
@@ -112,6 +113,10 @@ public class Wrapper implements Edible{
                 treeWrapper.addObject(new Tag(tag), treeWrapper.getNode(lastParentItem), Kinship.CHILD);
                 
                 i = j;
+            }
+            else if(regexp.charAt(i) == '#')
+            {
+                treeWrapper.addObject(new Variable(), treeWrapper.getNode(lastParentItem), Kinship.CHILD);
             }
             else
             {

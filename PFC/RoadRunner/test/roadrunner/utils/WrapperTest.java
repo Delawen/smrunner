@@ -188,5 +188,10 @@ public class WrapperTest
         
         Wrapper w2 = new Wrapper(w2String);
         assertEquals(w2.toString(), w2String);
+        
+        String w3String = "<html>(<li>elemento(<b>pss</b>)?</li>)+</html>";
+        Wrapper w3 = new Wrapper(w3String);
+        assertEquals(w3.toString(), w3String);
+        
     }
 }
