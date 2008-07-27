@@ -266,7 +266,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                      */
                     SMTreeNode<Item> nodo = super.lastNode;
 
-                    while(nodo.getNext() == null)
+                    while(nodo.getNext() == null && nodo.getParent() != null)
                     {
                         nodo = nodo.getParent();
                         /**
@@ -287,7 +287,8 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                    if(nodo.getNext() != null && (nodo.getNext().getObject() instanceof List))
                         ((List)nodo.getNext().getObject()).setAccessed(false);
 
-                    resultado.add(k, nodo.getNext());
+                    if(nodo.getNext() != null)
+                        resultado.add(k, nodo.getNext());
                 }
             }
             /**
