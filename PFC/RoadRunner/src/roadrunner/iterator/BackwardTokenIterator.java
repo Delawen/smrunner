@@ -680,7 +680,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                      */
                     SMTreeNode<Item> nodo = super.lastNode;
 
-                    while(nodo.getNext() == null)
+                    while(nodo.getNext() == null && nodo.getParent() != null)
                     {
                         nodo = nodo.getParent();
                         /**
