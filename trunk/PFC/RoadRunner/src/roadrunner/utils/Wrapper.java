@@ -326,79 +326,6 @@ public class Wrapper implements Edible{
         return new Mismatch(this, e, itemWrapper, edibleToken, d);
 
     }
-   
-    private boolean isWellFormed (Token from,Enclosure inclusionFrom, Token to,Enclosure inclusionTo, DirectionOperator d) {
-        
-        if(from==null || to==null)
-           throw new NullPointerException("");
-        
-        // las regiones vacias estaran bien formadas
-        if(from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
-            return true;
-        
-        boolean isWellFormed = true;
-        Stack<Tag> openTags = new Stack(); 
-        EdibleIterator it = null;
-        
-        if(d == DirectionOperator.DOWNWARDS)
-            it = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
-        else if(d == DirectionOperator.UPWARDS)
-            it = (EdibleIterator) treeWrapper.iterator(BackwardTokenIterator.class);
-
-        //Si 'to' no esta incluido, no desechamos
-        if(Enclosure.NOT_ENCLOSED == inclusionTo)
-        {
-            it.goTo(to);
-            to = (Token)it.previous(true);
-        }
-        
-        it.goTo(from);
-            
-        //Si 'from' no esta incluido, no desechamos
-        if(Enclosure.NOT_ENCLOSED == inclusionFrom)
-            from = (Token) it.nextObject(true);
-        
-        if(from==to && !(from instanceof Tag))
-            return true;
-        else if (from==to)
-            return false;
-        
-        if(d == DirectionOperator.DOWNWARDS)
-        {
-            Token t;
-            do
-            {
-                t = (Token) it.nextObject();
-                if(t instanceof Tag && ((Tag)t).isOpenTag())
-                    openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
-                        openTags.pop();
-                else if(!(t instanceof Text) && !(t instanceof Variable))
-                    isWellFormed = false;
-
-            } while(it.hasNext() && t!=to && isWellFormed);
-        }
-        else if(d == DirectionOperator.UPWARDS)
-        {
-            Token t;
-            do
-            {
-                t = (Token) it.nextObject();
-                if(t instanceof Tag && ((Tag)t).isOpenTag())
-                    openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
-                        openTags.pop();
-                else if(!(t instanceof Text) && !(t instanceof Variable))
-                    isWellFormed = false;
-
-            } while(it.hasNext() && t!=to && isWellFormed);      
-        }
-            
-        if(!openTags.empty())
-            isWellFormed=false;
-        
-        return isWellFormed;
-    }
 
     public boolean substitute (Item from, Enclosure inclusionFrom, Item to, Enclosure inclusionTo, SMTree what) {
         return treeWrapper.substituteObject(from, inclusionFrom, to, inclusionTo, what);
@@ -511,39 +438,88 @@ public class Wrapper implements Edible{
         
         return null;
     }
+    
+    private boolean isWellFormed (Token from,Enclosure inclusionFrom, Token to,Enclosure inclusionTo, DirectionOperator d) {
+        
+        if(from==null || to==null)
+           throw new NullPointerException("");
+        
+        // las regiones vacias estaran bien formadas
+        if(from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
+            return true;
+        
+        boolean isWellFormed = true;
+        Stack<Tag> openTags = new Stack(); 
+        EdibleIterator it = null;
+        
+        if(d == DirectionOperator.DOWNWARDS)
+            it = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
+        else if(d == DirectionOperator.UPWARDS)
+            it = (EdibleIterator) treeWrapper.iterator(BackwardTokenIterator.class);
+
+        //Si 'to' no esta incluido, no desechamos
+        if(Enclosure.NOT_ENCLOSED == inclusionTo)
+        {
+            it.goTo(to);
+            to = (Token)it.previous(true);
+        }
+        
+        it.goTo(from);
+            
+        //Si 'from' no esta incluido, no desechamos
+        if(Enclosure.NOT_ENCLOSED == inclusionFrom)
+            from = (Token) it.nextObject(true);
+        
+        if(from==to && !(from instanceof Tag))
+            return true;
+        else if (from==to)
+            return false;
+        
+        if(d == DirectionOperator.DOWNWARDS)
+        {
+            Token t;
+            do
+            {
+                t = (Token) it.nextObject();
+                if(t instanceof Tag && ((Tag)t).isOpenTag() && ((Tag)t).isCloseTag())
+                    continue;
+                else if(t instanceof Tag && ((Tag)t).isOpenTag())
+                    openTags.push((Tag)t);
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                        openTags.pop();
+                else if(!(t instanceof Text) && !(t instanceof Variable))
+                    isWellFormed = false;
+
+            } while(it.hasNext() && t!=to && isWellFormed);
+        }
+        else if(d == DirectionOperator.UPWARDS)
+        {
+            Token t;
+            do
+            {
+                t = (Token) it.nextObject();
+                
+                if(t instanceof Tag && ((Tag)t).isOpenTag() && ((Tag)t).isCloseTag())
+                    continue;
+                else if(t instanceof Tag && ((Tag)t).isOpenTag())
+                    openTags.push((Tag)t);
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                        openTags.pop();
+                else if(!(t instanceof Text) && !(t instanceof Variable))
+                    isWellFormed = false;
+
+            } while(it.hasNext() && t!=to && isWellFormed);      
+        }
+            
+        if(!openTags.empty())
+            isWellFormed=false;
+        
+        return isWellFormed;
+    }
 
     @Override
     public String toString()
     {
-//        String result = "";
-//        ForwardIterator it = new ForwardIterator();
-//        it.setTree(treeWrapper);
-//               
-//        while(it.hasNext())
-//        {
-//            result += it.nextObject().toString();
-//        }
-//     return result;
-//     
-//        String result = "";
-//        ForwardIterator it = new ForwardIterator();
-//        it.setTree(treeWrapper);
-//            
-//        SMTreeNode aux = null;
-//        while(it.hasNext())
-//        {
-//            aux = (SMTreeNode) it.next();
-//            if(aux.getObject() instanceof DOF)
-//                continue;
-//            else if(!(aux.getObject() instanceof Token))
-//                result += "(";
-//            else if(aux.getPrevious() !=null && aux.getPrevious().getObject() instanceof Token)
-//                continue;
-//                
-//            //result += it.nextObject().toString();
-//        }
-//     return result;
-        
         return toStringWrapper(treeWrapper.getRoot());
     }
     

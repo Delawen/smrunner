@@ -11,7 +11,7 @@ import java.util.Map;
 public class Tag extends Token 
 {
 
-    public enum Type {OPEN,CLOSE};
+    public enum Type {OPEN,CLOSE, OPEN_AND_CLOSE};
     private Type type;
     private Map atributos;
 
@@ -48,6 +48,11 @@ public class Tag extends Token
         {
             this.type = Type.CLOSE;
             save(c.substring(2, c.length() - 1));
+        }
+        else if(c.startsWith("<") && c.endsWith("/>"))
+        {
+            this.type = Type.OPEN_AND_CLOSE;
+            save(c.substring(1, c.length() - 2));
         }
         else if(c.startsWith("<") && c.endsWith(">"))
         {
@@ -105,12 +110,12 @@ public class Tag extends Token
     
     public boolean isOpenTag()
     {
-        return Type.OPEN == type;
+        return Type.OPEN == type || Type.OPEN_AND_CLOSE == type;
     }
     
     public boolean isCloseTag()
     {
-        return Type.CLOSE == type;
+        return Type.CLOSE == type || Type.OPEN_AND_CLOSE == type;
     }
     
    
@@ -130,7 +135,7 @@ public class Tag extends Token
     {
         String resultado = "<";
         
-        if(this.isCloseTag())
+        if(this.isCloseTag() && !this.isOpenTag())
             resultado += "/";
         
         resultado += this.content;
@@ -143,7 +148,10 @@ public class Tag extends Token
             resultado += " " + key + "=" + this.atributos.get(key);
         }
         
-        resultado += ">";
+        if(this.isCloseTag() && this.isOpenTag())
+            resultado += "/>";
+        else
+            resultado += ">";
         
         return resultado;
     }

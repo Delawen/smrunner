@@ -89,79 +89,6 @@ public class Sample implements Edible{
         
         return resultado;
     }
-            
-    public boolean isWellFormed (Token from, Enclosure inclusionFrom, Token to, Enclosure inclusionTo, DirectionOperator d) {
-        
-        if(from==null || to==null)
-           throw new NullPointerException("");
-        
-        // las regiones vacias estaran bien formadas
-        if(from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
-            return true;
-        
-        boolean isWellFormed = true;
-        Stack<Tag> openTags = new Stack(); 
-        EdibleIterator it = null;
-        
-        if(d == DirectionOperator.DOWNWARDS)
-            it = iterator(webPageForwardIterator.class);
-        else if( d == DirectionOperator.UPWARDS)
-            it = iterator(webPageBackwardIterator.class);
-
-        //Si 'to' no esta incluido, no desechamos
-        if(Enclosure.NOT_ENCLOSED == inclusionTo)
-        {
-            it.goTo(to);
-            to = (Token) it.previous();
-        }
-        
-        it.goTo(from);
-            
-        //Si 'from' no esta incluido, no desechamos
-        if(Enclosure.NOT_ENCLOSED == inclusionFrom)
-            from = (Token) it.next();
-        
-        if(from==to && !(from instanceof Tag))
-            return true;
-        else if (from==to)
-            return false;
-        
-        if(d == DirectionOperator.DOWNWARDS)
-        {
-            Token t;
-            do
-            {
-                t = (Token) it.next();
-                if(t instanceof Tag && ((Tag)t).isOpenTag())
-                    openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
-                        openTags.pop();
-                else if(!(t instanceof Text) && !(t instanceof Variable))
-                    isWellFormed = false;
-
-            } while(it.hasNext() && t!=to && isWellFormed);   
-        }
-        else if( d == DirectionOperator.UPWARDS)       
-        {
-            Token t;
-            do
-            {
-                t = (Token) it.next();
-                if(t instanceof Tag && ((Tag)t).isOpenTag())
-                    openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag()  && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
-                        openTags.pop();
-                else if(!(t instanceof Text) && !(t instanceof Variable))
-                    isWellFormed = false;
-
-            } while(it.hasNext() && t!=to && isWellFormed);
-        }
-           
-        if(!openTags.empty())
-            isWellFormed=false;
-        
-        return isWellFormed; 
-    }
     
     public Wrapper getAsWrapper() 
     {
@@ -314,5 +241,82 @@ public class Sample implements Edible{
                 return token;
         }
         return null;
+    }
+    
+    public boolean isWellFormed (Token from, Enclosure inclusionFrom, Token to, Enclosure inclusionTo, DirectionOperator d) {
+        
+        if(from==null || to==null)
+           throw new NullPointerException("");
+        
+        // las regiones vacias estaran bien formadas
+        if(from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
+            return true;
+        
+        boolean isWellFormed = true;
+        Stack<Tag> openTags = new Stack(); 
+        EdibleIterator it = null;
+        
+        if(d == DirectionOperator.DOWNWARDS)
+            it = iterator(webPageForwardIterator.class);
+        else if( d == DirectionOperator.UPWARDS)
+            it = iterator(webPageBackwardIterator.class);
+
+        //Si 'to' no esta incluido, no desechamos
+        if(Enclosure.NOT_ENCLOSED == inclusionTo)
+        {
+            it.goTo(to);
+            to = (Token) it.previous();
+        }
+        
+        it.goTo(from);
+            
+        //Si 'from' no esta incluido, no desechamos
+        if(Enclosure.NOT_ENCLOSED == inclusionFrom)
+            from = (Token) it.next();
+        
+        if(from==to && !(from instanceof Tag))
+            return true;
+        else if (from==to)
+            return false;
+        
+        if(d == DirectionOperator.DOWNWARDS)
+        {
+            Token t;
+            do
+            {
+                t = (Token) it.next();
+                if(t instanceof Tag && ((Tag)t).isOpenTag() && ((Tag)t).isCloseTag())
+                    continue;
+                else if(t instanceof Tag && ((Tag)t).isOpenTag())
+                    openTags.push((Tag)t);
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                        openTags.pop();
+                else if(!(t instanceof Text) && !(t instanceof Variable))
+                    isWellFormed = false;
+
+            } while(it.hasNext() && t!=to && isWellFormed);   
+        }
+        else if( d == DirectionOperator.UPWARDS)       
+        {
+            Token t;
+            do
+            {
+                t = (Token) it.next();
+                if(t instanceof Tag && ((Tag)t).isOpenTag() && ((Tag)t).isCloseTag())
+                    continue;
+                else if(t instanceof Tag && ((Tag)t).isOpenTag())
+                    openTags.push((Tag)t);
+                else if (t instanceof Tag && ((Tag)t).isCloseTag()  && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                        openTags.pop();
+                else if(!(t instanceof Text) && !(t instanceof Variable))
+                    isWellFormed = false;
+
+            } while(it.hasNext() && t!=to && isWellFormed);
+        }
+           
+        if(!openTags.empty())
+            isWellFormed=false;
+        
+        return isWellFormed; 
     }
 }
