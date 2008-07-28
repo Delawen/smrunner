@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-// #[regen=yes,id=DCE.43392123-E85C-8D5D-0464-7640817C4CF6]
-// </editor-fold> 
+
 public class Tag extends Token
 {
 
@@ -119,14 +118,22 @@ public class Tag extends Token
     
    
     @Override
-    public Object clone() 
+    public Object clone() throws CloneNotSupportedException 
     {
-        Tag clon;
-        if(this.isOpenTag())
-            clon = new Tag("<" + getContent() + ">");
-        else
-            clon = new Tag("</" + getContent() + ">");
-        return clon;
+        Object o = super.clone();
+        
+        Map atribClone = new HashMap<String, String>();
+        
+        Iterator<String> it = this.atributos.keySet().iterator();
+        while(it.hasNext())
+        {
+            String key = it.next();            
+            atribClone.put(key.toString(), atributos.get(key).toString());
+        }
+        ((Tag)o).atributos = atribClone;
+        ((Tag)o).type = type;
+        
+        return o;
     }
     
     @Override
@@ -155,11 +162,4 @@ public class Tag extends Token
         return resultado;
     }
     
-    @Override
-    public Object clone() throws CloneNotSupportedException{    
-        Object obj = super.clone();
-        ((Tag)obj).setType(type);
-        ((Tag)obj).atributos = atributos.clone();
-        return obj;
-    }
 }
