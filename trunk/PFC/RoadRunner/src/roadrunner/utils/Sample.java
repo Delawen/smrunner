@@ -193,23 +193,37 @@ public class Sample implements Edible{
         return tokens.get(index);
     }
     
-    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent) 
+ public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent)
     {
-        Item root = (Item)parent.clone();
-        SMTree<Item> treeCloned = new SMTree<Item>(root);
-        SMTreeNode<Item> rootNode = treeCloned.getNode(root);
+
+        Item root; 
+        SMTree<Item> treeCloned = null;
+        SMTreeNode<Item> rootNode;
         
-        Iterator<Token> it = tokens.iterator();
-        Item i = null;
-        while(it.hasNext() && !firstTokenSquare.equals(i))
-            i = it.next();
+        if(!tokens.contains(firstTokenSquare) || !tokens.contains(lastTokenSquare))
+            throw new IllegalArgumentException("Los delimitadores no existen");
         
-        while(it.hasNext())
-        {
+        try {
+            root = (Item) parent.clone();
+            treeCloned = new SMTree<Item>(root);
+            rootNode = treeCloned.getNode(root);
+
+            Iterator<Token> it = tokens.iterator();
+            Item i = null;
+            while (it.hasNext() && firstTokenSquare != i)
+                i = it.next();
+            
             treeCloned.addObject(i, rootNode, Kinship.CHILD);
-            if(i.equals(lastTokenSquare))
-                break;
-            i = it.next();
+
+            while (it.hasNext() && i != lastTokenSquare) {                
+                i = it.next();
+                treeCloned.addObject(i, rootNode, Kinship.CHILD);
+            }
+            
+            treeCloned.addObject(i, rootNode, Kinship.CHILD);
+            
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new Wrapper(treeCloned);
     }
@@ -293,7 +307,7 @@ public class Sample implements Edible{
                     continue;
                 else if(t instanceof Tag && ((Tag)t).isOpenTag())
                     openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.lastElement().isOpenTag() && openTags.lastElement().getContent().equals(t.getContent()))
                         openTags.pop();
                 else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;
