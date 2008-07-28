@@ -54,7 +54,13 @@ public abstract class Item implements Cloneable{
      */
     @Override
     public abstract boolean equals(Object i);
-    public abstract Object clone();
+    
+    public Object clone() throws CloneNotSupportedException{    
+        
+        Object obj = super.clone();
+        
+        return obj;
+    }
 
 }
 
