@@ -470,9 +470,13 @@ public class Wrapper implements Edible{
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
             from = (Token) it.nextObject(true);
         
-        if(from==to && !(from instanceof Tag))
+        //si miramos solo si un token esta bien formado y dicho token no es una etiqueta
+        if(from==to && (!(from instanceof Tag)))
             return true;
-        else if (from==to)
+        //si miramos solo si un token esta bien formado y dicho token es una etiqueta del tipo <.../>
+        else if (from==to && ((Tag)from).isOpenTag() && ((Tag)from).isOpenTag())
+            return true;
+        else if(from==to)
             return false;
         
         if(d == DirectionOperator.DOWNWARDS)
