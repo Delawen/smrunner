@@ -1,6 +1,5 @@
 package roadrunner.node;
 
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,7 +7,7 @@ import java.util.Map;
 
 // #[regen=yes,id=DCE.43392123-E85C-8D5D-0464-7640817C4CF6]
 // </editor-fold> 
-public class Tag extends Token 
+public class Tag extends Token
 {
 
     public enum Type {OPEN,CLOSE, OPEN_AND_CLOSE};
@@ -154,5 +153,13 @@ public class Tag extends Token
             resultado += ">";
         
         return resultado;
+    }
+    
+    @Override
+    public Object clone() throws CloneNotSupportedException{    
+        Object obj = super.clone();
+        ((Tag)obj).setType(type);
+        ((Tag)obj).atributos = atributos.clone();
+        return obj;
     }
 }
