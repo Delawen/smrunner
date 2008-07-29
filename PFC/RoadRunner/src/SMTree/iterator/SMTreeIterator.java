@@ -36,7 +36,7 @@ public abstract class SMTreeIterator<T>
         lastNode = aux; 
         if(hasPrevious())
         {
-            Object o = previous();
+            Object o = previousNode();
             T previous;
             if(o instanceof java.util.List)
                 previous = ((java.util.List<T>)o).get(0);
@@ -73,7 +73,8 @@ public abstract class SMTreeIterator<T>
     public abstract SMTreeNode nextNode ();
     public  abstract boolean hasNext ();
     public abstract boolean hasPrevious();
-    public abstract Object previous();
+    public abstract SMTreeNode previousNode();
+    public abstract Object previousObject();
     public void remove() 
     {
         throw new UnsupportedOperationException("Not supported yet.");

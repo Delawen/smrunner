@@ -86,10 +86,15 @@ public class LevelIterator<T> extends SMTreeIterator<T>
     }
 
     @Override
-    public T previous() {
+    public SMTreeNode previousNode() {
         if(it == null)
             AmpliturIteratorConstructor();
-        return it.previous().getObject();
+        return it.previous();
+    }
+
+    @Override
+    public Object previousObject() {
+        return previousNode().getObject();
     }
 }
 
