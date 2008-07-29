@@ -15,6 +15,7 @@ import roadrunner.node.Item;
 import roadrunner.node.Text;
 import roadrunner.node.Token;
 import roadrunner.node.Variable;
+import roadrunner.utils.Edible;
 
 /**
  *  Class addVariable
@@ -50,7 +51,7 @@ public class AddVariable extends IOperator
             reparacion.setInitialItem(n);
             
             //indexSample:
-            Sample s = (Sample) m.getSample();
+            Edible s = m.getSample();
             EdibleIterator it;
             if(d == DirectionOperator.DOWNWARDS)
             {
