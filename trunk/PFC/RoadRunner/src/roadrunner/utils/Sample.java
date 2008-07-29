@@ -193,9 +193,14 @@ public class Sample implements Edible{
         return tokens.get(index);
     }
     
- public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent)
+ public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent, DirectionOperator d)
     {
-
+        if(d == DirectionOperator.UPWARDS)
+        {
+            Token temp = firstTokenSquare;
+            firstTokenSquare = lastTokenSquare;
+            lastTokenSquare = temp;
+        }
         Item root; 
         SMTree<Item> treeCloned = null;
         SMTreeNode<Item> rootNode;
@@ -322,9 +327,9 @@ public class Sample implements Edible{
                 t = (Token) it.next();
                 if(t instanceof Tag && ((Tag)t).isOpenTag() && ((Tag)t).isCloseTag())
                     continue;
-                else if(t instanceof Tag && ((Tag)t).isOpenTag())
+                else if(t instanceof Tag && ((Tag)t).isCloseTag())
                     openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag()  && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                else if (t instanceof Tag && ((Tag)t).isOpenTag()  && !openTags.empty() && openTags.lastElement().isCloseTag() && openTags.lastElement().getContent().equals(t.getContent()))
                         openTags.pop();
                 else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;

@@ -18,7 +18,7 @@ import roadrunner.operator.DirectionOperator;
 public interface Edible 
 {
 
-    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item item);
+    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item item, DirectionOperator d);
     public EdibleIterator iterator(Class type);
     public Token searchWellFormed(Token token, Enclosure tokenEnclosure, Token t, Enclosure tEnclosure, DirectionOperator d);
 }

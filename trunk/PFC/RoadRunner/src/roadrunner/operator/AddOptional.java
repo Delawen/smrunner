@@ -106,9 +106,16 @@ public class AddOptional extends IOperator
 
             Wrapper wrapperReparator = null;
             try {
-                wrapperReparator = new Wrapper(w.cloneSubWrapper(firstTokenOptional, lastTokenOptional, new Optional()));
+                wrapperReparator = new Wrapper(w.cloneSubWrapper(firstTokenOptional, lastTokenOptional, new Optional(), d));
             } catch (CloneNotSupportedException ex) {
                 Logger.getLogger(AddOptional.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            if(DirectionOperator.UPWARDS == d)
+            {
+                Token temp = lastTokenOptional;
+                lastTokenOptional = firstTokenOptional;
+                firstTokenOptional = temp;
             }
 
             //colocamos los parámetros de la reparación
@@ -151,16 +158,28 @@ public class AddOptional extends IOperator
                 return rep;
             }
             
-            Wrapper wrapperReparator = s.cloneSubWrapper(firstTokenOptional, lastTokenOptional, new Optional());
-            
-            rep.setReparator(wrapperReparator);
-            itW.goTo(n);      
-            rep.setInitialItem((Item) itW.previous(true));
+            Wrapper wrapperReparator = s.cloneSubWrapper(firstTokenOptional, lastTokenOptional, new Optional(), d);
+
+
+            itW.goTo(n);
+            firstTokenOptional = (Token) itW.previous(true);
+
+
+            if(DirectionOperator.UPWARDS == d)
+            {
+                Token temp = lastTokenOptional;
+                lastTokenOptional = firstTokenOptional;
+                firstTokenOptional = temp;
+            }
+
+
+            rep.setReparator(wrapperReparator);    
+            rep.setInitialItem(firstTokenOptional);
             rep.setInitialEnclosure(Enclosure.NOT_ENCLOSED);
-            rep.setFinalItem(n);
+            rep.setFinalItem(lastTokenOptional);
             rep.setFinalEnclosure(Enclosure.NOT_ENCLOSED);
             rep.setState(StateRepair.SUCESSFULL);
-            itS.goTo(lastTokenOptional);
+            itS.goTo(t);
             itS.next();
             rep.setIndexSample((Token) itS.next()); 
         }

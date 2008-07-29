@@ -10,12 +10,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import roadrunner.iterator.EdibleIterator;
-import roadrunner.iterator.ForwardTokenIterator;
-import roadrunner.node.Token;
 import roadrunner.utils.Edible;
-import roadrunner.utils.Wrapper;
-import static org.junit.Assert.*;
 
 /**
  *
