@@ -154,6 +154,12 @@ public class Mismatch {
     public void setDirection(DirectionOperator direction) {
         this.direction = direction;
     }
+    
+    public String toString()
+    {
+        return "(n=\""+node+"\", t=\""+token+"\")";
+    
+    }
 
 }
 

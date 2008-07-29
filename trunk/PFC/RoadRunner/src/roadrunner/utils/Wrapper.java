@@ -543,10 +543,10 @@ public class Wrapper implements Edible{
         String result = "";     
         SMTreeNode aux = n.getFirstChild();     
 
-        if(n != treeWrapper.getRoot() && aux==null)
+        if(!(n.getObject() instanceof Tuple) && aux==null)
             return n.getObject().toString();
 
-        if(n != treeWrapper.getRoot())
+        if(!(n.getObject() instanceof Tuple) )
             result += "(";
         
         while(aux!=n.getLastChild())
@@ -557,7 +557,7 @@ public class Wrapper implements Edible{
         
         result += toStringWrapper(aux);
         
-        if(n != treeWrapper.getRoot())
+        if(!(n.getObject() instanceof Tuple))
             result += ")"+n.getObject().toString();
       
         return result;
