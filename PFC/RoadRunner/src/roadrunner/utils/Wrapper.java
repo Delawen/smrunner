@@ -150,7 +150,11 @@ public class Wrapper implements Edible{
         //Iteradores de los Edibles:
         Mismatch m = null;
 
+        if(t == null)
+            return null;
+
         crearIteradorEdible(d, t, e);
+
         crearIteradorWrapper(d, this.getTree().getRootObject());
 
         //Para resolver los mismatches:
@@ -397,11 +401,14 @@ public class Wrapper implements Edible{
         return wi;
     }
 
-    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent) 
+    public Wrapper cloneSubWrapper(Token firstTokenSquare, Token lastTokenSquare, Item parent, DirectionOperator d)
     {
         SMTree<Item> treeCloned = null;
         try {
-            treeCloned = treeWrapper.cloneSubTree(firstTokenSquare, lastTokenSquare, parent);
+            if(DirectionOperator.UPWARDS == d)
+                treeCloned = treeWrapper.cloneSubTree(lastTokenSquare, firstTokenSquare, parent);
+            else
+                treeCloned = treeWrapper.cloneSubTree(firstTokenSquare, lastTokenSquare, parent);
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -505,9 +512,9 @@ public class Wrapper implements Edible{
                 
                 if(t instanceof Tag && ((Tag)t).isOpenTag() && ((Tag)t).isCloseTag())
                     continue;
-                else if(t instanceof Tag && ((Tag)t).isOpenTag())
+                else if(t instanceof Tag && ((Tag)t).isCloseTag())
                     openTags.push((Tag)t);
-                else if (t instanceof Tag && ((Tag)t).isCloseTag() && !openTags.empty() && openTags.firstElement().isOpenTag() && openTags.firstElement().getContent().equals(t.getContent()))
+                else if (t instanceof Tag && ((Tag)t).isOpenTag() && !openTags.empty() && openTags.lastElement().isCloseTag() && openTags.lastElement().getContent().equals(t.getContent()))
                         openTags.pop();
                 else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;

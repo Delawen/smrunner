@@ -89,13 +89,18 @@ public class AddList extends IOperator
 
             
             // Ya tenemos definido la zona de squareW, ahora le creamos un wrapper        
-            Wrapper squareW = w.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new Tuple());     
+            Wrapper squareW = w.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new Tuple(), d);
                              
             // Comemos hacia arriba
             Item whereEat; 
             itW.goTo(firstTokenList);
             whereEat = (Item) itW.previous();
-            Item whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+            
+            Item whatEaten = null;
+            if(d == DirectionOperator.DOWNWARDS)
+                whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+            else
+                whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.DOWNWARDS);
             
             
             // para asegurarnos de que es un plus al menos tengo que comerme
@@ -113,7 +118,10 @@ public class AddList extends IOperator
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.previous();
                 whatEatenTemp = whatEaten;
-                whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+                if(d == DirectionOperator.DOWNWARDS)
+                    whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+                else
+                    whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.DOWNWARDS);
                 if(whatEaten == whatEatenTemp)
                     break;
             }
@@ -122,7 +130,7 @@ public class AddList extends IOperator
            itW.goTo(lastTokenList);
            itW.next();
            whereEat = (Item) itW.next();
-           whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.DOWNWARDS);
+           whatEaten = squareW.eatOneSquare(w, whereEat, d);
             
             while( whatEaten != null)
             {
@@ -130,12 +138,20 @@ public class AddList extends IOperator
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.next();
                 whatEatenTemp = whatEaten;
-                whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.DOWNWARDS);
+                whatEaten = squareW.eatOneSquare(w, whereEat, d);
                 if(whatEaten == whatEatenTemp)
                     return null;
             }
            
             squareW.getTree().setRootObject(new List());
+
+            if(DirectionOperator.UPWARDS == d)
+            {
+                Token temp = lastTokenList;
+                lastTokenList = firstTokenList;
+                firstTokenList = temp;
+            }
+
             rep.setReparator(squareW);
             rep.setInitialItem(firstTokenList);
             rep.setFinalItem(lastTokenList);
@@ -163,14 +179,18 @@ public class AddList extends IOperator
             }
                         
             // Ya tenemos definido la zona de squareS, ahora le creamos un wrapper        
-            Wrapper squareS = s.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new Tuple());     
+            Wrapper squareS = s.cloneSubWrapper(firstTokenSquare, lastTokenSquare, new Tuple(), d);
                              
             // Comemos hacia arriba en el wrapper
             Item whereEat;   
             itW.goTo(n);
             whereEat = lastTokenList;
-            Item whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
-            
+            Item whatEaten;
+
+            if(d == DirectionOperator.DOWNWARDS)
+                whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+            else
+                whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.DOWNWARDS);
             
             // para asegurarnos de que es un plus al menos tengo que comerme
             // un elemento de la lista, sino falla la reparacion:
@@ -187,7 +207,10 @@ public class AddList extends IOperator
                 itW.goTo(whatEaten);
                 whereEat =  (Item) itW.previous();
                 whatEatenTemp = whatEaten;
-                whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+                if(d == DirectionOperator.DOWNWARDS)
+                    whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
+                else
+                    whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.DOWNWARDS);
                 if(whatEaten == whatEatenTemp)
                     break;
             }
@@ -196,7 +219,7 @@ public class AddList extends IOperator
            itS.goTo(lastTokenSquare);
            itS.next();
            whereEat = (Item) itS.next();
-           whatEaten = squareS.eatOneSquare(s, whereEat, DirectionOperator.DOWNWARDS);
+           whatEaten = squareS.eatOneSquare(s, whereEat, d);
            Item lastEatenSuccess = (Item) whatEaten;
             
             while(true)
@@ -204,13 +227,22 @@ public class AddList extends IOperator
                 itS.goTo((Item) whatEaten);
                 whereEat = (Item) itS.next();
                 whatEatenTemp = whatEaten;
-                whatEaten = squareS.eatOneSquare(s, whereEat, DirectionOperator.DOWNWARDS);
+                whatEaten = squareS.eatOneSquare(s, whereEat, d);
                 if(whatEaten == null || whatEaten == whatEatenTemp)
                     break;
                 lastEatenSuccess =  (Item) whatEaten;
             }
            
             squareS.getTree().setRootObject(new List());
+
+
+            if(DirectionOperator.UPWARDS == d)
+            {
+                Token temp = lastTokenList;
+                lastTokenList = firstTokenList;
+                firstTokenList = temp;
+            }
+
             rep.setReparator(squareS);
             rep.setInitialItem(firstTokenList);
             rep.setFinalItem(lastTokenList);
