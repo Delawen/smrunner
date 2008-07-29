@@ -4,6 +4,7 @@ import roadrunner.*;
 import SMTree.utils.Enclosure;
 import roadrunner.node.Item; 
 import roadrunner.node.Token;
+import roadrunner.operator.DirectionOperator;
 
 /**
  *  Class Reparator
@@ -25,6 +26,8 @@ public class Repair {
     private Enclosure initialEnclosure;
     
     private Enclosure finalEnclosure;
+    
+    private DirectionOperator direction;
 
     
     public Repair (Mismatch m) 
@@ -37,12 +40,18 @@ public class Repair {
         this.reparator = new Wrapper();
         this.initialEnclosure = Enclosure.ENCLOSED;
         this.finalEnclosure = Enclosure.ENCLOSED;
+        this.direction = m.getDirection();
     }
 
     public boolean apply () 
     {
         if(this.getState() == State.SUCESSFULL)
-            return this.toRepair.substitute(initialItem, initialEnclosure, finalItem, finalEnclosure, this.reparator.treeWrapper);
+        {
+            if(DirectionOperator.UPWARDS == direction)
+                return this.toRepair.substitute(finalItem, finalEnclosure, initialItem, initialEnclosure, this.reparator.treeWrapper);
+            else
+                return this.toRepair.substitute(initialItem, initialEnclosure, finalItem, finalEnclosure, this.reparator.treeWrapper);
+        }  
         else
             return false;
     }
@@ -114,6 +123,13 @@ public class Repair {
 
     public void setFinalEnclosure(Enclosure finalEnclosure) {
         this.finalEnclosure = finalEnclosure;
+    }
+    
+    public String toString()
+    {       
+        String open = (initialEnclosure == Enclosure.ENCLOSED)? "[":"(";
+        String close = (finalEnclosure == Enclosure.ENCLOSED)? "]":")";
+        return "Cambiar "+open+initialItem.toString()+","+finalItem.toString()+close+" por :::"+reparator.toString()+":::";   
     }
 }
 

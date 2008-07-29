@@ -145,12 +145,12 @@ public class AddList extends IOperator
            
             squareW.getTree().setRootObject(new List());
 
-            if(DirectionOperator.UPWARDS == d)
-            {
-                Token temp = lastTokenList;
-                lastTokenList = firstTokenList;
-                firstTokenList = temp;
-            }
+//            if(DirectionOperator.UPWARDS == d)
+//            {
+//                Token temp = lastTokenList;
+//                lastTokenList = firstTokenList;
+//                firstTokenList = temp;
+//            }
 
             rep.setReparator(squareW);
             rep.setInitialItem(firstTokenList);
@@ -236,12 +236,12 @@ public class AddList extends IOperator
             squareS.getTree().setRootObject(new List());
 
 
-            if(DirectionOperator.UPWARDS == d)
-            {
-                Token temp = lastTokenList;
-                lastTokenList = firstTokenList;
-                firstTokenList = temp;
-            }
+//            if(DirectionOperator.UPWARDS == d)
+//            {
+//                Token temp = lastTokenList;
+//                lastTokenList = firstTokenList;
+//                firstTokenList = temp;
+//            }
 
             rep.setReparator(squareS);
             rep.setInitialItem(firstTokenList);

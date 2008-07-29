@@ -634,9 +634,33 @@ public class SMTree<T> implements Cloneable{
     @Override
     public String toString() 
     {
-        return "buh!";
+        return toStringTree(root);
     }
 
+       private String toStringTree(SMTreeNode n)
+    {
+        String result = "";     
+        SMTreeNode aux = n.getFirstChild();     
+
+        if(aux==null)
+            return n.getObject().toString();
+        
+        
+        result += "(";
+        
+        while(aux!=n.getLastChild())
+        {
+            result += toStringTree(aux);
+            aux = aux.getNext(); 
+        }
+        
+        result += toStringTree(aux);
+        
+        result += ")"+n.getObject().toString()+"\n";
+      
+        return result;
+    }
+    
     
     public SMTree cloneSubTree(T from) throws CloneNotSupportedException
     {
