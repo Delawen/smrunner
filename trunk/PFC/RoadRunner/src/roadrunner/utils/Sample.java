@@ -65,7 +65,8 @@ public class Sample implements Edible{
             for (IToken token : twp) 
             {
                 XMLTokenizer.Token t = (XMLTokenizer.Token) token;
-                if(!vacio(t.getText()))
+                t = new XMLTokenizer.Token(quitarBlanco(t.getText()), t.getTokenType(), t.getLength(), t.getPosition());
+                if(!t.getText().equals(""))
                     tokens.add((Token) limpiar(t));
             }
 
@@ -153,16 +154,15 @@ public class Sample implements Edible{
         return new Wrapper(tree);
     }
 
-    private boolean vacio(String text) 
+    private String quitarBlanco(String text)
     {
         String cadenas[] = {System.getProperty("line.separator"), " ", "\r", "\t", "\n"};
-        
+
         for(String cadena:cadenas)
             text = text.replaceAll(cadena, "");
-            
-        if(text.equals(""))
-            return true;
-        return false;
+
+        return text;
+
     }
     
     public interface webPageIterator extends EdibleIterator
