@@ -15,6 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import SMTree.iterator.LevelIterator;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 
 /**
@@ -91,7 +93,7 @@ public class IteratorTest
         orden.add(node1_1_2_1);
         orden.add(node1_1_2_2);
         
-        java.util.Iterator itorden = orden.iterator();
+        ListIterator itorden = orden.listIterator();
         
         //Recorremos en amplitud y comprobamos:
         SMTreeIterator<String> it = arbol.iterator(LevelIterator.class);
@@ -104,6 +106,21 @@ public class IteratorTest
         
         assertFalse(it.hasNext());
         assertFalse(itorden.hasNext());
+        
+        // Y ahora lo probamos al reves
+        itorden = orden.listIterator(orden.size());
+        
+        //Recorremos en amplitud y comprobamos:
+        it = arbol.iterator(LevelIterator.class);
+        while(it.hasPrevious() && itorden.hasPrevious())
+        {
+            String next = (String)it.previousObject();
+            String otro = (String) ((SMTreeNode<String>)itorden.previous()).getObject();
+            assertEquals(next, otro);
+        }
+        
+        assertFalse(it.hasPrevious());
+        assertFalse(itorden.hasPrevious());
     }
     
     @Test
@@ -126,21 +143,24 @@ public class IteratorTest
         orden.add(node1_1_2_1);
         orden.add(node1_1_1);
         
-*/
-        orden.add(node1);  
-        orden.add(node1_4);
+*/  
+        
         orden.add(node1_4_2);
         orden.add(node1_4_1);
+        orden.add(node1_4);
         orden.add(node1_3);
+        
         orden.add(node1_2);  
-        orden.add(node1_1);  
-        orden.add(node1_1_2);
+        
         orden.add(node1_1_2_2);
         orden.add(node1_1_2_1);
-        orden.add(node1_1_1);      
+        orden.add(node1_1_2);
+        orden.add(node1_1_1);  
+        orden.add(node1_1); 
+        orden.add(node1);
         
         
-        java.util.Iterator itorden = orden.iterator();
+        ListIterator itorden = orden.listIterator();
         
         //Recorremos en amplitud y comprobamos:
         SMTreeIterator<String> it = arbol.iterator(BackwardIterator.class);
@@ -151,8 +171,26 @@ public class IteratorTest
             assertEquals(next, otro);
         }
         
+        
         assertFalse(it.hasNext());
         assertFalse(itorden.hasNext());
+        
+        // Y ahora lo probamos al reves
+        itorden = orden.listIterator(orden.size());
+        
+        //Recorremos en amplitud y comprobamos:
+        it = arbol.iterator(BackwardIterator.class);
+        while(it.hasNext())
+             it.nextObject();
+        while(it.hasPrevious() && itorden.hasPrevious())
+        {
+            String next = (String)it.previousObject();
+            String otro = (String) ((SMTreeNode<String>)itorden.previous()).getObject();
+            assertEquals(next, otro);
+        }
+        
+        assertFalse(it.hasPrevious());
+        assertFalse(itorden.hasPrevious());
     }
 
     @Test
@@ -174,7 +212,7 @@ public class IteratorTest
         orden.add(node1_4_1);
         orden.add(node1_4_2);
         
-        java.util.Iterator itorden = orden.iterator();
+        ListIterator itorden = orden.listIterator();
         
         //Recorremos en amplitud y comprobamos:
         SMTreeIterator<String> it = arbol.iterator(ForwardIterator.class);
@@ -187,5 +225,23 @@ public class IteratorTest
         
         assertFalse(it.hasNext());
         assertFalse(itorden.hasNext());
+        
+        // Y ahora lo probamos al reves
+        itorden = orden.listIterator(orden.size());
+        
+        //Recorremos en amplitud y comprobamos:
+        it = arbol.iterator(ForwardIterator.class);
+        //colocamos al final el iterador:
+        while(it.hasNext())
+             it.nextObject();
+        
+        while(it.hasPrevious() && itorden.hasPrevious())
+        {
+            String next = (String)it.previousObject();
+            String otro = (String) ((SMTreeNode<String>)itorden.previous()).getObject();
+            assertEquals(next, otro);
+        }
+        assertFalse(it.hasPrevious());
+        assertFalse(itorden.hasPrevious());
     }
 }

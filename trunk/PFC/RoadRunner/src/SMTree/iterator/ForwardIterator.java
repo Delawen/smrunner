@@ -51,8 +51,7 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
         }
         
         
-        if(resultNode == null)
-            throw new IllegalStateException("¿No se supone que habia next()?");
+        assert (resultNode != null);
         
         lastNode = resultNode;
         return resultNode; 
@@ -81,62 +80,51 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
 
     @Override
     public boolean hasPrevious() {
-        boolean hasPrevious=false;
-              
-        if(lastNode != null && lastNode != getRootIterator())
-        {
-            hasPrevious |= lastNode.getPrevious()!=null;
-            hasPrevious |= lastNode.getParent()!=null;
-            
-            /** SOBRA???
-            if(!hasPrevious && lastNode.getPrevious() != null && lastNode.getPrevious().getLastChild() != null)
-            {
-                SMTreeNode<T> aux = lastNode.getPrevious().getLastChild();
-                do {
-                    aux = 
-                    hasPrevious |= aux != null;
-                } while(hasPrevious==false && aux!=null);
-            }
-             * */
-
-        }
+//        boolean hasPrevious=false;
+//              
+//        if(lastNode != null && lastNode != getRootIterator())
+//        {
+//            hasPrevious |= lastNode.getPrevious()!=null;
+//            hasPrevious |= lastNode.getParent()!=null;
+//
+//        }
+//        
+//        return hasPrevious;
         
-        return hasPrevious;
+        return lastNode != null;
         
     }
 
     @Override
-    public Object previous() {
-        SMTreeNode<T> resultNode = null;
-        T result;
+    public SMTreeNode previousNode() {
+        SMTreeNode<T> resultNode = lastNode;
+        //T result;
         
         if(lastNode==null)
             throw new NullPointerException("");
         
         if(lastNode == getRootIterator())
-            throw new IllegalStateException("¿No se supone que habia previous()?");
-        
-        if(lastNode.getPrevious() != null && lastNode.getPrevious().getLastChild() != null)
+            lastNode = null;
+        else if(lastNode.getPrevious() != null && lastNode.getPrevious().getLastChild() != null)
         {
-            resultNode = lastNode.getPrevious();
+            lastNode = lastNode.getPrevious();
             do
-                resultNode = resultNode.getLastChild();
-            while(resultNode.getLastChild()!=null);      
+                lastNode = lastNode.getLastChild();
+            while(lastNode.getLastChild()!=null);      
         }
         else if(lastNode.getPrevious()!=null && lastNode.getPrevious().getLastChild() == null)
-            resultNode = lastNode.getPrevious();
+            lastNode = lastNode.getPrevious();
         else if(lastNode!=getRootIterator() && lastNode.getParent()!=null)
-            resultNode = lastNode.getParent();
-            
-        if(resultNode!=null)
-        {
-            lastNode = resultNode; 
-            result = resultNode.getObject();
-        }
+            lastNode = lastNode.getParent();        
         else
-            throw new IllegalStateException("¿No se supone que habia previous()?");
+            assert(false);
         
-        return result;
+        return resultNode;
+    }
+
+    @Override
+    public Object previousObject() {
+        return previousNode().getObject();
     }
 
 }
