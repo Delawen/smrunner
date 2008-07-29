@@ -112,6 +112,10 @@ public class IteratorTest
         
         //Recorremos en amplitud y comprobamos:
         it = arbol.iterator(LevelIterator.class);
+        
+        while(it.hasNext())
+             it.nextObject();
+        
         while(it.hasPrevious() && itorden.hasPrevious())
         {
             String next = (String)it.previousObject();

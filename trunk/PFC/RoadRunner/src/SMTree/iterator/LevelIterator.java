@@ -17,7 +17,7 @@ public class LevelIterator<T> extends SMTreeIterator<T>
         nodes = new LinkedList<SMTreeNode<T>>();
     }
     
-    private void AmpliturIteratorConstructor()
+    private void LevelIteratorConstructor()
     {
         Queue<SMTreeNode<T>> s = new LinkedBlockingDeque();
         
@@ -53,42 +53,42 @@ public class LevelIterator<T> extends SMTreeIterator<T>
     @Override
     public boolean isNext(T o) {
         if(it == null)
-            AmpliturIteratorConstructor();
+            LevelIteratorConstructor();
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public T nextObject() {
         if(it == null)
-            AmpliturIteratorConstructor();
+            LevelIteratorConstructor();
         return it.next().getObject();
     }
     
     @Override
     public SMTreeNode<T> nextNode() {
         if(it == null)
-            AmpliturIteratorConstructor();
+            LevelIteratorConstructor();
         return it.next();
     }
 
     @Override
     public boolean hasNext() {
         if(it == null)
-            AmpliturIteratorConstructor();
+            LevelIteratorConstructor();
         return it.hasNext();
     }
 
     @Override
     public boolean hasPrevious() {
         if(it == null)
-            AmpliturIteratorConstructor();
+            LevelIteratorConstructor();
         return it.hasPrevious();
     }
 
     @Override
     public SMTreeNode previousNode() {
         if(it == null)
-            AmpliturIteratorConstructor();
+            LevelIteratorConstructor();
         return it.previous();
     }
 
