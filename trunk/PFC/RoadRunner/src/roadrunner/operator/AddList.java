@@ -221,8 +221,9 @@ public class AddList extends IOperator
            whereEat = (Item) itS.next();
            whatEaten = squareS.eatOneSquare(s, whereEat, d);
            Item lastEatenSuccess = (Item) whatEaten;
+          
             
-            while(true)
+            while(whatEaten != null)
             {
                 itS.goTo((Item) whatEaten);
                 whereEat = (Item) itS.next();
@@ -233,24 +234,26 @@ public class AddList extends IOperator
                 lastEatenSuccess =  (Item) whatEaten;
             }
            
+
+           
             squareS.getTree().setRootObject(new List());
-
-
-//            if(DirectionOperator.UPWARDS == d)
-//            {
-//                Token temp = lastTokenList;
-//                lastTokenList = firstTokenList;
-//                firstTokenList = temp;
-//            }
 
             rep.setReparator(squareS);
             rep.setInitialItem(firstTokenList);
             rep.setFinalItem(lastTokenList);
             rep.setState(StateRepair.SUCESSFULL);
             rep.setToRepair((Wrapper) w);
-            itS.goTo((Item) lastEatenSuccess);
-            itS.next();
-            rep.setIndexSample((Token) itS.next());
+            if(lastEatenSuccess == null)
+            {
+                // Este caso se da cuando no he conseguido comerme nada hacia abajo (solo hay un elemento mas en el Sample que en el Wrapper)
+                rep.setIndexSample((Token) whereEat);
+            }
+            else
+            {
+                itS.goTo((Item) lastEatenSuccess);
+                itS.next();
+                rep.setIndexSample((Token) itS.next());
+            }
            
         }
     
