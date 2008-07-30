@@ -137,20 +137,30 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
         ForwardIterator f = new ForwardIterator();
         f.setTree(tree);
         
-        f.goTo(lastNode);
+        f.goTo(lastNode.getObject());
+        f.previousNode();
         
-        for(int i=0; i<5 && f.hasPrevious(); i++)
+        int i = 0;
+        while(i<5 && f.hasPrevious())
         {
-            result += f.previousObject();  
+            if(f.previousNode() != lastNode)
+                i++;
+            else
+                break;
         }
         
-        f.goTo(lastNode);
-        
-        result += ":::lastNode=["+f.nextObject()+"]=Previous:::Next->:::";
-        
-        for(int i=0; i<5 && f.hasNext(); i++)
+        for(int j=0; j<i && f.hasNext(); j++)
         {
-            result += f.nextObject();  
+            result += "|"+f.nextObject();  
+        }
+        
+        //f.goTo(lastNode.getObject());
+        
+        result += ":::Previous=["+f.nextObject()+"]::Next->:::";
+        
+        for(int j=0; j<5 && f.hasNext(); j++)
+        {
+            result += "|"+f.nextObject();  
         }           
         
         result += "....";   
