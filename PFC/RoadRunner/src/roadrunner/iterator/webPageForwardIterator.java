@@ -21,6 +21,7 @@ public class webPageForwardIterator implements webPageIterator
 {
     private ListIterator<Token> it = null;
     private List<Token> tokens = null;
+    private Token lastTokenWebPage = null;
 
     public webPageForwardIterator()
     {
@@ -51,7 +52,7 @@ public class webPageForwardIterator implements webPageIterator
         {
             if(t==it.next())
             {
-                it.previous();
+                lastTokenWebPage = it.previous();
                 result = true;
             }
         }
@@ -64,7 +65,9 @@ public class webPageForwardIterator implements webPageIterator
     }
 
     public Token next() {
-        return it.next();
+
+        lastTokenWebPage = it.next();
+        return lastTokenWebPage;
     }
 
     public boolean hasPrevious() {
@@ -72,7 +75,9 @@ public class webPageForwardIterator implements webPageIterator
     }
 
     public Token previous() {
-        return it.previous();
+
+        lastTokenWebPage = it.previous();
+        return lastTokenWebPage;
     }
 
     public boolean isNext(Item o) 
@@ -99,7 +104,7 @@ public class webPageForwardIterator implements webPageIterator
     }
 
     public Object previous(boolean optional) {
-        return previous();
+            return previous();
     }
 
     public Object nextObject(boolean optional)
@@ -110,6 +115,34 @@ public class webPageForwardIterator implements webPageIterator
     public Object nextObject()
     {
         return next();
+    }
+
+        @Override
+    public String toString()
+    {   
+        if(lastTokenWebPage == null)
+            return "";
+        
+        String result = "....";
+        ListIterator itaux = tokens.listIterator(tokens.indexOf(lastTokenWebPage));
+
+        for(int i=0; i<5 && itaux.hasPrevious(); i++)
+        {
+            result += itaux.previous();
+        }
+        
+        itaux = tokens.listIterator(tokens.indexOf(lastTokenWebPage));
+        
+        result += "<-Previous:::Next->["+itaux.next()+"]:::";
+        
+        for(int i=0; i<5 && itaux.hasNext(); i++)
+        {
+            result += itaux.next();  
+        }           
+        
+        result += "....";   
+        
+        return result;
     }
 
 }

@@ -5,22 +5,21 @@
 
 package roadrunner.simples;
 
+import roadrunner.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import roadrunner.RoadRunner;
 import roadrunner.utils.Edible;
-import static org.junit.Assert.*;
 
 /**
  *
- * @author santi
+ * @author delawen
  */
-public class todos {
+public class unicoSample_Test {
 
-    public todos() {
+    public unicoSample_Test() {
     }
 
     @BeforeClass
@@ -38,26 +37,17 @@ public class todos {
     @After
     public void tearDown() {
     }
-
+    
     @Test
-    public void test5()
+    public void test1()
     {
-        System.out.println("¡¡Todo junto!!");
-        String[] prueba = new String[5];
+        System.out.println("Test simple para RoadRunner: un solo sample");
+        String[] prueba = new String[1];
         String s = "test/roadrunner/simples/html/sample1.html";
         prueba[0] = s;
-        s = "test/roadrunner/simples/html/sample2.html";
-        prueba[1] = s;
-        s = "test/roadrunner/simples/html/sample3.html";
-        prueba[2] = s;
-        s = "test/roadrunner/simples/html/sample4.html";
-        prueba[3] = s;
-        s = "test/roadrunner/simples/html/sample5.html";
-        prueba[4] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
 
     }
-
 }

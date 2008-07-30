@@ -1,6 +1,6 @@
 package SMTree.iterator;
 
-import SMTree.*;
+import SMTree.SMTreeNode;
 
 public class BackwardIterator<T> extends SMTreeIterator<T> 
 {   
@@ -132,6 +132,37 @@ public class BackwardIterator<T> extends SMTreeIterator<T>
     @Override
     public Object previousObject() {
         return previousNode().getObject();
+    }
+    
+    @Override
+    public String toString()
+    {     
+        if(lastNode==null)
+            return "";
+        
+        String result = "....";
+        ForwardIterator f = new ForwardIterator();
+        f.setTree(tree);
+        
+        f.goTo(lastNode);
+        
+        for(int i=0; i<5 && f.hasPrevious(); i++)
+        {
+            result += f.previousObject();  
+        }
+        
+        f.goTo(lastNode);
+        
+        result += ":::<-Next:::lastNode=["+f.nextObject()+"]=Previous:::";
+        
+        for(int i=0; i<5 && f.hasNext(); i++)
+        {
+            result += f.nextObject(); 
+        }           
+        
+        result += "....";   
+        
+        return result;
     }
 }
 
