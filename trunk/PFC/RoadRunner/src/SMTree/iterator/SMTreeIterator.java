@@ -36,7 +36,7 @@ public abstract class SMTreeIterator<T>
         lastNode = aux; 
         if(hasPrevious())
         {
-            Object o = previousNode();
+            Object o = previousObject();
             T previous;
             if(o instanceof java.util.List)
                 previous = ((java.util.List<T>)o).get(0);
