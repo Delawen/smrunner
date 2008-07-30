@@ -66,7 +66,7 @@ public class Sample implements Edible{
             {
                 XMLTokenizer.Token t = (XMLTokenizer.Token) token;
                 t = new XMLTokenizer.Token(quitarBlanco(t.getText()), t.getTokenType(), t.getLength(), t.getPosition());
-                if(!t.getText().equals(""))
+                if(!t.getText().replaceAll(" ", "").equals(""))
                     tokens.add((Token) limpiar(t));
             }
 
@@ -156,7 +156,7 @@ public class Sample implements Edible{
 
     private String quitarBlanco(String text)
     {
-        String cadenas[] = {System.getProperty("line.separator"), " ", "\r", "\t", "\n"};
+        String cadenas[] = {System.getProperty("line.separator"), "\r", "\t", "\n"};
 
         for(String cadena:cadenas)
             text = text.replaceAll(cadena, "");
