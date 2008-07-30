@@ -18,9 +18,9 @@ import static org.junit.Assert.*;
  *
  * @author santi
  */
-public class addOptional {
+public class addOptional_Test {
 
-    public addOptional() {
+    public addOptional_Test() {
     }
 
     @BeforeClass

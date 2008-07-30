@@ -3,13 +3,14 @@
  * and open the template in the editor.
  */
 
-package roadrunner;
+package roadrunner.medios;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import roadrunner.RoadRunner;
 import roadrunner.iterator.EdibleIterator;
 import roadrunner.iterator.ForwardTokenIterator;
 import roadrunner.node.Token;
@@ -21,9 +22,9 @@ import static org.junit.Assert.*;
  *
  * @author delawen
  */
-public class addListaddOptionalTest {
+public class list_con_RI_variable_Test {
 
-    public addListaddOptionalTest() {
+    public list_con_RI_variable_Test() {
     }
 
     @BeforeClass
@@ -46,11 +47,26 @@ public class addListaddOptionalTest {
     @Test
     public void test()
     {
-        System.out.println("addList con addOptional interno");
+        System.out.println("addList con addVariable interno");
         String[] prueba = new String[2];
-        String s = "test/roadrunner/ejemplosComplejos/basico.html";
+        String s = "test/roadrunner/medios/html/basico.html";
         prueba[0] = s;
-        s = "test/roadrunner/ejemplosComplejos/test2.html";
+        s = "test/roadrunner/medios/html/test1.html";
+        prueba[1] = s;
+        RoadRunner rr = new RoadRunner(prueba);
+        Edible w = rr.process();
+        System.out.println(w);
+
+    }
+    
+    @Test
+    public void test2()
+    {
+        System.out.println("addList con addVariable interno");
+        String[] prueba = new String[2];
+        String s = "test/roadrunner/medios/html/test1.html";
+        prueba[0] = s;
+        s = "test/roadrunner/medios/html/basico.htm";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();

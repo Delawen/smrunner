@@ -235,8 +235,8 @@ public class SMTree<T> implements Cloneable{
 
         //recorremos el subarbol de 'n'
         it.setRootIterator(n);
-        //desechamos 'n' porque lo insertamos al principio en el mapa
         
+        //desechamos 'n' porque lo insertamos al principio en el mapa:
         if(it.hasNext())
             it.nextObject();
         
@@ -451,6 +451,8 @@ public class SMTree<T> implements Cloneable{
             removeSMTreeNode(from);
             from = nextFrom;
         }
+        
+        //  El 'to' lo borramos mas adelante
         
         
         /**

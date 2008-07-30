@@ -18,9 +18,9 @@ import static org.junit.Assert.*;
  *
  * @author santi
  */
-public class addVariable {
+public class addList_Test {
 
-    public addVariable() {
+    public addList_Test() {
     }
 
     @BeforeClass
@@ -39,31 +39,35 @@ public class addVariable {
     public void tearDown() {
     }
 
-    @Test
+
+        @Test
     public void test1()
     {
-        System.out.println("Test complejo para RoadRunner: dos sample y un addVariable");
+        System.out.println("Test complejo para RoadRunner: dos sample y un addList simple");
         String[] prueba = new String[2];
         String s = "test/roadrunner/simples/html/sample1.html";
         prueba[0] = s;
-        s = "test/roadrunner/simples/html/sample2.html";
+        s = "test/roadrunner/simples/html/sample3.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+
     }
+    
     @Test
     public void test2()
     {
-        System.out.println("Test complejo para RoadRunner: dos sample y un addVariable");
+        System.out.println("Test complejo para RoadRunner: dos sample y un addList simple");
         String[] prueba = new String[2];
-        String s = "test/roadrunner/simples/html/sample2.html";
+        String s = "test/roadrunner/simples/html/sample3.html";
         prueba[0] = s;
         s = "test/roadrunner/simples/html/sample1.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+
     }
 
 }

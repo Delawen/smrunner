@@ -225,7 +225,8 @@ public class Sample implements Edible{
                 treeCloned.addObject(i, rootNode, Kinship.CHILD);
             }
             
-            treeCloned.addObject(i, rootNode, Kinship.CHILD);
+            if(firstTokenSquare != lastTokenSquare)
+                treeCloned.addObject(i, rootNode, Kinship.CHILD);
             
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
