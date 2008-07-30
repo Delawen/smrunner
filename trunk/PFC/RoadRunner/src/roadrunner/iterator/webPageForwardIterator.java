@@ -117,27 +117,69 @@ public class webPageForwardIterator implements webPageIterator
         return next();
     }
 
-        @Override
+//        @Override
+//    public String toString()
+//    {   
+//        if(lastTokenWebPage == null)
+//            return "";
+//        
+//        String result = "....";
+//        ListIterator itaux = tokens.listIterator(tokens.indexOf(lastTokenWebPage));
+//
+//        for(int i=0; i<5 && itaux.hasPrevious(); i++)
+//        {
+//            result += itaux.previous();
+//        }
+//        
+//        itaux = tokens.listIterator(tokens.indexOf(lastTokenWebPage));
+//        
+//        result += "<-Previous:::Next->["+itaux.next()+"]:::";
+//        
+//        for(int i=0; i<5 && itaux.hasNext(); i++)
+//        {
+//            result += itaux.next();  
+//        }           
+//        
+//        result += "....";   
+//        
+//        return result;
+//    }
+        
+   @Override
     public String toString()
-    {   
+    {     
+
         if(lastTokenWebPage == null)
             return "";
         
         String result = "....";
-        ListIterator itaux = tokens.listIterator(tokens.indexOf(lastTokenWebPage));
-
-        for(int i=0; i<5 && itaux.hasPrevious(); i++)
+        ListIterator f = tokens.listIterator();
+        
+        while(f.hasNext())
         {
-            result += itaux.previous();
+            if(f.next() == lastTokenWebPage)
+                break;
         }
         
-        itaux = tokens.listIterator(tokens.indexOf(lastTokenWebPage));
-        
-        result += "<-Previous:::Next->["+itaux.next()+"]:::";
-        
-        for(int i=0; i<5 && itaux.hasNext(); i++)
+        int i = 0;
+        while(i<5 && f.hasPrevious())
         {
-            result += itaux.next();  
+            String bsss = f.previous().toString();
+            i++;
+        }
+        
+        for(int j=0; j<i && f.hasNext(); j++)
+        {
+            result += "|"+f.next();
+        }
+        
+        //f.goTo(lastNode.getObject());
+        
+        result += "<-Previous:::Next->["+f.next()+"]:::";
+        
+        for(int j=0; j<5 && f.hasNext(); j++)
+        {
+            result += "|"+f.next();  
         }           
         
         result += "....";   
