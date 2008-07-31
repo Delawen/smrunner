@@ -66,7 +66,7 @@ public class list_con_RI_variable_Test {
         String[] prueba = new String[2];
         String s = "test/roadrunner/medios/html/test1.html";
         prueba[0] = s;
-        s = "test/roadrunner/medios/html/basico.htm";
+        s = "test/roadrunner/medios/html/basico.html";
         prueba[1] = s;
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
