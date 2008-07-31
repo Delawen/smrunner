@@ -155,9 +155,9 @@ public class webPageForwardIterator implements webPageIterator
         String result = "....";
         ListIterator f = tokens.listIterator();
         
-        while(f.hasNext())
+        while(f.hasPrevious())
         {
-            if(f.next() == lastTokenWebPage)
+            if(f.previous() == lastTokenWebPage)
                 break;
         }
         
