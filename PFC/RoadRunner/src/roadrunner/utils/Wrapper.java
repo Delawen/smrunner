@@ -180,9 +180,9 @@ public class Wrapper implements Edible{
                     edibleToken = null;
                     break;
                 }
-                itSample.goTo(repair.getIndexSample());
+                assert(itSample.goTo(repair.getIndexSample()));
                 Item n = repair.getReparator().getTree().getRootObject();
-                itWrapper.goTo(n);
+                assert(itWrapper.goTo(n));
                 if(n instanceof roadrunner.node.List)
                     ((roadrunner.node.List)n).setAccessed(true);
             }
@@ -235,7 +235,7 @@ public class Wrapper implements Edible{
         }
 
         //Nos colocamos para empezar a comer:
-        itSample.goTo(t);
+        assert(itSample.goTo(t));
     }
 
     private void crearIteradorWrapper(DirectionOperator d, Item n)
@@ -251,7 +251,7 @@ public class Wrapper implements Edible{
         }
 
         //Nos colocamos para empezar a comer:
-        itWrapper.goTo(n);
+        assert(itWrapper.goTo(n));
     }
 
     private Mismatch compruebaNext(Object edibleToken, Edible e, DirectionOperator d)
@@ -300,7 +300,7 @@ public class Wrapper implements Edible{
                 if(itWrapper.isNext(i))
                 {
                     encontrado = true;
-                    itSample.goTo(i);
+                    assert(itSample.goTo(i));
                     itSample.next();
                     break;
                 }
@@ -467,11 +467,11 @@ public class Wrapper implements Edible{
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
-            it.goTo(to);
+            assert(it.goTo(to));
             to = (Token)it.previous(true);
         }
         
-        it.goTo(from);
+        assert(it.goTo(from));
             
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)

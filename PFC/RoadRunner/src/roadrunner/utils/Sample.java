@@ -284,11 +284,11 @@ public class Sample implements Edible{
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
-            it.goTo(to);
+            assert(it.goTo(to));
             to = (Token) it.previous();
         }
         
-        it.goTo(from);
+        assert(it.goTo(from));
             
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)

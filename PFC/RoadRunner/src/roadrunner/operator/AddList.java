@@ -71,7 +71,7 @@ public class AddList extends IOperator
             firstTokenSquare = (Token) n;
             firstTokenList= firstTokenSquare;
             
-            itS.goTo(t);
+            assert(itS.goTo(t));
             itS.toString();
             lastDelim = (Token) itS.previous();
             itS.toString();
@@ -94,7 +94,7 @@ public class AddList extends IOperator
                              
             // Comemos hacia arriba
             Item whereEat; 
-            itW.goTo(firstTokenList);
+            assert(itW.goTo(firstTokenList));
             whereEat = (Item) itW.previous();
             
             Item whatEaten = null;
@@ -116,7 +116,7 @@ public class AddList extends IOperator
             while( whatEaten != null)
             {
                 firstTokenList = (Token) whatEaten;
-                itW.goTo((Item) whatEaten);
+                assert(itW.goTo((Item) whatEaten));
                 whereEat = (Item) itW.previous();
                 whatEatenTemp = whatEaten;
                 if(d == DirectionOperator.DOWNWARDS)
@@ -128,7 +128,7 @@ public class AddList extends IOperator
             }
                 
            // Ahora comemos hacia abajo
-           itW.goTo(lastTokenList);
+           assert(itW.goTo(lastTokenList));
            itW.next();
            whereEat = (Item) itW.next();
            whatEaten = squareW.eatOneSquare(w, whereEat, d);
@@ -136,7 +136,7 @@ public class AddList extends IOperator
             while( whatEaten != null)
             {
                 lastTokenList = (Token) whatEaten;
-                itW.goTo((Item) whatEaten);
+                assert(itW.goTo((Item) whatEaten));
                 whereEat = (Item) itW.next();
                 whatEatenTemp = whatEaten;
                 whatEaten = squareW.eatOneSquare(w, whereEat, d);
@@ -165,10 +165,10 @@ public class AddList extends IOperator
         {
             //buscamos squareS        
             firstTokenSquare = (Token) t;
-            itW.goTo(n);
+            assert(itW.goTo(n));
             lastTokenList = (Token) itW.previous();
             
-            itS.goTo(t);
+            assert(itS.goTo(t));
             lastDelim = (Token) itS.previous();
             
             lastTokenSquare =  s.searchWellFormed(lastDelim,Enclosure.ENCLOSED, firstTokenSquare, Enclosure.ENCLOSED, d);
@@ -184,7 +184,7 @@ public class AddList extends IOperator
                              
             // Comemos hacia arriba en el wrapper
             Item whereEat;   
-            itW.goTo(n);
+            assert(itW.goTo(n));
             whereEat = lastTokenList;
             Item whatEaten;
 
@@ -205,7 +205,7 @@ public class AddList extends IOperator
             while(whatEaten != null)
             {
                 firstTokenList = (Token) whatEaten;
-                itW.goTo(whatEaten);
+                assert(itW.goTo(whatEaten));
                 whereEat =  (Item) itW.previous();
                 whatEatenTemp = whatEaten;
                 if(d == DirectionOperator.DOWNWARDS)
@@ -217,7 +217,7 @@ public class AddList extends IOperator
             }
                 
            // Ahora comemos hacia abajo en el sample
-           itS.goTo(lastTokenSquare);
+           assert(itS.goTo(lastTokenSquare));
            itS.next();
            whereEat = (Item) itS.next();
            whatEaten = squareS.eatOneSquare(s, whereEat, d);
@@ -226,7 +226,7 @@ public class AddList extends IOperator
             
             while(whatEaten != null)
             {
-                itS.goTo((Item) whatEaten);
+                assert(itS.goTo((Item) whatEaten));
                 whereEat = (Item) itS.next();
                 whatEatenTemp = whatEaten;
                 whatEaten = squareS.eatOneSquare(s, whereEat, d);
@@ -251,7 +251,7 @@ public class AddList extends IOperator
             }
             else
             {
-                itS.goTo((Item) lastEatenSuccess);
+                assert(itS.goTo((Item) lastEatenSuccess));
                 itS.next();
                 rep.setIndexSample((Token) itS.next());
             }

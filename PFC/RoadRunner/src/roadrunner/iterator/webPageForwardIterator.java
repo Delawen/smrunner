@@ -173,7 +173,7 @@ public class webPageForwardIterator implements webPageIterator
             result += "|"+f.next();
         }
         
-        //f.goTo(lastNode.getObject());
+        //assert(f.goTo(lastNode.getObject()));
         
         result += "<-Previous:::Next->["+f.next()+"]:::";
         
