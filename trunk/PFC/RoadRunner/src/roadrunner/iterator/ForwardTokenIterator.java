@@ -444,7 +444,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 /**
                  * vamos hasta el item siguiente
                  */
-                goTo(item);
+                assert(goTo(item));
                 
                 /**
                  * Sacamos la lista de siguientes.

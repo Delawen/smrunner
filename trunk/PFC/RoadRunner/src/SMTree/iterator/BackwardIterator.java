@@ -144,7 +144,7 @@ public class BackwardIterator<T> extends SMTreeIterator<T>
         ForwardIterator f = new ForwardIterator();
         f.setTree(tree);
         
-        f.goTo(lastNode.getObject());
+        assert(f.goTo(lastNode.getObject()));
         f.previousNode();
         
         int i = 0;
@@ -161,7 +161,7 @@ public class BackwardIterator<T> extends SMTreeIterator<T>
             result += "|"+f.nextObject();  
         }
         
-        //f.goTo(lastNode.getObject());
+        //assert(f.goTo(lastNode.getObject()));
         
         result += ":::<-Next::["+f.nextObject()+"]=Previous:::";
         

@@ -447,7 +447,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 /**
                  * vamos hasta el item siguiente
                  */
-                goTo(item);
+                assert(goTo(item));
 
                 /**
                  * Sacamos la lista de siguientes.
