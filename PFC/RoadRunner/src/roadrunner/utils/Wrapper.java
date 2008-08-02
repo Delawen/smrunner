@@ -437,7 +437,8 @@ public class Wrapper implements Edible{
             if(i instanceof Token)
             {
                 token = (Token) i;
-                if(token.match(t) && isWellFormed(from, tEnclosure, token, tokenEnclosure, d))
+                if((token.match(t) || (token instanceof Text && t instanceof Text))
+                        && isWellFormed(from, tEnclosure, token, tokenEnclosure, d))
                     return token;
             }            
         }
