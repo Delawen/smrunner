@@ -180,9 +180,9 @@ public class Wrapper implements Edible{
                     edibleToken = null;
                     break;
                 }
-                assert(itSample.goTo(repair.getIndexSample()));
+                itSample.goTo(repair.getIndexSample());
                 Item n = repair.getReparator().getTree().getRootObject();
-                assert(itWrapper.goTo(n));
+                itWrapper.goTo(n);
                 if(n instanceof roadrunner.node.List)
                     ((roadrunner.node.List)n).setAccessed(true);
             }
@@ -235,7 +235,7 @@ public class Wrapper implements Edible{
         }
 
         //Nos colocamos para empezar a comer:
-        assert(itSample.goTo(t));
+        itSample.goTo(t);
     }
 
     private void crearIteradorWrapper(DirectionOperator d, Item n)
@@ -251,7 +251,7 @@ public class Wrapper implements Edible{
         }
 
         //Nos colocamos para empezar a comer:
-        assert(itWrapper.goTo(n));
+        itWrapper.goTo(n);
     }
 
     private Mismatch compruebaNext(Object edibleToken, Edible e, DirectionOperator d)
@@ -300,7 +300,7 @@ public class Wrapper implements Edible{
                 if(itWrapper.isNext(i))
                 {
                     encontrado = true;
-                    assert(itSample.goTo(i));
+                    itSample.goTo(i);
                     itSample.next();
                     break;
                 }
@@ -425,8 +425,7 @@ public class Wrapper implements Edible{
         else if(DirectionOperator.UPWARDS == d)
             it = treeWrapper.iterator(BackwardIterator.class);
         
-        if(!it.goTo(from))
-            return null;
+        it.goTo(from);
         
         Token token=null;
 
@@ -467,11 +466,11 @@ public class Wrapper implements Edible{
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
-            assert(it.goTo(to));
+            it.goTo(to);
             to = (Token)it.previous(true);
         }
         
-        assert(it.goTo(from));
+        it.goTo(from);
             
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)

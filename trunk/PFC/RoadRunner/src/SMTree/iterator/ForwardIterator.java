@@ -137,7 +137,7 @@ public class ForwardIterator<T> extends SMTreeIterator<T>
         ForwardIterator f = new ForwardIterator();
         f.setTree(tree);
         
-        assert(f.goTo(lastNode.getObject()));
+        f.goTo(lastNode.getObject());
         f.previousNode();
         
         int i = 0;

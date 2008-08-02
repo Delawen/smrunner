@@ -25,11 +25,10 @@ public abstract class SMTreeIterator<T>
         this.rootIterator = tree.getRoot();
     }
     
-     public boolean goTo (T objeto) 
+     public void goTo (T objeto)
     {
         SMTreeNode aux = getTree().getNode(objeto);
-        if(aux==null)
-            return false;
+        assert(aux!=null);
         
         // movemos el puntero al nodo al que queremos ir, pero tenemos que desplazarnos
         // para que el iterador el siguiente elemento que devuelva sea el que especificamos
@@ -47,7 +46,6 @@ public abstract class SMTreeIterator<T>
         else
             lastNode = null; // Si no tiene anterior, es porque es el primer elemento a recorrer
         
-        return true;
     }
      
  

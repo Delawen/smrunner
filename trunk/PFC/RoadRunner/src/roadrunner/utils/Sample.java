@@ -105,15 +105,13 @@ public class Sample implements Edible{
         
         if(inclusionFrom == Enclosure.NOT_ENCLOSED)
         {
-            if(!it.goTo(from))
-                throw new IllegalStateException("No se ha podido un wrapper del sample: Los indices son erroneos");
+            it.goTo(from);
             it.next(); // desechamos from
             from = (Token)it.next();
         }
         if(inclusionTo == Enclosure.NOT_ENCLOSED)
         {
-            if(!it.goTo(to))
-                throw new IllegalStateException("No se ha podido un wrapper del sample: Los indices son erroneos");
+            it.goTo(to);
             to = (Token)it.previous();
         
         }
@@ -132,8 +130,7 @@ public class Sample implements Edible{
             return null;
         }
         
-        if(!it.goTo(from))
-            return null;
+        it.goTo(from);
         
         tree = new SMTree();
         tree.setRootObject(newParent);
@@ -247,8 +244,7 @@ public class Sample implements Edible{
         else if(DirectionOperator.UPWARDS == d)
             itSample = iterator(webPageBackwardIterator.class);
         
-        if(!itSample.goTo(from))
-            return null;
+        itSample.goTo(from);
         
         Token token=null;
 
@@ -284,11 +280,11 @@ public class Sample implements Edible{
         //Si 'to' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionTo)
         {
-            assert(it.goTo(to));
+            it.goTo(to);
             to = (Token) it.previous();
         }
         
-        assert(it.goTo(from));
+        it.goTo(from);
             
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
