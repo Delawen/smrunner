@@ -202,7 +202,7 @@ public class TokenIteratorTest {
         it.goTo((Item)actual.getLastChild().getObject());
         actual = actual.getLastChild().getLastChild().getLastChild();
         Object o = actual.getObject();
-        assertEquals(it.nextObject(), o);
+        assertEquals(it.nextObject(true), o);
         System.out.println("-->" + actual.getObject());               
     }
 

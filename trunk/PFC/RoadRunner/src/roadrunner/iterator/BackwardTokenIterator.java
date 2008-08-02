@@ -92,14 +92,14 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             next = null;
             cache = null;
 
-            //Si nos hemos colocado en un nodo que no es hoja, buscamos la hoja:
-            while(super.lastNode.getObject() instanceof CompositeItem)
-                super.lastNode = super.lastNode.getLastChild();
-
             //Si nos hemos colocado en una lista, esta no ha podido ser accedida:
             if(super.lastNode.getObject() instanceof List)
                 ((roadrunner.node.List)super.lastNode.getObject()).setAccessed(false);
-            return super.lastNode.getObject();
+
+            //Si es un token, que lo devuelva
+            //Si no lo es, que entre en el bucle de abajo para ver a dónde va:
+            if(super.lastNode.getObject() instanceof Token)
+                return super.lastNode.getObject();
         }
 
         /**
