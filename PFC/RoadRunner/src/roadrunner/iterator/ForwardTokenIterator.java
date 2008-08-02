@@ -90,10 +90,14 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             next = null;
             cache = null;
 
-            //Si nos hemos colocado en un nodo que no es hoja, buscamos las hojas:
-            if(super.lastNode.getObject() instanceof CompositeItem)
-                return nextAll();
-            return super.lastNode.getObject();
+            //Si nos hemos colocado en una lista, esta no ha podido ser accedida:
+            if(super.lastNode.getObject() instanceof List)
+                ((roadrunner.node.List)super.lastNode.getObject()).setAccessed(false);
+
+            //Si es un token, que lo devuelva
+            //Si no lo es, que entre en el bucle de abajo para ver a dónde va:
+            if(super.lastNode.getObject() instanceof Token)
+                return super.lastNode.getObject();
         }
         
         /**
