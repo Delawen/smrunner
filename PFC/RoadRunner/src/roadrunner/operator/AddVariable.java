@@ -68,7 +68,7 @@ public class AddVariable extends IOperator
                     it = s.iterator(BackwardTokenIterator.class);
             }
             
-            assert(it.goTo(t));
+            it.goTo(t);
             
             reparacion.setIndexSample((Token)it.next());
             

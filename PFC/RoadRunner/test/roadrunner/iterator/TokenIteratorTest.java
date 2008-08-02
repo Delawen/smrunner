@@ -136,7 +136,7 @@ public class TokenIteratorTest {
         
         
         //Nos vamos por el primer camino:
-        assert(it.goTo((Item)actual.getFirstChild().getObject()));
+        it.goTo((Item)actual.getFirstChild().getObject());
         actual = actual.getFirstChild();
         assertEquals(it.nextObject(), actual.getObject());
         System.out.println("repetimos (goto)-->" + actual.getObject());
@@ -156,7 +156,7 @@ public class TokenIteratorTest {
         
         
         //Nos vamos por el primer camino:
-        assert(it.goTo((Item)actual.getFirstChild().getObject()));
+        it.goTo((Item)actual.getFirstChild().getObject());
         actual = actual.getFirstChild();
         assertEquals(it.nextObject(), actual.getObject());
         System.out.println("repetimos (goto)-->" + actual.getObject());

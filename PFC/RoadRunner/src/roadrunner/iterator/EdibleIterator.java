@@ -17,7 +17,7 @@ import roadrunner.node.Item;
 //El iterador comestible :D
 public interface EdibleIterator
 {
-    public boolean goTo (Item objeto);
+    public void goTo (Item objeto);
     public boolean isNext (Item o);
     public Object nextAll();
     public Item next();

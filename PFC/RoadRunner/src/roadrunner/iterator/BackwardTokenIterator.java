@@ -334,14 +334,11 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
      * @return
      */
     @Override
-     public boolean goTo (Item objeto)
+     public void goTo (Item objeto)
     {
 
         next = getTree().getNode(objeto);
-        if(next==null)
-            return false;
-
-        return true;
+        assert(next!=null);
     }
 
 
@@ -447,7 +444,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 /**
                  * vamos hasta el item siguiente
                  */
-                assert(goTo(item));
+                goTo(item);
 
                 /**
                  * Sacamos la lista de siguientes.

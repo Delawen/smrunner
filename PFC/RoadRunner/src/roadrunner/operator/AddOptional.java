@@ -86,14 +86,14 @@ public class AddOptional extends IOperator
             }
             
             // lastTokenOptional contiene al nodo posterior, asi que nos quedamos con el ultimo de la opcionalidad
-            assert(itW.goTo(lastTokenOptional));
+            itW.goTo(lastTokenOptional);
             lastTokenOptional = (Token) itW.previous(true);
             firstTokenOptional = (Token) n;
             
             // comprobamos que no estamos ante una lista          
-            assert(itS.goTo(t));
+            itS.goTo(t);
             Token tokenInmediatelyBeforeT = (Token) itS.previous(true);
-            assert(itS.goTo(t));
+            itS.goTo(t);
             Token tokenInmediatelyAfterT = (Token) itS.next();
             
             if(lastTokenOptional.match(tokenInmediatelyBeforeT)) // || 
@@ -144,13 +144,13 @@ public class AddOptional extends IOperator
             }
 
             // y ahora si que nos quedamos con el token ultimo de la opcionalidad
-            assert(itS.goTo(lastTokenOptional));
+            itS.goTo(lastTokenOptional);
             lastTokenOptional = (Token) itS.previous(true);
             firstTokenOptional = (Token) t;
             
-            assert(itS.goTo(t));
+            itS.goTo(t);
             Token tokenInmediatelyBeforeT = (Token) itS.previous(true);
-            assert(itS.goTo(t));
+            itS.goTo(t);
             
             if(lastTokenOptional.match(tokenInmediatelyBeforeT) /*|| 
                      firstTokenOptional.match(tokenInmediatelyAfterT)*/ ) //TODO asegurarse de que hace esta condicion de abajo
@@ -161,13 +161,13 @@ public class AddOptional extends IOperator
             }
             
 
-            assert(itW.goTo(n));
+            itW.goTo(n);
             rep.setInitialItem((Item) itW.previous(true));
             rep.setInitialEnclosure(Enclosure.NOT_ENCLOSED);
             rep.setFinalItem(n);
             rep.setFinalEnclosure(Enclosure.NOT_ENCLOSED);
             rep.setState(StateRepair.SUCESSFULL);
-            assert(itS.goTo(lastTokenOptional));
+            itS.goTo(lastTokenOptional);
             itS.next();
             rep.setIndexSample((Token) itS.next());
             

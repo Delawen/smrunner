@@ -34,7 +34,7 @@ public class webPageForwardIterator implements webPageIterator
         this.tokens = tokens;
     }
 
-    public boolean goTo(Item t)
+    public void goTo(Item t)
     {
 //        if(!tokens.contains((Token)t))
 //            return false;
@@ -56,7 +56,7 @@ public class webPageForwardIterator implements webPageIterator
                 result = true;
             }
         }
-        return result;
+        assert(result == true);
 
     }
 
