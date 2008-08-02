@@ -84,9 +84,9 @@ public class Sample implements Edible{
     {
         Token resultado;
         if(t.getTokenType().getName().equals("TAG"))
-            resultado = new Tag(t.getText());
+            resultado = new Tag(t.getText().trim());
         else
-            resultado = new Text(t.getText());
+            resultado = new Text(t.getText().trim());
         
         return resultado;
     }
