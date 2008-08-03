@@ -99,12 +99,14 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             if(super.lastNode.getObject() instanceof Token)
                 return super.lastNode.getObject();
         }
-        
-        /**
-         * Limpiamos la cache porque nos vamos a mover
-         * (es un next(), no un isNext()).
-         */
-        cache = null;
+
+
+        if(cache != null)
+        {
+            super.lastNode = this.tree.getNode(cache.getFirst());
+            cache = null;
+            return super.lastNode.getObject();
+        }
         
         /**
          * Calculamos el siguiente en función del último item recorrido:

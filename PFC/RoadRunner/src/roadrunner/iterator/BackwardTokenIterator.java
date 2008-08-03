@@ -102,11 +102,13 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 return super.lastNode.getObject();
         }
 
-        /**
-         * Limpiamos la cache porque nos vamos a mover
-         * (es un next(), no un isNext()).
-         */
-        cache = null;
+        if(cache != null)
+        {
+            super.lastNode = this.tree.getNode(cache.getFirst());
+            cache = null;
+            return super.lastNode.getObject();
+        }
+
 
         /**
          * Calculamos el siguiente en función del último item recorrido:
@@ -307,6 +309,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 resultado.add(k, super.lastNode);
             }
         }
+
 
         if(resultado.size() > 1)
         {
