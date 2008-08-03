@@ -245,7 +245,7 @@ public class TokenIteratorTest {
         assertFalse(it.isNext((Item)actual.getNext().getObject())); //porque aun no hemos entrado
         it.nextObject();
         it.nextObject();
-        assertFalse(it.hasNext());
+        assertTrue(it.hasNext());
     }
 
 }

@@ -72,9 +72,7 @@ public class AddList extends IOperator
             firstTokenList= firstTokenSquare;
             
             itS.goTo(t);
-            itS.toString();
             lastDelim = (Token) itS.previous();
-            itS.toString();
    
             lastTokenSquare =  w.searchWellFormed(lastDelim, Enclosure.ENCLOSED, firstTokenSquare, Enclosure.ENCLOSED, d);
 

@@ -205,6 +205,8 @@ public class SMTreeNode<T> implements Cloneable{
     @Override
     public String toString()
     {
+        if(this.getObject() == null)
+            return "[Node: NULL]";
         return "[Node: " + this.getObject().toString() + "]";
     }
 }
