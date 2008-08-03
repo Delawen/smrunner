@@ -110,7 +110,7 @@ public class RoadRunner {
                     if(reparacion.getState() == StateRepair.SUCESSFULL)
                         reparacion.apply();
                     else
-                        throw new RuntimeException("I couldn't repair a mismatch.");
+                        throw new RuntimeException("I couldn't repair the mismatch " + m);
                     t = reparacion.getIndexSample();
                     n = reparacion.getReparator().getTree().getRootObject();
                     if(n instanceof roadrunner.node.List)

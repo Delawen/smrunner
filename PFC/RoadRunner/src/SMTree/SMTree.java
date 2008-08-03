@@ -804,7 +804,7 @@ public class SMTree<T> implements Cloneable{
 
         if(from.getParent()!=to.getParent())
             throw new IllegalStateException("No se pueden clonar un subarbol " +
-                    "desde un nodo a otro que pertenecen a distintos niveles.");
+                    "desde un nodo a otro que pertenecen a distintos niveles. From: " + from.toString() + " To: " + to.toString());
         if(from == to)
             return cloneSubTree(from, newParent);
         
