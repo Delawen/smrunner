@@ -135,6 +135,7 @@ public class AddList extends IOperator
             {
                 lastTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
+                itW.next();
                 whereEat = (Item) itW.next();
                 whatEatenTemp = whatEaten;
                 whatEaten = squareW.eatOneSquare(w, whereEat, d);
@@ -225,6 +226,7 @@ public class AddList extends IOperator
             while(whatEaten != null)
             {
                 itS.goTo((Item) whatEaten);
+                itS.next();
                 whereEat = (Item) itS.next();
                 whatEatenTemp = whatEaten;
                 whatEaten = squareS.eatOneSquare(s, whereEat, d);

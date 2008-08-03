@@ -341,7 +341,7 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
     {
 
         next = getTree().getNode(objeto);
-        assert(next!=null);
+        assert next!=null;
     }
 
 

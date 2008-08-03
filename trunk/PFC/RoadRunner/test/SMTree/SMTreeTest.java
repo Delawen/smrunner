@@ -375,7 +375,7 @@ public class SMTreeTest {
     /**
      * Test of equals method, of class SMTree.
      */
-    @Test
+    //@Test
     public void equals() {
         
         System.out.println("equals()");

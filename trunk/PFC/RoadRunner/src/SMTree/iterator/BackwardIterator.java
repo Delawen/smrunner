@@ -113,7 +113,6 @@ public class BackwardIterator<T> extends SMTreeIterator<T>
             lastNode  = lastNode.getNext();
         else if(lastNode != getRootIterator())
         {
-            lastNode  = lastNode;
             do
                 lastNode  = lastNode .getParent();
             while(lastNode .getNext() == null && lastNode !=getRootIterator());
@@ -123,9 +122,6 @@ public class BackwardIterator<T> extends SMTreeIterator<T>
                 lastNode  = lastNode.getNext();
         }
         
-        
-        assert (lastNode != null);
-
         return resultNode ; 
     }
 

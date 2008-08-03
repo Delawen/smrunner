@@ -154,7 +154,6 @@ public class Wrapper implements Edible{
             return null;
 
         crearIteradorEdible(d, t, e);
-
         crearIteradorWrapper(d, this.getTree().getRootObject());
 
         //Para resolver los mismatches:
@@ -166,7 +165,7 @@ public class Wrapper implements Edible{
         while(itWrapper.hasNext())
         {
             edibleToken = itSample.nextAll();
-            m = compruebaNext(edibleToken, e, d);
+            m = compruebaNextYSacaFactorComun(edibleToken, e, d);
             //Si es necesario, aplicamos reparaciones:
             if(m != null)
             {
@@ -213,6 +212,147 @@ public class Wrapper implements Edible{
     }
     public Mismatch eat (Sample s) {
         return eat(s,DirectionOperator.DOWNWARDS);
+    }
+
+    private Mismatch compruebaNextYSacaFactorComun(Object edibleToken, Edible e, DirectionOperator d)
+    {
+        Mismatch m = null;
+
+        //Si nos ha devuelto un único camino
+        if(edibleToken instanceof Token)
+        {
+            Object nextAllWrapper = itWrapper.nextAll();
+            
+            //CASO VARIABLE: el edibleToken es una variable
+            if(edibleToken instanceof Variable)
+            {
+                boolean encontrado = false;
+                //y el nextAllWrapper es un texto o variable:
+                if(nextAllWrapper instanceof Text)
+                {
+                    Token i = (Token) nextAllWrapper;
+                    Item nuevo = new Variable();
+                    this.substitute(i, Enclosure.ENCLOSED, i, Enclosure.ENCLOSED, new Wrapper(nuevo));
+                    itWrapper.goTo(nuevo);
+                    itWrapper.next();
+                    encontrado = true;
+                }
+                else if(nextAllWrapper instanceof Token)
+                {
+                    if(!((Token)nextAllWrapper).match((Token)edibleToken))
+                        m = crearMismatch((Token)nextAllWrapper, (Token)edibleToken, e, d);
+                    else
+                    {
+                        itWrapper.goTo((Token)nextAllWrapper);
+                        itWrapper.next();
+                    }
+                }
+                else //y el nextAllWrapper contiene un texto o variable:
+                {
+                    for(Token i : ((java.util.List<Token>)nextAllWrapper))
+                    {
+                        if(i instanceof Text)
+                        {
+                            Item nuevo = new Variable();
+                           this.substitute(i, Enclosure.ENCLOSED, i, Enclosure.ENCLOSED, new Wrapper(nuevo));
+                           itWrapper.goTo(nuevo);
+                           itWrapper.next();
+                           encontrado = true;
+                           break;
+                        }
+                    }
+                }
+
+                //Si no hemos conseguido hacer match, hay que crear un mismatch:
+                if(!encontrado)
+                {
+                    if(nextAllWrapper instanceof Token)
+                        m = crearMismatch(nextAllWrapper, (Token)edibleToken, e, d);
+                    else
+                        m = crearMismatch(((java.util.List<Token>)nextAllWrapper).get(0), (Token)edibleToken, e, d);
+                }
+            }
+            else //edibleToken no es una variable:
+            {
+                //el wrapper sólo tiene un camino:
+                if(nextAllWrapper instanceof Token)
+                {
+                    if(!((Token)nextAllWrapper).match((Token)edibleToken))
+                        m = crearMismatch((Token)nextAllWrapper, (Token)edibleToken, e, d);
+                    else
+                    {
+                        itWrapper.goTo((Token)nextAllWrapper);
+                        itWrapper.next();
+                    }
+                }
+                else //el wrapper tiene varios caminos:
+                {
+                    boolean encontrado = false;
+                    for(Token t : ((java.util.List<Token>)nextAllWrapper))
+                    {
+                        if(t.match((Token)edibleToken))
+                        {
+                            encontrado = true;
+                            itWrapper.goTo(t);
+                            itWrapper.next();
+                            break;
+                        }
+                    }
+                    if(!encontrado)
+                        m = crearMismatch(((java.util.List<Token>)nextAllWrapper).get(0), (Token)edibleToken, e, d);
+                }
+            }
+        }
+        //Si el edible nos devolvio varios caminos:
+        else if(edibleToken instanceof java.util.List)
+        {
+            //Vamos probando todos los caminos
+            boolean encontrado = false;
+
+            //La pila irá guardando los caminos no recorridos:
+            Stack<Item> noRecorridos = new Stack<Item>();
+
+            //Si es el principio de una lista ya accedida,
+            //para evitar bucles infinitos probamos primero
+            //fuera de la lista
+            java.util.List<Item> listaItems = (java.util.List)edibleToken;
+            Item primerItem = listaItems.get(0);
+            Item primerPadre = (Item)((Wrapper)e).treeWrapper.getNode(primerItem).getParent().getObject();
+
+            if(primerPadre instanceof roadrunner.node.List
+                    && ((roadrunner.node.List)primerPadre).isAccessed()
+                    && listaItems.size() > 1)
+            {
+                noRecorridos.add(listaItems.get(1));
+                noRecorridos.add(listaItems.get(0));
+                for(int i = 2; i < listaItems.size(); i++)
+                    noRecorridos.add(listaItems.get(i));
+            }
+            else
+                for(Item i : (java.util.List<Item>)edibleToken)
+                    noRecorridos.add(i);
+
+
+            for(Item i : noRecorridos)
+            {
+                if(itWrapper.isNext(i))
+                {
+                    encontrado = true;
+                    itSample.goTo(i);
+                    itSample.next();
+                    break;
+                }
+            }
+
+            //Creamos el Mismatch si no lo ha encontrado:
+            if(!encontrado)
+                m = crearMismatch(itWrapper.next(), (Token)((java.util.List)edibleToken).get(0), e, d);
+        }
+        else
+            throw new RuntimeException("El next() muestra comportamientos extraños. Sample: " + edibleToken + "Wrapper: " + itWrapper.next());
+
+        return m;
+
     }
 
     private void crearIteradorEdible(DirectionOperator d, Item t, Edible e)
@@ -308,7 +448,7 @@ public class Wrapper implements Edible{
 
             //Creamos el Mismatch si no lo ha encontrado:
             if(!encontrado)
-                m = crearMismatch(itWrapper.next(), (Token)edibleToken, e, d);
+                m = crearMismatch(itWrapper.next(), (Token)((java.util.List)edibleToken).get(0), e, d);
         }
         else
             throw new RuntimeException("El next() muestra comportamientos extraños. Sample: " + edibleToken + "Wrapper: " + itWrapper.next());
