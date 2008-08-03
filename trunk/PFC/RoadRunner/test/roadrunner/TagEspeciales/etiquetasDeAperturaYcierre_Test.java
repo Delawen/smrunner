@@ -39,7 +39,7 @@ public class etiquetasDeAperturaYcierre_Test {
     public void tearDown() {
     }
 
-//    @Test
+    @Test
     public void test1()
     {
         System.out.println("Test para comprobar etiquetas del tipo <img/>");
@@ -51,7 +51,7 @@ public class etiquetasDeAperturaYcierre_Test {
         System.out.println(w);
     }
     
-//    @Test
+    @Test
     public void test2()
     {
         System.out.println("Test para comprobar etiquetas del tipo <img/>");
@@ -100,7 +100,7 @@ public class etiquetasDeAperturaYcierre_Test {
         System.out.println(w);
     }
     
-//    @Test
+    @Test
     public void test6()
     {
         System.out.println("Test para comprobar etiquetas del tipo <img/>");
@@ -113,7 +113,7 @@ public class etiquetasDeAperturaYcierre_Test {
         System.out.println(w);
     }
     
-//    @Test
+    @Test
     public void test7()
     {
         System.out.println("Test para comprobar etiquetas del tipo <img/>");

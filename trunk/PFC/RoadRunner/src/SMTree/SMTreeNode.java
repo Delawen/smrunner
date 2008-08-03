@@ -159,10 +159,17 @@ public class SMTreeNode<T> implements Cloneable{
         return hash;
     }
     
-    //Comprueba si las raíces de los dos nodos son iguales
-    //Pero no comprueba las referencias, ¿mejor por hashcode?
     @Override
     public boolean equals(Object o)
+    {
+        if(o instanceof SMTreeNode)
+            return o == this;
+        return false;
+    }
+
+    //Comprueba si las raíces de los dos nodos son iguales
+    //Pero no comprueba las referencias, ¿mejor por hashcode?
+    public boolean equalsNode(Object o)
     {
         if(!(o instanceof SMTreeNode))
             return false;
