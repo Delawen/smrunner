@@ -113,7 +113,6 @@ public class SMTreeNodeTest {
         assertEquals(expResult, instance.getFirstChild());
     }
 
-    @Test
     public void testClone()
     {
         System.out.println("clone()");
@@ -145,7 +144,7 @@ public class SMTreeNodeTest {
     /**
      * Test of equals method, of class SMTreeNode.
      */
-    @Test
+
     public void equals() 
     {
         System.out.println("equals()");
