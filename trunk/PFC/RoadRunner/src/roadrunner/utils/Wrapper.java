@@ -702,106 +702,102 @@ public class Wrapper implements Edible{
         SMTreeNode<Item> actual = e.getTree().getNode(desde);
         SMTreeNode<Item> fin = e.getTree().getNode(hasta);
 
-        
-        Item item_actual = actual.getObject();
+        while(actual.getObject() instanceof CompositeItem)
+            actual = actual.getFirstChild();
 
-        while(item_actual instanceof CompositeItem)
+        while(fin.getObject() instanceof CompositeItem)
+            fin = fin.getFirstChild();
+
+        int level_actual = 0;
+        int level_fin = 0;
+
+        SMTreeNode aux = actual;
+        while(aux.getParent() != null)
         {
-            if(item_actual instanceof Optional)
-            {
-                if(!complejidad)
-                    actual = actual.getNext();
-                else
-                {
-                    actual = actual.getFirstChild();
-                    if(actual.getObject() instanceof List)
-                        ((List)actual.getObject()).setAccessed(false);
-                }
-            }
-            else
-            {
-                actual = actual.getFirstChild();
-                if(actual.getObject() instanceof List)
-                    ((List)actual.getObject()).setAccessed(false);
-            }
-
-            item_actual = actual.getObject();
+            aux = aux.getParent();
+            level_actual ++;
         }
-        
-        while(actual != null && actual != fin)
+
+        aux = fin;
+        while(aux.getParent() != null)
         {
-            ejemplo.add(actual.getObject());
+            aux = aux.getParent();
+            level_fin++;
+        }
 
-            //Intentamos encontrar el siguiente. Las listas tienen tratamiento especial
-            while(actual.getNext() == null && actual.getParent() != null && !(actual.getObject() instanceof List))
-                actual = actual.getParent();
+        while(level_actual > level_fin)
+        {
+            level_actual--;
+            actual = actual.getParent();
+        }
 
-            //Si el siguiente no existe y no es una lista, es que hemos acabado
-            if(actual.getNext() == null && !(actual.getObject() instanceof List))
-                break;
+        while(level_actual < level_fin)
+        {
+            level_fin--;
+            fin = fin.getParent();
+        }
 
-            //Si no estamos en una lista, es porque queremos ir al siguiente
-            if(!(actual.getObject() instanceof List))
-                actual = actual.getNext();
+        while(actual != fin)
+        {
+            ejemplo.addAll(simularSampleRecursivo(actual, complejidad));
 
-
-            item_actual = actual.getObject();
-            //Navegamos por los items internos hasta llegar a una hoja
-            while(item_actual instanceof CompositeItem)
-            {
-                //Si es un opcional
-                if(item_actual instanceof Optional)
-                {
-                    //Significa que entramos en el opcional
-                    if(complejidad)
-                    {
-                       while(actual.getNext() == null && actual.getParent() != null && !(actual.getObject() instanceof List))
-                            actual = actual.getParent();
-
-                        if(actual.getNext() != null)
-                            actual = actual.getNext();
-                    }
-                    else //Significa que nos saltamos el opcional
-                    {
-                        while(actual.getNext() == null && actual.getParent() != null)
-                            actual = actual.getParent();
-                        if(actual.getNext() == null)
-                            break;
-                        actual = actual.getNext();
-                    }
-                }
-                else if(item_actual instanceof List) //Si estamos en una lista
-                {
-                    if(complejidad || !((List)item_actual).isAccessed()) //Significa que entramos en la lista
-                    {
-                        ((List)item_actual).setAccessed(true);
-
-                        actual = actual.getFirstChild();
-                        if(actual.getObject() instanceof List)
-                            ((List)actual.getObject()).setAccessed(false);
-                    }
-                    else if(actual.getNext() != null) //Significa que nos saltamos la lista
-                    {
-                        actual = actual.getNext();
-                    }
-                    else
-                        break;
-                }
-                else //Estamos en una tupla
-                {
-                    actual = actual.getFirstChild();
-                    if(actual.getObject() instanceof List)
-                        ((List)actual.getObject()).setAccessed(false);
-                }
-
-                //Nos preparamos para procesar el siguiente elemento
-                item_actual = actual.getObject();
-            }
+            assert(actual.getNext() != null);
+            actual = actual.getNext();
         }
 
         Sample s = new Sample(ejemplo);
 
         return s;
+    }
+
+    private java.util.List<Item> simularSampleRecursivo(SMTreeNode<Item> actual, boolean complejidad)
+    {
+        java.util.List<Item> resultado = new LinkedList<Item>();
+        SMTreeNode<Item> aux;
+
+        if(actual.getObject() instanceof CompositeItem)
+        {
+            Item objeto = actual.getObject();
+            assert(actual.getFirstChild() != null);
+            actual = actual.getFirstChild();
+
+            if(objeto instanceof List)
+            {
+                aux = actual;
+                while(actual != null)
+                {
+                    resultado.addAll(simularSampleRecursivo(actual, complejidad));
+                    actual = actual.getNext();
+                }
+                actual = aux;
+                while(actual != null)
+                {
+                    resultado.addAll(simularSampleRecursivo(actual, !complejidad));
+                    actual = actual.getNext();
+                }
+            }
+            else if(objeto instanceof Tuple)
+            {
+                while(actual != null)
+                {
+                    resultado.addAll(simularSampleRecursivo(actual, complejidad));
+                    actual = actual.getNext();
+                }
+            }
+            else if((objeto instanceof Optional) && complejidad)
+            {
+                while(actual != null)
+                {
+                    resultado.addAll(simularSampleRecursivo(actual, complejidad));
+                    actual = actual.getNext();
+                }
+            }
+
+        }
+        else
+            resultado.add(actual.getObject());
+
+        return resultado;
     }
     
     private String toStringWrapper(SMTreeNode n)
