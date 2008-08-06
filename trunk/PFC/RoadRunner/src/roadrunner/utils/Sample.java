@@ -46,6 +46,12 @@ public class Sample implements Edible{
             Logger.getLogger(Sample.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public Sample(List tokens)
+    {
+        this();
+        this.tokens = tokens;
+    }
     
     public Sample(String page)
     {
@@ -338,5 +344,11 @@ public class Sample implements Edible{
             isWellFormed=false;
         
         return isWellFormed; 
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.tokens.toString();
     }
 }
