@@ -9,6 +9,7 @@ import SMTree.iterator.SMTreeIterator;
 import SMTree.*;
 import SMTree.iterator.BackwardIterator;
 import SMTree.iterator.ForwardIterator;
+import java.util.LinkedList;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -165,7 +166,7 @@ public class Wrapper implements Edible{
         while(itWrapper.hasNext())
         {
             edibleToken = itSample.nextAll();
-            m = compruebaNextYSacaFactorComun(edibleToken, e, d);
+            m = compruebaNextYSacaVariables(edibleToken, e, d);
             //Si es necesario, aplicamos reparaciones:
             if(m != null)
             {
@@ -190,10 +191,68 @@ public class Wrapper implements Edible{
         if(edibleToken == null)
             return null;
 
+        Item fin;
+
         if(edibleToken instanceof Item)
-            return (Item) edibleToken;
+            fin = (Item) edibleToken;
         else
-            return (Item) ((java.util.List)edibleToken).get(0);
+            fin = (Item) ((java.util.List)edibleToken).get(0);
+
+        //Si es un wrapper, tenemos que recuperar lo que nos hayamos perdido
+        //e incorporarlo al square candidate
+        if(e instanceof Wrapper)
+        {
+            Sample s1 = simularSample((Wrapper)e, t, fin, true);
+            Sample s2 = simularSample((Wrapper)e, t, fin, false);
+
+            Mismatch mismatch_interno;
+            Item n_interno = this.treeWrapper.getRootObject();
+            Item item_interno = s1.getToken(0);
+            while(true) //Procesamos todo el sample
+            {
+
+                mismatch_interno = eat(s1, item_interno, n_interno, DirectionOperator.DOWNWARDS);
+
+                //Si al comer se ha provocado un Mismatch:
+                if(mismatch_interno != null)
+                {
+                    Operator operator = new Operator();
+                    Repair reparacion = operator.repair(mismatch_interno);
+                    assert(reparacion.getState() == StateRepair.SUCESSFULL);
+                    reparacion.apply();
+                    item_interno = reparacion.getIndexSample();
+                    n_interno = reparacion.getReparator().getTree().getRootObject();
+                    if(n_interno instanceof roadrunner.node.List)
+                        ((roadrunner.node.List)n_interno).setAccessed(true);
+                }
+                else break; //Hemos terminado
+            }
+
+            n_interno = this.treeWrapper.getRootObject();
+            item_interno = s2.getToken(0);
+            while(true) //Procesamos todo el sample
+            {
+
+                mismatch_interno = eat(s2, item_interno, n_interno, DirectionOperator.DOWNWARDS);
+
+                //Si al comer se ha provocado un Mismatch:
+                if(mismatch_interno != null)
+                {
+                    Operator operator = new Operator();
+                    Repair reparacion = operator.repair(mismatch_interno);
+                    assert(reparacion.getState() == StateRepair.SUCESSFULL);
+                    reparacion.apply();
+                    item_interno = reparacion.getIndexSample();
+                    n_interno = reparacion.getReparator().getTree().getRootObject();
+                    if(n_interno instanceof roadrunner.node.List)
+                        ((roadrunner.node.List)n_interno).setAccessed(true);
+                }
+                else break; //Hemos terminado
+            }
+        }
+
+
+        return fin;
     }
     
     public SMTree<Item> getTree()
@@ -214,7 +273,7 @@ public class Wrapper implements Edible{
         return eat(s,DirectionOperator.DOWNWARDS);
     }
 
-    private Mismatch compruebaNextYSacaFactorComun(Object edibleToken, Edible e, DirectionOperator d)
+    private Mismatch compruebaNextYSacaVariables(Object edibleToken, Edible e, DirectionOperator d)
     {
         Mismatch m = null;
 
@@ -304,50 +363,6 @@ public class Wrapper implements Edible{
             }
         }
         //Si el edible nos devolvio varios caminos:
-        else if(edibleToken instanceof java.util.List)
-        {
-            //Vamos probando todos los caminos
-            boolean encontrado = false;
-
-            //La pila irá guardando los caminos no recorridos:
-            Stack<Item> noRecorridos = new Stack<Item>();
-
-            //Si es el principio de una lista ya accedida,
-            //para evitar bucles infinitos probamos primero
-            //fuera de la lista
-            java.util.List<Item> listaItems = (java.util.List)edibleToken;
-            Item primerItem = listaItems.get(0);
-            Item primerPadre = (Item)((Wrapper)e).treeWrapper.getNode(primerItem).getParent().getObject();
-
-            if(primerPadre instanceof roadrunner.node.List
-                    && ((roadrunner.node.List)primerPadre).isAccessed()
-                    && listaItems.size() > 1)
-            {
-                noRecorridos.add(listaItems.get(1));
-                noRecorridos.add(listaItems.get(0));
-                for(int i = 2; i < listaItems.size(); i++)
-                    noRecorridos.add(listaItems.get(i));
-            }
-            else
-                for(Item i : (java.util.List<Item>)edibleToken)
-                    noRecorridos.add(i);
-
-
-            for(Item i : noRecorridos)
-            {
-                if(itWrapper.isNext(i))
-                {
-                    encontrado = true;
-                    itSample.goTo(i);
-                    itSample.next();
-                    break;
-                }
-            }
-
-            //Creamos el Mismatch si no lo ha encontrado:
-            if(!encontrado)
-                m = crearMismatch(itWrapper.next(), (Token)((java.util.List)edibleToken).get(0), e, d);
-        }
         else
             throw new RuntimeException("El next() muestra comportamientos extraños. Sample: " + edibleToken + "Wrapper: " + itWrapper.next());
 
@@ -672,6 +687,121 @@ public class Wrapper implements Edible{
     public String toString()
     {
         return toStringWrapper(treeWrapper.getRoot());
+    }
+    /**
+     *
+     * @param e Wrapper desde el que copio.
+     * @param desde Nodo desde el que copia, contenido.
+     * @param hasta Nodo hasta el que tiene que copiar, no contenido.
+     * @param complejidad Indica si se introduce o no en los opcionales y las listas.
+     * @return un sample que copia el wrapper.
+     */
+    public Sample simularSample(Wrapper e, Item desde, Item hasta, boolean complejidad)
+    {
+        LinkedList<Item> ejemplo = new LinkedList<Item>();
+        SMTreeNode<Item> actual = e.getTree().getNode(desde);
+        SMTreeNode<Item> fin = e.getTree().getNode(hasta);
+
+        
+        Item item_actual = actual.getObject();
+
+        while(item_actual instanceof CompositeItem)
+        {
+            if(item_actual instanceof Optional)
+            {
+                if(!complejidad)
+                    actual = actual.getNext();
+                else
+                {
+                    actual = actual.getFirstChild();
+                    if(actual.getObject() instanceof List)
+                        ((List)actual.getObject()).setAccessed(false);
+                }
+            }
+            else
+            {
+                actual = actual.getFirstChild();
+                if(actual.getObject() instanceof List)
+                    ((List)actual.getObject()).setAccessed(false);
+            }
+
+            item_actual = actual.getObject();
+        }
+        
+        while(actual != null && actual != fin)
+        {
+            ejemplo.add(actual.getObject());
+
+            //Intentamos encontrar el siguiente. Las listas tienen tratamiento especial
+            while(actual.getNext() == null && actual.getParent() != null && !(actual.getObject() instanceof List))
+                actual = actual.getParent();
+
+            //Si el siguiente no existe y no es una lista, es que hemos acabado
+            if(actual.getNext() == null && !(actual.getObject() instanceof List))
+                break;
+
+            //Si no estamos en una lista, es porque queremos ir al siguiente
+            if(!(actual.getObject() instanceof List))
+                actual = actual.getNext();
+
+
+            item_actual = actual.getObject();
+            //Navegamos por los items internos hasta llegar a una hoja
+            while(item_actual instanceof CompositeItem)
+            {
+                //Si es un opcional
+                if(item_actual instanceof Optional)
+                {
+                    //Significa que entramos en el opcional
+                    if(complejidad)
+                    {
+                       while(actual.getNext() == null && actual.getParent() != null && !(actual.getObject() instanceof List))
+                            actual = actual.getParent();
+
+                        if(actual.getNext() != null)
+                            actual = actual.getNext();
+                    }
+                    else //Significa que nos saltamos el opcional
+                    {
+                        while(actual.getNext() == null && actual.getParent() != null)
+                            actual = actual.getParent();
+                        if(actual.getNext() == null)
+                            break;
+                        actual = actual.getNext();
+                    }
+                }
+                else if(item_actual instanceof List) //Si estamos en una lista
+                {
+                    if(complejidad || !((List)item_actual).isAccessed()) //Significa que entramos en la lista
+                    {
+                        ((List)item_actual).setAccessed(true);
+
+                        actual = actual.getFirstChild();
+                        if(actual.getObject() instanceof List)
+                            ((List)actual.getObject()).setAccessed(false);
+                    }
+                    else if(actual.getNext() != null) //Significa que nos saltamos la lista
+                    {
+                        actual = actual.getNext();
+                    }
+                    else
+                        break;
+                }
+                else //Estamos en una tupla
+                {
+                    actual = actual.getFirstChild();
+                    if(actual.getObject() instanceof List)
+                        ((List)actual.getObject()).setAccessed(false);
+                }
+
+                //Nos preparamos para procesar el siguiente elemento
+                item_actual = actual.getObject();
+            }
+        }
+
+        Sample s = new Sample(ejemplo);
+
+        return s;
     }
     
     private String toStringWrapper(SMTreeNode n)
