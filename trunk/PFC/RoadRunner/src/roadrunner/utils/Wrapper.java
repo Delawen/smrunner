@@ -764,16 +764,21 @@ public class Wrapper implements Edible{
             if(objeto instanceof List)
             {
                 aux = actual;
+
                 while(actual != null)
                 {
                     resultado.addAll(simularSampleRecursivo(actual, complejidad));
                     actual = actual.getNext();
                 }
-                actual = aux;
-                while(actual != null)
+
+                if(complejidad)
                 {
-                    resultado.addAll(simularSampleRecursivo(actual, !complejidad));
-                    actual = actual.getNext();
+                    actual = aux;
+                    while(actual != null)
+                    {
+                        resultado.addAll(simularSampleRecursivo(actual, !complejidad));
+                        actual = actual.getNext();
+                    }
                 }
             }
             else if(objeto instanceof Tuple)
