@@ -42,7 +42,12 @@ public class Tag extends Token
         @Override
     public void setContent(String c){
         
-        if(c.startsWith("</") && c.endsWith(">"))
+        if(c.startsWith("<!") && c.endsWith(">"))
+        {
+            this.type = Type.OPEN_AND_CLOSE;
+            this.content = c.substring(1, c.length() - 1);
+        }
+        else if(c.startsWith("</") && c.endsWith(">"))
         {
             this.type = Type.CLOSE;
             save(c.substring(2, c.length() - 1));
@@ -65,8 +70,9 @@ public class Tag extends Token
         
     private void save(String contenido) 
     {
+        //TODO : esto falla cuando -> atributo="valor con espacios en medio"
         String[] elems = contenido.split(" ");
-        
+
         this.content = elems[0];
         
         for(int i = 1; i < elems.length; i++)
