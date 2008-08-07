@@ -710,22 +710,13 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             /**
              * En verdad este caso sólo se debería de dar en el inicio
              */
-            else if(item instanceof Tuple)
+            else if((item instanceof Tuple) || ((item instanceof Optional) && optional))
             {
                 super.lastNode = super.lastNode.getLastChild();
                 item = super.lastNode.getObject();
                 //Si una lista es el hijo de una tupla es porque es la primera vez que entramos
                 if(item instanceof List)
                     ((List)item).setAccessed(false);
-                resultado.add(k, super.lastNode);
-            }
-            else if((item instanceof Optional) && optional)
-            {
-               super.lastNode = super.lastNode.getFirstChild();
-
-               if(super.lastNode.getPrevious().getObject() instanceof List)
-                    ((List)super.lastNode.getObject()).setAccessed(false);
-
                 resultado.add(k, super.lastNode);
             }
         }
