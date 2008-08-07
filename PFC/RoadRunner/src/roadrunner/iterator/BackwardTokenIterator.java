@@ -717,13 +717,13 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             }
             else if((item instanceof Optional) && optional)
             {
-                while(super.lastNode.getPrevious() == null && super.lastNode.getParent() != null)
-                    super.lastNode = super.lastNode.getParent();
 
-               if(super.lastNode.getPrevious() != null && (super.lastNode.getPrevious().getObject() instanceof List))
-                    ((List)super.lastNode.getPrevious().getObject()).setAccessed(false);
+               super.lastNode = super.lastNode.getLastChild();
 
-                resultado.add(k, super.lastNode.getPrevious());
+               if(super.lastNode.getPrevious().getObject() instanceof List)
+                    ((List)super.lastNode.getObject()).setAccessed(false);
+
+                resultado.add(k, super.lastNode);
             }
         }
 

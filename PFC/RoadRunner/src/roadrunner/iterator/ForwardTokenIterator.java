@@ -721,13 +721,12 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
             }
             else if((item instanceof Optional) && optional)
             {
-                while(super.lastNode.getPrevious() == null && super.lastNode.getParent() != null)
-                    super.lastNode = super.lastNode.getParent();
+               super.lastNode = super.lastNode.getFirstChild();
 
-               if(super.lastNode.getPrevious() != null && (super.lastNode.getPrevious().getObject() instanceof List))
-                    ((List)super.lastNode.getPrevious().getObject()).setAccessed(false);
+               if(super.lastNode.getPrevious().getObject() instanceof List)
+                    ((List)super.lastNode.getObject()).setAccessed(false);
 
-                resultado.add(k, super.lastNode.getPrevious());
+                resultado.add(k, super.lastNode);
             }
         }
         
