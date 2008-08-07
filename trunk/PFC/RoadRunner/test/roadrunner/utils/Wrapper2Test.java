@@ -46,7 +46,7 @@ public class Wrapper2Test {
     }
 
 
-    //@Test
+    @Test
     public void simularSample()
     {
         System.out.println("simularSample");
@@ -59,18 +59,18 @@ public class Wrapper2Test {
         SMTreeNode<Item> lista = new SMTreeNode<Item>(new roadrunner.node.List());
         tree.addSMTreeNode(lista, tree.getRoot(), Kinship.CHILD);
 
-        tree.addObject(new Text("Repeticion"), lista, Kinship.CHILD);
-        tree.addObject(new Text(" y más repetición."), lista, Kinship.CHILD);
+        tree.addObject(new Text("Repe"), lista, Kinship.CHILD);
+        tree.addObject(new Text("tido"), lista, Kinship.CHILD);
 
 
         SMTreeNode<Item> optional = new SMTreeNode<Item>(new roadrunner.node.Optional());
         tree.addSMTreeNode(optional, tree.getRoot(), Kinship.CHILD);
 
-        tree.addObject(new Text("Esto solo lo leere"), optional, Kinship.CHILD);
+        tree.addObject(new Text("-Alguna vez-"), optional, Kinship.CHILD);
 
         optional = new SMTreeNode<Item>(new Optional());
         tree.addSMTreeNode(optional, tree.getRoot(), Kinship.CHILD);
-        tree.addObject(new Text(" a veces."), optional, Kinship.CHILD);
+        tree.addObject(new Text(" -a veces-"), optional, Kinship.CHILD);
 
         tree.addObject(new Text(" ¿Funcionara?"), tree.getRoot(), Kinship.CHILD);
         tree.addObject(new Text("Esto no debe leerse, FIN"), tree.getRoot(), Kinship.CHILD);
