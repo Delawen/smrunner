@@ -215,6 +215,10 @@ public class Wrapper implements Edible{
                 s2 = simularSample((Wrapper)e, fin, t, false);
             }
 
+            System.out.println("Sample1: "+ s1);
+            System.out.println("Sample2: "+ s2);
+
+
             Mismatch mismatch_interno;
             Item n_interno = this.treeWrapper.getRootObject();
             Item item_interno = s1.getToken(0);

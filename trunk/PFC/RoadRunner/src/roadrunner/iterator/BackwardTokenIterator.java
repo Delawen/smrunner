@@ -705,7 +705,8 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
             /**
              * En verdad este caso sólo se debería de dar en el inicio
              */
-            else if(item instanceof Tuple || (item instanceof Optional && optional))
+
+            else if(item instanceof Tuple)
             {
                 super.lastNode = super.lastNode.getFirstChild();
                 item = super.lastNode.getObject();
@@ -713,6 +714,16 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 if(item instanceof List)
                     ((List)item).setAccessed(false);
                 resultado.add(k, super.lastNode);
+            }
+            else if((item instanceof Optional) && optional)
+            {
+                while(super.lastNode.getPrevious() == null && super.lastNode.getParent() != null)
+                    super.lastNode = super.lastNode.getParent();
+
+               if(super.lastNode.getPrevious() != null && (super.lastNode.getPrevious().getObject() instanceof List))
+                    ((List)super.lastNode.getPrevious().getObject()).setAccessed(false);
+
+                resultado.add(k, super.lastNode.getPrevious());
             }
         }
 
