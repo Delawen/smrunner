@@ -363,6 +363,95 @@ public class Wrapper implements Edible{
             }
         }
         //Si el edible nos devolvio varios caminos:
+        else if (edibleToken instanceof java.util.List)
+        {
+            boolean encontrado = false;
+            Object nextAllWrapper = itWrapper.nextAll();
+
+            for(Item t : (java.util.List<Item>)edibleToken)
+            {
+                //CASO VARIABLE: el edibleToken es una variable
+                if(t instanceof Variable)
+                {
+                    //y el nextAllWrapper es un texto o variable:
+                    if(nextAllWrapper instanceof Text)
+                    {
+                        Token i = (Token) nextAllWrapper;
+                        Item nuevo = new Variable();
+                        this.substitute(i, Enclosure.ENCLOSED, i, Enclosure.ENCLOSED, new Wrapper(nuevo));
+                        itWrapper.goTo(nuevo);
+                        itWrapper.next();
+                        encontrado = true;
+                        break;
+                    }
+                    else if(nextAllWrapper instanceof Token)
+                    {
+                        if(((Token)nextAllWrapper).match((Token)t))
+                        {
+                            itWrapper.goTo((Token)nextAllWrapper);
+                            itWrapper.next();
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    else //y el nextAllWrapper contiene un texto o variable:
+                    {
+                        for(Token i : ((java.util.List<Token>)nextAllWrapper))
+                        {
+                            if(i instanceof Text)
+                            {
+                               Item nuevo = new Variable();
+                               this.substitute(i, Enclosure.ENCLOSED, i, Enclosure.ENCLOSED, new Wrapper(nuevo));
+                               itWrapper.goTo(nuevo);
+                               itWrapper.next();
+                               encontrado = true;
+                               break;
+                            }
+                            if(encontrado)
+                                break;
+                        }
+                    }
+                }
+                else //edibleToken no es una variable:
+                {
+                    //el wrapper sólo tiene un camino:
+                    if(nextAllWrapper instanceof Token)
+                    {
+                        if(!((Token)nextAllWrapper).match((Token)t))
+                            m = crearMismatch((Token)nextAllWrapper, (Token)t, e, d);
+                        else
+                        {
+                            itWrapper.goTo((Token)nextAllWrapper);
+                            itWrapper.next();
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    else //el wrapper tiene varios caminos:
+                    {
+                        for(Token token : ((java.util.List<Token>)nextAllWrapper))
+                        {
+                            if(token.match((Token)t))
+                            {
+                                encontrado = true;
+                                itWrapper.goTo(token);
+                                itWrapper.next();
+                                break;
+                            }
+                        }
+                        if(encontrado)
+                            break;
+                    }
+                }
+            }
+            if(!encontrado)
+            {
+                if(nextAllWrapper instanceof java.util.List)
+                    m = crearMismatch(((java.util.List<Item>)nextAllWrapper).get(0), (Token)((java.util.List)edibleToken).get(0), e, d);
+                else
+                    m = crearMismatch(nextAllWrapper, (Token)((java.util.List)edibleToken).get(0), e, d);
+            }
+        }
         else
             throw new RuntimeException("El next() muestra comportamientos extraños. Sample: " + edibleToken + "Wrapper: " + itWrapper.next());
 
@@ -737,11 +826,16 @@ public class Wrapper implements Edible{
             fin = fin.getParent();
         }
 
-        while(actual != fin)
+        while(fin.getParent() != actual.getParent())
+        {
+            fin = fin.getParent();
+            actual = actual.getParent();
+        }
+
+        while(actual != fin && actual != null)
         {
             ejemplo.addAll(simularSampleRecursivo(actual, complejidad));
 
-            assert(actual.getNext() != null);
             actual = actual.getNext();
         }
 
