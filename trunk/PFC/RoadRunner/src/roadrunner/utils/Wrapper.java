@@ -200,10 +200,25 @@ public class Wrapper implements Edible{
 
         //Si es un wrapper, tenemos que recuperar lo que nos hayamos perdido
         //e incorporarlo al square candidate
-        if(e instanceof Wrapper)
+        if((e instanceof Wrapper) && fin != null)
         {
-            Sample s1 = simularSample((Wrapper)e, t, fin, true);
-            Sample s2 = simularSample((Wrapper)e, t, fin, false);
+            Sample s1;
+            Sample s2;
+            if(DirectionOperator.DOWNWARDS == d)
+            {
+                s1 = simularSample((Wrapper)e, t, fin, true);
+                s2 = simularSample((Wrapper)e, t, fin, false);
+            }
+            else
+            {
+                s1 = simularSample((Wrapper)e, fin, t, true);
+                s2 = simularSample((Wrapper)e, fin, t, false);
+            }
+
+            System.out.println("Del wrapper " + e);
+            System.out.println("Saco: ");
+            System.out.println(s1);
+            System.out.println(s2);
 
             Mismatch mismatch_interno;
             Item n_interno = this.treeWrapper.getRootObject();
@@ -838,6 +853,9 @@ public class Wrapper implements Edible{
 
             actual = actual.getNext();
         }
+
+        if(hasta instanceof Token)
+            ejemplo.add(hasta);
 
         Sample s = new Sample(ejemplo);
 
