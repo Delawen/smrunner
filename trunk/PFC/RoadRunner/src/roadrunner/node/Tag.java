@@ -4,6 +4,8 @@ package roadrunner.node;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Tag extends Token
@@ -12,6 +14,10 @@ public class Tag extends Token
     public enum Type {OPEN,CLOSE, OPEN_AND_CLOSE};
     private Type type;
     private Map atributos;
+           
+    private final static String regexTag = "([\\w]+)([ ]*([\\w\\-]+)[ ]*=[ ]*\"([^\"]*)\")*";
+    //GRUPOS:                               1       2    3                     4
+    private final static Pattern pattern = Pattern.compile(regexTag, /*Pattern.MULTILINE|*/Pattern.CASE_INSENSITIVE);
 
     public Tag(String text)
     {
@@ -70,21 +76,44 @@ public class Tag extends Token
         
     private void save(String contenido) 
     {
-        //TODO : esto falla cuando -> atributo="valor con espacios en medio"
-        String[] elems = contenido.split(" ");
-
-        this.content = elems[0];
-        
-        for(int i = 1; i < elems.length; i++)
+        //TODO no hace bien los atributos porque no se como se recorren bien los grupos
+        Matcher matcher=pattern.matcher(contenido);    
+        int j = 0;
+        while(matcher.find())
         {
-            String elem = elems[i];
+//            System.out.println(j + " "+matcher.groupCount()+"  " +matcher.group(1));
+//            j++;
+            this.content = matcher.group(1);
             
-            int indice = elem.indexOf("=");
-            if(indice < 0)
-                throw new RuntimeException("El atributo no estaba en formato XHTML.");
-            
-            this.atributos.put(elem.substring(0, indice), elem.substring(indice +1));
+//            startText=matcher.start();
+//            endText=matcher.end();
+//            fulltext=matcher.group(0);
+//            if(matcher.groupCount()>1)
+//            {
+//                for(int i=1;i<=matcher.groupCount();i++)
+//                {
+//                    label=matcher.group(i);
+//                    startGroup=matcher.start(i);
+//                    endGroup=matcher.end(i);
+//                    doSometing(label,startGroup,endGroup);
+//                }
+//            }
         }
+        
+//        String[] elems = contenido.split(" ");
+//
+//        this.content = elems[0];
+//        
+//        for(int i = 1; i < elems.length; i++)
+//        {
+//            String elem = elems[i];
+//            
+//            int indice = elem.indexOf("=");
+//            if(indice < 0)
+//                throw new RuntimeException("El atributo no estaba en formato XHTML.");
+//            
+//            this.atributos.put(elem.substring(0, indice), elem.substring(indice +1));
+//        }
     }
     
     /**
