@@ -616,7 +616,7 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
              * Puede llegar aquí desde el if anterior (un token cuyo siguiente es un compositeItem) como directamente de
              * la llamada del método.
              */
-            if(item instanceof Optional && !optional)
+            if(item instanceof Optional && (!optional || super.lastNode.getFirstChild() == next))
             {
                 /**
                  * SMTreeNode<Item> nodo nos ayudará a guardar el super.lastNode actual 
