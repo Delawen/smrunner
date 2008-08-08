@@ -42,22 +42,17 @@ public class todos_Test {
     @Test
     public void test5()
     {
-        System.out.println("¡¡Todo junto!!");
-        String[] prueba = new String[5];
-        String s = "test/roadrunner/simples/html/sample1.html";
-        prueba[0] = s;
-        s = "test/roadrunner/simples/html/sample2.html";
-        prueba[1] = s;
-        s = "test/roadrunner/simples/html/sample3.html";
-        prueba[2] = s;
-        s = "test/roadrunner/simples/html/sample4.html";
-        prueba[3] = s;
-        s = "test/roadrunner/simples/html/sample5.html";
-        prueba[4] = s;
+        System.out.println("Todo Junto");
+        String[] prueba = {
+                "test/roadrunner/simples/html/sample1.html",
+                "test/roadrunner/simples/html/sample2.html",
+                "test/roadrunner/simples/html/sample3.html",
+                "test/roadrunner/simples/html/sample4.html",
+                "test/roadrunner/simples/html/sample5.html"};
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
-
+        assertEquals("<body>(<p>&VARIABLE;</p>)+(<b>&VARIABLE;</b>(<i>Hola</i>)?)?</body>",w.toString());
     }
 
 }

@@ -48,28 +48,28 @@ public class lista_con_RI_simples_Test{
     public void test()
     {
         System.out.println("addList con RI simples");
-        String[] prueba = new String[2];
-        String s = "test/roadrunner/complejos/html/A_sample1.xhtml";
-        prueba[0] = s;
-        s = "test/roadrunner/complejos/html/A_sample2.xhtml";
-        prueba[1] = s;
+        String[] prueba = {
+                            "test/roadrunner/complejos/html/A_sample1.xhtml",
+                            "test/roadrunner/complejos/html/A_sample2.xhtml"};
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        
+        assertEquals("<body><ul>(<li>&VARIABLE;(<b>&VARIABLE;</b>)?</li>)+</ul></body>", w.toString());
     }
     
     @Test
     public void test2()
     {
         System.out.println("addList con RI simples");
-        String[] prueba = new String[2];
-        String s = "test/roadrunner/complejos/html/A_sample2.xhtml";
-        prueba[0] = s;
-        s = "test/roadrunner/complejos/html/A_sample1.xhtml";
-        prueba[1] = s;
+        String[] prueba = {
+                            "test/roadrunner/complejos/html/A_sample2.xhtml",
+                            "test/roadrunner/complejos/html/A_sample1.xhtml"};
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        
+        assertEquals("<body><ul>(<li>&VARIABLE;(<b>&VARIABLE;</b>)?</li>)+</ul></body>", w.toString());
     }
     
 

@@ -62,6 +62,8 @@ public class DOF_arribaOptional_Test {
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        
+        assertEquals("(<b>&VARIABLE;</b>)?(<i>opcionalidad</i>)?", w.toString());
     }
     
     @Test
@@ -74,6 +76,7 @@ public class DOF_arribaOptional_Test {
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        assertEquals("(<b>&VARIABLE;</b>)?(<i>opcionalidad</i>)?", w.toString());
     }
     
     @Test
@@ -86,6 +89,7 @@ public class DOF_arribaOptional_Test {
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        assertEquals("(<b>&VARIABLE;</b>)?(<i>opcionalidad</i>)?", w.toString());
     }
 
 }

@@ -48,28 +48,26 @@ public class list_con_RI_optional_Test {
     public void test()
     {
         System.out.println("addList con addOptional interno");
-        String[] prueba = new String[2];
-        String s = "test/roadrunner/medios/html/basico.html";
-        prueba[0] = s;
-        s = "test/roadrunner/medios/html/test2.html";
-        prueba[1] = s;
+        String[] prueba = {
+                "test/roadrunner/medios/html/basico.html",
+                "test/roadrunner/medios/html/test2.html"};
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        assertEquals("<html>(<div>HTML Básico(<b>Esto introduce un addOptional</b>)?</div>)+</html>", w.toString());
     }
     
     @Test
     public void test2()
     {
         System.out.println("addList con addOptional interno");
-        String[] prueba = new String[2];
-        String s = "test/roadrunner/medios/html/test2.html";
-        prueba[0] = s;
-        s = "test/roadrunner/medios/html/basico.html";
-        prueba[1] = s;
+        String[] prueba = {
+                "test/roadrunner/medios/html/test2.html",
+                "test/roadrunner/medios/html/basico.html"};
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        assertEquals("<html>(<div>HTML Básico(<b>Esto introduce un addOptional</b>)?</div>)+</html>", w.toString());
     }
     
 
