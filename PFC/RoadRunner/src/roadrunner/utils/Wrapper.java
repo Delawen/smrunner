@@ -318,6 +318,7 @@ public class Wrapper implements Edible{
                     {
                         itWrapper.goTo((Token)nextAllWrapper);
                         itWrapper.next();
+                        encontrado = true;
                     }
                 }
                 else //y el nextAllWrapper contiene un texto o variable:
