@@ -44,16 +44,15 @@ public class addListVacio {
     public void test()
     {
         System.out.println("addList sin elementos");
-        String[] prueba = new String[3];
-        String s = "test/roadrunner/complejos/html/A_sample2.xhtml";
-        prueba[0] = s;
-        s = "test/roadrunner/complejos/html/A_sample1.xhtml";
-        prueba[1] = s;
-        s = "test/roadrunner/complejos/html/A_sample3.xhtml";
-        prueba[2] = s;
+        String[] prueba = {
+            "test/roadrunner/complejos/html/A_sample2.xhtml",
+                "test/roadrunner/complejos/html/A_sample1.xhtml",
+                "test/roadrunner/complejos/html/A_sample3.xhtml"};
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        
+        assertEquals("<body><ul>((<li>&VARIABLE;(<b>&VARIABLE;</b>)?</li>)?)+</ul></body>", w.toString());
     }
 
 
@@ -61,16 +60,15 @@ public class addListVacio {
     public void test2()
     {
         System.out.println("addList sin elementos");
-        String[] prueba = new String[3];
-        String s = "test/roadrunner/complejos/html/A_sample3.xhtml";
-        prueba[0] = s;
-        s = "test/roadrunner/complejos/html/A_sample1.xhtml";
-        prueba[1] = s;
-        s = "test/roadrunner/complejos/html/A_sample2.xhtml";
-        prueba[2] = s;
+        String[] prueba = {
+            "test/roadrunner/complejos/html/A_sample3.xhtml",
+                "test/roadrunner/complejos/html/A_sample1.xhtml",
+                "test/roadrunner/complejos/html/A_sample2.xhtml"};
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        
+        assertEquals("<body><ul>((<li>&VARIABLE;(<b>&VARIABLE;</b>)?</li>)+)?</ul></body>", w.toString());
     }
 
 }

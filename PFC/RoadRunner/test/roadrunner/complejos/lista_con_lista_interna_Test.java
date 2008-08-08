@@ -44,13 +44,14 @@ public class lista_con_lista_interna_Test {
     public void test()
     {
         System.out.println("addList con RI simples");
-        String[] prueba = new String[2];
-        String s = "test/roadrunner/complejos/html/A_sample4.xhtml";
-        prueba[0] = s;
-        s = "test/roadrunner/complejos/html/A_sample5.xhtml";
-        prueba[1] = s;
+        String[] prueba = {
+            "test/roadrunner/complejos/html/A_sample4.xhtml",
+            "test/roadrunner/complejos/html/A_sample5.xhtml"
+        };
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        
+        assertEquals("<body><ul>(<li>&VARIABLE;(<i>cursiva</i>)?(<b>&VARIABLE;</b>)+</li>)+</ul></body>", w.toString());
     }
 }

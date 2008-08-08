@@ -43,27 +43,30 @@ public class addVariable_Test {
     public void test1()
     {
         System.out.println("Test complejo para RoadRunner: dos sample y un addVariable");
-        String[] prueba = new String[2];
-        String s = "test/roadrunner/simples/html/sample1.html";
-        prueba[0] = s;
-        s = "test/roadrunner/simples/html/sample2.html";
-        prueba[1] = s;
+        String[] prueba = {
+                "test/roadrunner/simples/html/sample1.html",
+                "test/roadrunner/simples/html/sample2.html"
+        };
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        
+        assertEquals("<body><p>&VARIABLE;</p></body>",w.toString());
+
     }
     @Test
     public void test2()
     {
         System.out.println("Test complejo para RoadRunner: dos sample y un addVariable");
-        String[] prueba = new String[2];
-        String s = "test/roadrunner/simples/html/sample2.html";
-        prueba[0] = s;
-        s = "test/roadrunner/simples/html/sample1.html";
-        prueba[1] = s;
+        String[] prueba = {
+                "test/roadrunner/simples/html/sample2.html",
+                "test/roadrunner/simples/html/sample1.html"
+        };
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
+        
+        assertEquals("<body><p>&VARIABLE;</p></body>",w.toString());
     }
 
 }

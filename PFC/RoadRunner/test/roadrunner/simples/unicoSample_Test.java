@@ -42,9 +42,7 @@ public class unicoSample_Test {
     public void test1()
     {
         System.out.println("Test simple para RoadRunner: un solo sample");
-        String[] prueba = new String[1];
-        String s = "test/roadrunner/simples/html/sample1.html";
-        prueba[0] = s;
+        String[] prueba = { "test/roadrunner/simples/html/sample1.html"};
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
         System.out.println(w);
