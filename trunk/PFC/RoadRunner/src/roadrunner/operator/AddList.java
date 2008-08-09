@@ -1,5 +1,6 @@
 package roadrunner.operator;
 
+import SMTree.SMTreeNode;
 import SMTree.utils.Enclosure;
 import roadrunner.iterator.BackwardTokenIterator;
 import roadrunner.iterator.EdibleIterator;
@@ -95,6 +96,12 @@ public class AddList extends IOperator
             itW.goTo(firstTokenList);
             whereEat = (Item) itW.previous();
             
+            if(whereEat == null)
+            {
+                SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(firstTokenList);
+                whereEat = (Item) nodo.getParent().getObject();
+            }
+            
             Item whatEaten = null;
             if(d == DirectionOperator.DOWNWARDS)
                 whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
@@ -116,6 +123,11 @@ public class AddList extends IOperator
                 firstTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.previous();
+                if(whereEat == null)
+                {
+                    SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(whatEaten);
+                    whereEat = (Item) nodo.getParent().getObject();
+                }
                 whatEatenTemp = whatEaten;
                 if(d == DirectionOperator.DOWNWARDS)
                     whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
@@ -129,6 +141,11 @@ public class AddList extends IOperator
            itW.goTo(lastTokenList);
            itW.next();
            whereEat = (Item) itW.next();
+            if(whereEat == null)
+            {
+                SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(whatEaten);
+                whereEat = (Item) nodo.getParent().getObject();
+            }
            whatEaten = squareW.eatOneSquare(w, whereEat, d);
             
             while( whatEaten != null)
@@ -137,6 +154,11 @@ public class AddList extends IOperator
                 itW.goTo((Item) whatEaten);
                 itW.next();
                 whereEat = (Item) itW.next();
+                if(whereEat == null)
+                {
+                    SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(whatEaten);
+                    whereEat = (Item) nodo.getParent().getObject();
+                }
                 whatEatenTemp = whatEaten;
                 whatEaten = squareW.eatOneSquare(w, whereEat, d);
                 if(whatEaten == whatEatenTemp)
