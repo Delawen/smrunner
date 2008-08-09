@@ -16,11 +16,11 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author santi
+ * @author delawen
  */
-public class debian_Test {
+public class barrapunto_Test {
 
-    public debian_Test() {
+    public barrapunto_Test() {
     }
 
     @BeforeClass
@@ -42,9 +42,9 @@ public class debian_Test {
     @Test
     public void test1()
     {
-        System.out.println("DOF's");
-        String[] prueba = { "test/roadrunner/real/html/debian1.xhtml",
-                            "test/roadrunner/real/html/debian2.xhtml"
+        System.out.println("Barrapunto");
+        String[] prueba = { "test/roadrunner/real/html/barrapunto1.xhtml",
+                            "test/roadrunner/real/html/barrapunto2.xhtml"
                             //,"test/roadrunner/real/html/debian3.xhtml"
                             };
         RoadRunner rr = new RoadRunner(prueba);
