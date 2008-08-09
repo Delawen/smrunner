@@ -407,6 +407,8 @@ public class Wrapper implements Edible{
                         this.substitute(i, Enclosure.ENCLOSED, i, Enclosure.ENCLOSED, new Wrapper(nuevo));
                         itWrapper.goTo(nuevo);
                         itWrapper.next();
+                        itSample.goTo(t);
+                        itSample.next();
                         encontrado = true;
                         break;
                     }
@@ -416,6 +418,8 @@ public class Wrapper implements Edible{
                         {
                             itWrapper.goTo((Token)nextAllWrapper);
                             itWrapper.next();
+                            itSample.goTo(t);
+                            itSample.next();
                             encontrado = true;
                             break;
                         }
@@ -430,6 +434,8 @@ public class Wrapper implements Edible{
                                this.substitute(i, Enclosure.ENCLOSED, i, Enclosure.ENCLOSED, new Wrapper(nuevo));
                                itWrapper.goTo(nuevo);
                                itWrapper.next();
+                                itSample.goTo(t);
+                                itSample.next();
                                encontrado = true;
                                break;
                             }
@@ -449,6 +455,8 @@ public class Wrapper implements Edible{
                         {
                             itWrapper.goTo((Token)nextAllWrapper);
                             itWrapper.next();
+                            itSample.goTo(t);
+                            itSample.next();
                             encontrado = true;
                             break;
                         }
@@ -462,11 +470,13 @@ public class Wrapper implements Edible{
                                 encontrado = true;
                                 itWrapper.goTo(token);
                                 itWrapper.next();
+                                itSample.goTo(t);
+                                itSample.next();
                                 break;
                             }
+                            if(encontrado)
+                                break;
                         }
-                        if(encontrado)
-                            break;
                     }
                 }
             }
