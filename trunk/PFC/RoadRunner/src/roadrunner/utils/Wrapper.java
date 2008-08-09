@@ -165,6 +165,8 @@ public class Wrapper implements Edible{
         /*mientras no me coma entero el elemento*/
         while(itWrapper.hasNext())
         {
+            if(!itSample.hasNext())
+                return null;
             edibleToken = itSample.nextAll();
                 m = compruebaNextYSacaVariables(edibleToken, e, d);
             //Si es necesario, aplicamos reparaciones:
@@ -215,6 +217,7 @@ public class Wrapper implements Edible{
                 s2 = simularSample((Wrapper)e, fin, t, false, d);
             }
 
+            System.out.println("Wrapper: " + (Wrapper)e);
             System.out.println("Sample1: "+ s1);
             System.out.println("Sample2: "+ s2);
 
@@ -232,7 +235,8 @@ public class Wrapper implements Edible{
                 {
                     Operator operator = new Operator();
                     Repair reparacion = operator.repair(mismatch_interno);
-                    assert(reparacion.getState() == StateRepair.SUCESSFULL);
+                    if(reparacion.getState() != StateRepair.SUCESSFULL)
+                        throw new AssertionError("No pudo resolver una de las reparaciones simuladas internas: \n" + s1 + "\n" + this);
                     reparacion.apply();
                     item_interno = reparacion.getIndexSample();
                     n_interno = reparacion.getReparator().getTree().getRootObject();
