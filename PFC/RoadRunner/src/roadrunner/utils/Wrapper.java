@@ -341,6 +341,8 @@ public class Wrapper implements Edible{
                         if(((Token)i).match((Token)edibleToken))
                         {
                             encontrado = true;
+                           itWrapper.goTo(i);
+                           itWrapper.next();
                             break;
                         }
                     }
