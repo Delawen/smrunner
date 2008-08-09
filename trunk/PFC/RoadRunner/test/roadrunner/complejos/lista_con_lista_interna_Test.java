@@ -52,13 +52,6 @@ public class lista_con_lista_interna_Test {
         Edible w = rr.process();
         System.out.println(w);
         
-        if("<body><ul>(<li>&VARIABLE;(<i>cursiva</i>)?((<b>&VARIABLE;</b>)?)+</li>)+</ul></body>".equals(w.toString())
-            ||   "<body><ul>(<li>&VARIABLE;(<i>cursiva</i>)?((<b>&VARIABLE;</b>)+)?</li>)+</ul></body>".equals(w.toString())
-                )
-        {
-        ;
-        }
-        else
-            fail("mal");
+        assertEquals("<body><ul>(<li>&VARIABLE;((<b>&VARIABLE;</b>)?)+(<i>cursiva</i>)?</li>)+</ul></body>", w.toString());
     }
 }

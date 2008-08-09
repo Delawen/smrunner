@@ -166,7 +166,7 @@ public class Wrapper implements Edible{
         while(itWrapper.hasNext())
         {
             edibleToken = itSample.nextAll();
-            m = compruebaNextYSacaVariables(edibleToken, e, d);
+                m = compruebaNextYSacaVariables(edibleToken, e, d);
             //Si es necesario, aplicamos reparaciones:
             if(m != null)
             {
@@ -333,6 +333,11 @@ public class Wrapper implements Edible{
                            itWrapper.next();
                            encontrado = true;
                            break;
+                        }
+                        if(((Token)i).match((Token)edibleToken))
+                        {
+                            encontrado = true;
+                            break;
                         }
                     }
                 }
