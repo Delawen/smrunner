@@ -74,6 +74,11 @@ public class AddList extends IOperator
             
             itS.goTo(t);
             lastDelim = (Token) itS.previous();
+            if(lastDelim == null)
+            {
+                rep.setState(StateRepair.FAILED);
+                return rep;
+            }
    
             lastTokenSquare =  w.searchWellFormed(lastDelim, Enclosure.ENCLOSED, firstTokenSquare, Enclosure.ENCLOSED, d);
 
@@ -96,10 +101,10 @@ public class AddList extends IOperator
             itW.goTo(firstTokenList);
             whereEat = (Item) itW.previous();
             
-            if(whereEat == null)
+            if(whereEat == null) //Significa que no había previous, o sea que hemos fallado:
             {
-                SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(firstTokenList);
-                whereEat = (Item) nodo.getParent().getObject();
+                rep.setState(StateRepair.FAILED);
+                return rep;
             }
             
             Item whatEaten = null;
@@ -123,11 +128,8 @@ public class AddList extends IOperator
                 firstTokenList = (Token) whatEaten;
                 itW.goTo((Item) whatEaten);
                 whereEat = (Item) itW.previous();
-                if(whereEat == null)
-                {
-                    SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(whatEaten);
-                    whereEat = (Item) nodo.getParent().getObject();
-                }
+                if(whereEat == null) //Habíamos terminado de comer el w
+                    break;
                 whatEatenTemp = whatEaten;
                 if(d == DirectionOperator.DOWNWARDS)
                     whatEaten = squareW.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
@@ -141,29 +143,28 @@ public class AddList extends IOperator
            itW.goTo(lastTokenList);
            itW.next();
            whereEat = (Item) itW.next();
-            if(whereEat == null)
-            {
-                SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(whatEaten);
-                whereEat = (Item) nodo.getParent().getObject();
-            }
-           whatEaten = squareW.eatOneSquare(w, whereEat, d);
-            
-            while( whatEaten != null)
-            {
-                lastTokenList = (Token) whatEaten;
-                itW.goTo((Item) whatEaten);
-                itW.next();
-                whereEat = (Item) itW.next();
-                if(whereEat == null)
+           if(whereEat != null) //No hay nada que comer abajo
+           {
+
+               whatEaten = squareW.eatOneSquare(w, whereEat, d);
+
+                while( whatEaten != null)
                 {
-                    SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(whatEaten);
-                    whereEat = (Item) nodo.getParent().getObject();
+                    lastTokenList = (Token) whatEaten;
+                    itW.goTo((Item) whatEaten);
+                    itW.next();
+                    whereEat = (Item) itW.next();
+                    if(whereEat == null)
+                    {
+                        SMTreeNode<Item> nodo = ((Wrapper)w).getTree().getNode(whatEaten);
+                        whereEat = (Item) nodo.getParent().getObject();
+                    }
+                    whatEatenTemp = whatEaten;
+                    whatEaten = squareW.eatOneSquare(w, whereEat, d);
+                    if(whatEaten == whatEatenTemp)
+                        break;
                 }
-                whatEatenTemp = whatEaten;
-                whatEaten = squareW.eatOneSquare(w, whereEat, d);
-                if(whatEaten == whatEatenTemp)
-                    return null;
-            }
+           }
            
             squareW.getTree().setRootObject(new List());
 
@@ -207,6 +208,12 @@ public class AddList extends IOperator
             Item whereEat;   
             itW.goTo(n);
             whereEat = lastTokenList;
+
+            if(whereEat == null) //Significa que no había previous, o sea que hemos fallado:
+            {
+                rep.setState(StateRepair.FAILED);
+                return rep;
+            }
             Item whatEaten;
 
             if(d == DirectionOperator.DOWNWARDS)
@@ -228,6 +235,8 @@ public class AddList extends IOperator
                 firstTokenList = (Token) whatEaten;
                 itW.goTo(whatEaten);
                 whereEat =  (Item) itW.previous();
+                if(whereEat == null) //Habíamos terminado de comer el w
+                    break;
                 whatEatenTemp = whatEaten;
                 if(d == DirectionOperator.DOWNWARDS)
                     whatEaten = squareS.eatOneSquare(w, whereEat, DirectionOperator.UPWARDS);
@@ -241,22 +250,27 @@ public class AddList extends IOperator
            itS.goTo(lastTokenSquare);
            itS.next();
            whereEat = (Item) itS.next();
-           whatEaten = squareS.eatOneSquare(s, whereEat, d);
            Item lastEatenSuccess = (Item) whatEaten;
-          
-            
-            while(whatEaten != null)
-            {
-                itS.goTo((Item) whatEaten);
-                itS.next();
-                whereEat = (Item) itS.next();
-                whatEatenTemp = whatEaten;
-                whatEaten = squareS.eatOneSquare(s, whereEat, d);
-                if(whatEaten == null || whatEaten == whatEatenTemp)
-                    break;
-                lastEatenSuccess =  (Item) whatEaten;
+
+            if(whereEat != null) //No hay nada que comer abajo
+           {
+
+
+               whatEaten = squareS.eatOneSquare(s, whereEat, d);
+
+
+                while(whatEaten != null)
+                {
+                    itS.goTo((Item) whatEaten);
+                    itS.next();
+                    whereEat = (Item) itS.next();
+                    whatEatenTemp = whatEaten;
+                    whatEaten = squareS.eatOneSquare(s, whereEat, d);
+                    if(whatEaten == null || whatEaten == whatEatenTemp)
+                        break;
+                    lastEatenSuccess =  (Item) whatEaten;
+                }
             }
-           
 
            
             squareS.getTree().setRootObject(new List());

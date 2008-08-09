@@ -14,7 +14,7 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.StyledEditorKit.BoldAction;
-import roadrunner.node.*; 
+import roadrunner.node.*;
 import roadrunner.operator.DirectionOperator;
 import roadrunner.iterator.webPageBackwardIterator;
 import roadrunner.iterator.webPageForwardIterator;
@@ -24,23 +24,23 @@ import roadrunner.operator.Operator;
 /**
  *  @author delawen
  */
-// <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
+// <editor-fold defaultstate="collapsed" desc=" UML Marker ">
 // #[regen=yes,id=DCE.6DA19461-88AB-136F-23B7-1FB2AC471B20]
-// </editor-fold> 
+// </editor-fold>
 public class Wrapper implements Edible{
-    
+
     SMTree<Item> treeWrapper;
     private EdibleIterator itWrapper;
     private EdibleIterator itSample;
 
-    // <editor-fold defaultstate="collapsed" desc=" UML Marker "> 
+    // <editor-fold defaultstate="collapsed" desc=" UML Marker ">
     // #[regen=yes,id=DCE.4C4FEE21-B6CA-E719-277C-03EDB616EFAF]
-    // </editor-fold> 
+    // </editor-fold>
     public Wrapper () {
         super();
         treeWrapper = new SMTree<Item>();
     }
-    
+
     public Wrapper(Item rootItem)
     {
         this();
@@ -50,30 +50,30 @@ public class Wrapper implements Edible{
     public Wrapper(Wrapper w) throws CloneNotSupportedException {
         treeWrapper = w.getTree().clone();
     }
-    
+
     public Wrapper(Item rootItem,Item firstChildRoot)
     {
         this(rootItem);
         treeWrapper.addObject(firstChildRoot, treeWrapper.getRoot(), Kinship.CHILD);
     }
-    
+
     public Wrapper(SMTree<Item> tree)
     {
         super();
         this.treeWrapper = tree;
     }
-    
+
     public Wrapper(String regexp)
     {
         super();
         treeWrapper = new SMTree<Item>();
-        
+
         Stack<Item> s = new Stack<Item>();
         Item lastParentItem = new Tuple();
-        
+
         treeWrapper.setRootObject(lastParentItem);
         treeWrapper.addObject(new DOF(), treeWrapper.getRoot(), Kinship.CHILD);
-        
+
         for(int i=0; i<regexp.length(); i++ )
         {
             if(regexp.charAt(i) == '(')
@@ -81,13 +81,13 @@ public class Wrapper implements Edible{
                 Item oldParent = lastParentItem;
                 lastParentItem = s.push(new Tuple());
                 treeWrapper.addObject(lastParentItem,treeWrapper.getNode(oldParent), Kinship.CHILD);
-                
+
             }
             else if (regexp.charAt(i) == ')')
             {
                 if(s.isEmpty())
                     throw new IllegalArgumentException("La expresión regular no está bien formada");
-                
+
                 if(regexp.charAt(i+1) == '+')
                 {
                     i++;
@@ -101,18 +101,18 @@ public class Wrapper implements Edible{
                     lastParentItem = (Item) treeWrapper.getNode(lastParentItem).getParent().getObject();
                 }
                 else
-                    continue;      
+                    continue;
             }
             else if(regexp.charAt(i) == '<')
             {
                 int j = regexp.indexOf(">", i);
                 if(j<0)
                     throw new IllegalArgumentException("La expresión regular no está bien formada");
-                
+
                 String tag = regexp.substring(i, j+1);
-                
+
                 treeWrapper.addObject(new Tag(tag), treeWrapper.getNode(lastParentItem), Kinship.CHILD);
-                
+
                 i = j;
             }
             else if(regexp.charAt(i) == '#')
@@ -122,24 +122,24 @@ public class Wrapper implements Edible{
             else
             {
                 int j = i;
-                while(j<regexp.length() && regexp.charAt(j)!='<' && regexp.charAt(j)!='>' 
+                while(j<regexp.length() && regexp.charAt(j)!='<' && regexp.charAt(j)!='>'
                         && regexp.charAt(j)!='(' && regexp.charAt(j)!=')')
                 {
                     j++;
                 }
-                
+
                 String text = regexp.substring(i, j);
-                            
+
                 treeWrapper.addObject(new Text(text), treeWrapper.getNode(lastParentItem), Kinship.CHILD);
-                i = j-1;        
+                i = j-1;
             }
         }
-        
+
         treeWrapper.addObject(new DOF(), treeWrapper.getRoot(), Kinship.CHILD);
     }
 
     /**
-     * Eats a square candidate. 
+     * Eats a square candidate.
      * Returns null if it cannot be eaten or the item after the element.
      * @param e Edible to be eaten
      * @param t Where to start eating
@@ -150,7 +150,7 @@ public class Wrapper implements Edible{
     {
         //Iteradores de los Edibles:
         Mismatch m = null;
-        
+
         if(t == null)
             throw new IllegalArgumentException();
 
@@ -268,17 +268,17 @@ public class Wrapper implements Edible{
 
         return fin;
     }
-    
+
     public SMTree<Item> getTree()
     {
         return this.treeWrapper;
     }
-    public Mismatch eat (Sample s, DirectionOperator d) 
+    public Mismatch eat (Sample s, DirectionOperator d)
     {
         if(d == DirectionOperator.DOWNWARDS)
             return eat(s, s.getToken(0), treeWrapper.getRootObject(), d);
         else
-            return eat(s, s.getToken(s.getNumToken()-1), treeWrapper.getRootObject(), d);  
+            return eat(s, s.getToken(s.getNumToken()-1), treeWrapper.getRootObject(), d);
     }
     public boolean goTo (Item i) {
         return true;
@@ -295,7 +295,7 @@ public class Wrapper implements Edible{
         if(edibleToken instanceof Token)
         {
             Object nextAllWrapper = itWrapper.nextAll();
-            
+
             //CASO VARIABLE: el edibleToken es una variable
             if(edibleToken instanceof Variable)
             {
@@ -593,12 +593,12 @@ public class Wrapper implements Edible{
     public boolean substitute (Item from, Enclosure inclusionFrom, Item to, Enclosure inclusionTo, SMTree what) {
         return treeWrapper.substituteObject(from, inclusionFrom, to, inclusionTo, what);
     }
-    
+
      public boolean substitute (Item from, Enclosure inclusionFrom, Item to, Enclosure inclusionTo, Wrapper what) {
         return treeWrapper.substituteObject(from, inclusionFrom, to, inclusionTo, what.treeWrapper);
     }
 
-    public Mismatch eat (Edible e, Item t, Item n, DirectionOperator d) 
+    public Mismatch eat (Edible e, Item t, Item n, DirectionOperator d)
     {
         if(e == null || t == null || n == null || d == null)
             throw new IllegalArgumentException("eat no puede tener parámetros nulos.");
@@ -608,18 +608,18 @@ public class Wrapper implements Edible{
         //Iteradores de los Edibles:
         crearIteradorWrapper(d, n);
         crearIteradorEdible(d, t, e);
-        
+
 
         /*mientras no se produzca un mismatch y no me coma entero el sample o el wrapper*/
         while(itSample.hasNext() && itWrapper.hasNext() && m==null)
             m = compruebaNext(itSample.nextAll(), e, d);
-       
+
         /* Si no se ha producido un mismatch pero si el sample o el wrapper se han acabado,
          * no ha funcionado bien
          */
         if(m == null && (itWrapper.hasNext() ||itSample.hasNext()))
            throw new RuntimeException("Se ha liado con los DOF. Probablemente el isNext() está fallando.");
-        
+
         return m;
     }
 
@@ -635,10 +635,10 @@ public class Wrapper implements Edible{
         }
         wi.setTree(treeWrapper);
         wi.setRootIterator(treeWrapper.getRoot());
-        
+
         return wi;
     }
-    
+
     public SMTreeIterator<Item> iterator (Class iteratorClass, Item virtualRootWrapper)
     {
         SMTreeIterator<Item> wi = null;
@@ -649,14 +649,14 @@ public class Wrapper implements Edible{
         } catch (IllegalAccessException ex) {
             Logger.getLogger(SMTree.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         SMTreeNode<Item> virtualRootNode = treeWrapper.getNode(virtualRootWrapper);
         if(virtualRootNode==null)
             throw new NullPointerException("La raiz virtual para recorrer el wrapper no existe");
-        
+
         wi.setTree(treeWrapper);
         wi.setRootIterator(virtualRootNode);
-        
+
         return wi;
     }
 
@@ -671,27 +671,27 @@ public class Wrapper implements Edible{
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return new Wrapper(treeCloned);
     }
 
     public Token searchWellFormed(Token t, Enclosure tokenEnclosure, Token from, Enclosure tEnclosure, DirectionOperator d) {
-                
+
         SMTreeIterator<Item> it = null;
-        
+
         if(DirectionOperator.DOWNWARDS == d)
             it = treeWrapper.iterator(ForwardIterator.class);
         else if(DirectionOperator.UPWARDS == d)
             it = treeWrapper.iterator(BackwardIterator.class);
-        
+
         it.goTo(from);
-        
+
         Token token=null;
 
         while(it.hasNext())
         {
             Item i = (Item) it.nextObject();
-            
+
             //Sabremos que estamos en una hoja si es un token
             if(i instanceof Token)
             {
@@ -699,25 +699,25 @@ public class Wrapper implements Edible{
                 if((token.match(t) || (token instanceof Text && t instanceof Text))
                         && isWellFormed(from, tEnclosure, token, tokenEnclosure, d))
                     return token;
-            }            
+            }
         }
-        
+
         return null;
     }
-    
+
     private boolean isWellFormed (Token from,Enclosure inclusionFrom, Token to,Enclosure inclusionTo, DirectionOperator d) {
-        
+
         if(from==null || to==null)
            throw new NullPointerException("");
-        
+
         // las regiones vacias estaran bien formadas
         if(from==to && (inclusionFrom == Enclosure.NOT_ENCLOSED || inclusionTo == Enclosure.NOT_ENCLOSED))
             return true;
-        
+
         boolean isWellFormed = true;
-        Stack<Tag> openTags = new Stack(); 
+        Stack<Tag> openTags = new Stack();
         EdibleIterator it = null;
-        
+
         if(d == DirectionOperator.DOWNWARDS)
             it = (EdibleIterator) treeWrapper.iterator(ForwardTokenIterator.class);
         else if(d == DirectionOperator.UPWARDS)
@@ -729,13 +729,13 @@ public class Wrapper implements Edible{
             it.goTo(to);
             to = (Token)it.previous(true);
         }
-        
+
         it.goTo(from);
-            
+
         //Si 'from' no esta incluido, no desechamos
         if(Enclosure.NOT_ENCLOSED == inclusionFrom)
             from = (Token) it.nextObject(true);
-        
+
         //si miramos solo si un token esta bien formado y dicho token no es una etiqueta
         if(from==to && (!(from instanceof Tag)))
             return true;
@@ -744,7 +744,7 @@ public class Wrapper implements Edible{
             return true;
         else if(from==to)
             return false;
-        
+
         if(d == DirectionOperator.DOWNWARDS)
         {
             Token t;
@@ -768,7 +768,7 @@ public class Wrapper implements Edible{
             do
             {
                 t = (Token) it.nextObject();
-                
+
                 if(t instanceof Tag && ((Tag)t).isOpenTag() && ((Tag)t).isCloseTag())
                     continue;
                 else if(t instanceof Tag && ((Tag)t).isCloseTag())
@@ -778,12 +778,12 @@ public class Wrapper implements Edible{
                 else if(!(t instanceof Text) && !(t instanceof Variable))
                     isWellFormed = false;
 
-            } while(it.hasNext() && t!=to && isWellFormed);      
+            } while(it.hasNext() && t!=to && isWellFormed);
         }
-            
+
         if(!openTags.empty())
             isWellFormed=false;
-        
+
         return isWellFormed;
     }
 
@@ -864,8 +864,8 @@ public class Wrapper implements Edible{
             actual = actual.getNext();
         }
 
-        if(hasta instanceof Token)
-            ejemplo.add(hasta);
+        if(fin.getObject() instanceof Token)
+            ejemplo.add(fin.getObject());
 
         Sample s = new Sample(ejemplo);
 
@@ -932,33 +932,33 @@ public class Wrapper implements Edible{
 
         return resultado;
     }
-    
+
     private String toStringWrapper(SMTreeNode n)
     {
-        
+
         if(n.getObject() instanceof DOF)
             return "";
-        
-        String result = "";     
-        SMTreeNode aux = n.getFirstChild();     
+
+        String result = "";
+        SMTreeNode aux = n.getFirstChild();
 
         if(!(n.getObject() instanceof Tuple) && aux==null)
             return n.getObject().toString();
 
         if(!(n.getObject() instanceof Tuple) )
             result += "(";
-        
+
         while(aux!=n.getLastChild())
         {
             result += toStringWrapper(aux);
-            aux = aux.getNext(); 
+            aux = aux.getNext();
         }
-        
+
         result += toStringWrapper(aux);
-        
+
         if(!(n.getObject() instanceof Tuple))
             result += ")"+n.getObject().toString();
-      
+
         return result;
     }
 }
