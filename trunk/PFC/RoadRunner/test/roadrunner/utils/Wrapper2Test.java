@@ -18,6 +18,7 @@ import roadrunner.node.List;
 import roadrunner.node.Optional;
 import roadrunner.node.Text;
 import roadrunner.node.Tuple;
+import roadrunner.operator.DirectionOperator;
 import static org.junit.Assert.*;
 
 /**
@@ -79,11 +80,11 @@ public class Wrapper2Test {
 
         System.out.println(w);
 
-        Sample e1 = w.simularSample(w, w.getTree().getRootObject(), (Item)w.getTree().getNode(raiz).getLastChild().getObject(), true);
+        Sample e1 = w.simularSample(w, w.getTree().getRootObject(), (Item)w.getTree().getNode(raiz).getLastChild().getObject(), true, DirectionOperator.UPWARDS);
 
         System.out.println(e1);
 
-        Sample e2 = w.simularSample(w, w.getTree().getRootObject(), (Item)w.getTree().getNode(raiz).getLastChild().getObject(), false);
+        Sample e2 = w.simularSample(w, w.getTree().getRootObject(), (Item)w.getTree().getNode(raiz).getLastChild().getObject(), false, DirectionOperator.UPWARDS);
 
         System.out.println(e2);
 
@@ -126,11 +127,11 @@ public class Wrapper2Test {
 
         System.out.println(w);
 
-        Sample e1 = w.simularSample(w, w.getTree().getRootObject(), (Item)w.getTree().getNode(raiz).getLastChild().getObject(), true);
+        Sample e1 = w.simularSample(w, w.getTree().getRootObject(), (Item)w.getTree().getNode(raiz).getLastChild().getObject(), true, DirectionOperator.DOWNWARDS);
 
         System.out.println(e1);
 
-        Sample e2 = w.simularSample(w, w.getTree().getRootObject(), (Item)w.getTree().getNode(raiz).getLastChild().getObject(), false);
+        Sample e2 = w.simularSample(w, w.getTree().getRootObject(), (Item)w.getTree().getNode(raiz).getLastChild().getObject(), false, DirectionOperator.DOWNWARDS);
 
         System.out.println(e2);
 

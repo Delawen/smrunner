@@ -1,8 +1,6 @@
 package roadrunner.operator;
 
-import SMTree.iterator.BackwardIterator;
 import SMTree.utils.Enclosure;
-import SMTree.iterator.ForwardIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import roadrunner.iterator.BackwardTokenIterator;
@@ -17,7 +15,6 @@ import roadrunner.utils.StateRepair;
 import roadrunner.utils.Wrapper;
 import roadrunner.node.Item;
 import roadrunner.node.Optional;
-import roadrunner.node.Text;
 import roadrunner.node.Token;
 import roadrunner.utils.Edible;
 
