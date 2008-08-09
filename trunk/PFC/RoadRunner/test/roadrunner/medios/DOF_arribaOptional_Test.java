@@ -86,10 +86,21 @@ public class DOF_arribaOptional_Test {
         String[] prueba = { "test/roadrunner/medios/html/DOF_optional3.xhtml",
                             "test/roadrunner/medios/html/DOF_optional1.xhtml",
                             "test/roadrunner/medios/html/DOF_optional2.xhtml"};
-        RoadRunner rr = new RoadRunner(prueba);
-        Edible w = rr.process();
-        System.out.println(w);
-        assertEquals("(<b>&VARIABLE;</b>)?(<i>opcionalidad</i>)?", w.toString());
+        
+        try{
+            RoadRunner rr = new RoadRunner(prueba);
+            Edible w = rr.process();
+            System.out.println(w);
+            assertEquals("(<b>&VARIABLE;</b>)?(<i>opcionalidad</i>)?", w.toString());
+            // Debe fallar y aqui no debe llegar nunca:
+            assertFalse(true);
+        }
+        catch(Exception e)
+        {
+            // correcto :D
+        }
+
+
     }
 
 }
