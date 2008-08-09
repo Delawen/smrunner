@@ -150,9 +150,9 @@ public class Wrapper implements Edible{
     {
         //Iteradores de los Edibles:
         Mismatch m = null;
-
+        
         if(t == null)
-            return null;
+            throw new IllegalArgumentException();
 
         crearIteradorEdible(d, t, e);
         crearIteradorWrapper(d, this.getTree().getRootObject());
@@ -206,13 +206,13 @@ public class Wrapper implements Edible{
             Sample s2;
             if(DirectionOperator.DOWNWARDS == d)
             {
-                s1 = simularSample((Wrapper)e, t, fin, true);
-                s2 = simularSample((Wrapper)e, t, fin, false);
+                s1 = simularSample((Wrapper)e, t, fin, true, d);
+                s2 = simularSample((Wrapper)e, t, fin, false, d);
             }
             else
             {
-                s1 = simularSample((Wrapper)e, fin, t, true);
-                s2 = simularSample((Wrapper)e, fin, t, false);
+                s1 = simularSample((Wrapper)e, fin, t, true, d);
+                s2 = simularSample((Wrapper)e, fin, t, false, d);
             }
 
             System.out.println("Sample1: "+ s1);
@@ -800,17 +800,27 @@ public class Wrapper implements Edible{
      * @param complejidad Indica si se introduce o no en los opcionales y las listas.
      * @return un sample que copia el wrapper.
      */
-    public Sample simularSample(Wrapper e, Item desde, Item hasta, boolean complejidad)
+    public Sample simularSample(Wrapper e, Item desde, Item hasta, boolean complejidad, DirectionOperator d)
     {
         LinkedList<Item> ejemplo = new LinkedList<Item>();
         SMTreeNode<Item> actual = e.getTree().getNode(desde);
         SMTreeNode<Item> fin = e.getTree().getNode(hasta);
 
         while(actual.getObject() instanceof CompositeItem)
-            actual = actual.getFirstChild();
+        {
+            if(d == DirectionOperator.UPWARDS)
+                actual = actual.getLastChild();
+            else
+                actual = actual.getFirstChild();
+        }
 
         while(fin.getObject() instanceof CompositeItem)
-            fin = fin.getFirstChild();
+        {
+            if(d == DirectionOperator.UPWARDS)
+                fin = fin.getLastChild();
+            else
+                fin = fin.getFirstChild();
+        }
 
         int level_actual = 0;
         int level_fin = 0;
@@ -912,7 +922,13 @@ public class Wrapper implements Edible{
 
         }
         else
-            resultado.add(actual.getObject());
+        {
+            try {
+                    resultado.add((Item)actual.getObject().clone());
+                } catch (CloneNotSupportedException ex) {
+                    Logger.getLogger(Wrapper.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
 
         return resultado;
     }
