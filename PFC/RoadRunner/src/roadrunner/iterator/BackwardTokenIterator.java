@@ -568,6 +568,11 @@ public class BackwardTokenIterator extends BackwardIterator<Item> implements Edi
                 /**
                  * Lo preparamos para los siguientes if
                  */
+
+                if(next == super.lastNode.getLastChild())
+                {
+                    super.lastNode = super.lastNode.getNext();
+                }
                 item = super.lastNode.getObject();
             }
             else
