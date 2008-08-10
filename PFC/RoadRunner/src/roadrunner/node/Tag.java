@@ -15,7 +15,7 @@ public class Tag extends Token
     private Type type;
     private Map atributos;
            
-    private final static String regexTag = "([\\w]+)([\\s]*([\\w\\-]+)[\\s]*=[\\s]*\"([^\"]*)\")*";
+    private final static String regexTag = "([\\w]+)([\\s]*([\\w\\-:]+)[\\s]*=[\\s]*\"([^\"]*)\")*";
     //GRUPOS:                               1       2      3                         4
     private final static Pattern pattern = Pattern.compile(regexTag, /*Pattern.MULTILINE|*/Pattern.CASE_INSENSITIVE);
 
