@@ -93,13 +93,13 @@ public class AddOptional extends IOperator
             itS.goTo(t);
             Token tokenInmediatelyAfterT = (Token) itS.next();
             
-            if(lastTokenOptional.match(tokenInmediatelyBeforeT)) // || 
-                    //!firstTokenOptional.match(tokenInmediatelyAfterT)) //TODO asegurarse de que hace esta condicion de abajo
-            {
-                // falla: estabamos ante una lista.
-                rep.setState(StateRepair.FAILED);
-                return rep;
-            }
+//            if(lastTokenOptional.match(tokenInmediatelyBeforeT)) // ||
+//                    //!firstTokenOptional.match(tokenInmediatelyAfterT)) //TODO asegurarse de que hace esta condicion de abajo
+//            {
+//                // falla: estabamos ante una lista.
+//                rep.setState(StateRepair.FAILED);
+//                return rep;
+//            }
 
             //colocamos los parámetros de la reparación
             
@@ -107,6 +107,8 @@ public class AddOptional extends IOperator
             rep.setFinalItem(lastTokenOptional);
             rep.setState(StateRepair.SUCESSFULL);
             rep.setIndexSample(t);
+            rep.setFinalEnclosure(Enclosure.ENCLOSED);
+            rep.setInitialEnclosure(Enclosure.ENCLOSED);
 
             
 //            if(DirectionOperator.UPWARDS == d)
@@ -146,16 +148,14 @@ public class AddOptional extends IOperator
             firstTokenOptional = (Token) t;
             
             itS.goTo(t);
-            Token tokenInmediatelyBeforeT = (Token) itS.previous(true);
-            itS.goTo(t);
-            
-            if(lastTokenOptional.match(tokenInmediatelyBeforeT) /*|| 
-                     firstTokenOptional.match(tokenInmediatelyAfterT)*/ ) //TODO asegurarse de que hace esta condicion de abajo
-            {
-                // falla: estabamos ante una lista.
-                rep.setState(StateRepair.FAILED);
-                return rep;
-            }
+//
+//            if(lastTokenOptional.match(tokenInmediatelyBeforeT) /*||
+//                     firstTokenOptional.match(tokenInmediatelyAfterT)*/ ) //TODO asegurarse de que hace esta condicion de abajo
+//            {
+//                // falla: estabamos ante una lista.
+//                rep.setState(StateRepair.FAILED);
+//                return rep;
+//            }
             
 
             itW.goTo(n);

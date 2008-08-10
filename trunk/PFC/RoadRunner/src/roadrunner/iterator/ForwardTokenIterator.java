@@ -573,6 +573,11 @@ public class ForwardTokenIterator extends ForwardIterator<Item> implements Edibl
                 /**
                  * Lo preparamos para los siguientes if
                  */
+                if(next == super.lastNode.getFirstChild())
+                {
+                    super.lastNode = super.lastNode.getPrevious();
+                }
+
                 item = super.lastNode.getObject();
             }
             else

@@ -44,8 +44,8 @@ public class debian_Test {
     {
         System.out.println("DOF's");
         String[] prueba = { "test/roadrunner/real/html/debian1.xhtml",
-                            "test/roadrunner/real/html/debian2.xhtml"
-                            //,"test/roadrunner/real/html/debian3.xhtml"
+                            "test/roadrunner/real/html/debian2.xhtml",
+                            "test/roadrunner/real/html/debian3.xhtml"
                             };
         RoadRunner rr = new RoadRunner(prueba);
         Edible w = rr.process();
